@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Бесплатные шаблоны и чек-листы для продуктивности: ежедневник, трекер привычек, матрица Эйзенхауэра, SMART и другие.">
+  <title>Шаблоны и чек-листы для продуктивности</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#6c63ff"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Продуктивность и планирование</a>
+      <button class="hamburger" id="hamburger">☰</button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates" class="active">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a><a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon">🔍</button>
+        <button class="icon-btn" id="themeToggle">🌙</button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none"><div class="user-avatar"></div><span class="user-name"></span><a href="/cabinet" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет">📋</a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Шаблоны и чек-листы</h1>
+    <p>Готовые материалы для скачивания: планировщики, трекеры и чек-листы для ежедневной продуктивности</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2" id="templatesGrid"></div>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="downloadModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('downloadModal')">&times;</button>
+      <h2>Скачать шаблон</h2>
+      <p style="color:var(--text-secondary);margin-bottom:16px;">Заполните форму, чтобы получить доступ к скачиванию</p>
+      <form id="downloadForm">
+        <div class="form-group"><label>Ваше имя</label><input type="text" class="form-input" id="dlName" required minlength="2"></div>
+        <div class="form-group"><label>Ваш email</label><input type="email" class="form-input" id="dlEmail" required></div>
+        <div class="error-text" style="display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Получить ссылку</button>
+      </form>
+      <div id="downloadSuccess" style="display:none;text-align:center;padding:16px;">
+        <div style="font-size:2rem;color:var(--success);">✅</div>
+        <p style="font-weight:600;margin:8px 0;">Спасибо! Ваш файл готов к скачиванию.</p>
+        <button class="btn btn-primary" id="confirmDownloadBtn">Скачать</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div><h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    const templates = [
+      { icon: '📓', name: 'Ежедневник «Идеальный день»', desc: 'Почасовая разбивка дня + приоритеты. Формат A4, PDF.', size: '1.2 MB', content: 'ИДЕАЛЬНЫЙ ДЕНЬ\n\nДата: _____\n\nПриоритеты дня:\n1. _____\n2. _____\n3. _____\n\nРасписание:\n06:00-07:00 | Утро\n07:00-09:00 | ___ \n09:00-12:00 | ___ \n12:00-13:00 | Обед\n13:00-16:00 | ___ \n16:00-18:00 | ___ \n18:00-20:00 | Вечер\n20:00-22:00 | Отдых\n\nВечерний обзор:\nЧто сделано? _____\nЧто улучшить? _____' },
+      { icon: '📊', name: 'Трекер привычек на месяц', desc: 'Excel с графиком выполнения привычек на 30 дней.', size: '256 KB', content: 'ТРЕКЕР ПРИВЫЧЕК НА МЕСЯЦ\n\nМесяц: _____\n\nПривычка | 1 | 2 | 3 | ... | 30 | %\n___ | ☐ | ☐ | ☐ | ... | ☐ | 0%\n___ | ☐ | ☐ | ☐ | ... | ☐ | 0%\n\nИтого: ☐☐☐☐☐☐☐☐☐☐ / 30 дней' },
+      { icon: '📐', name: 'Матрица Эйзенхауэра', desc: 'Печатный лист A4 для приоритизации задач.', size: '890 KB', content: 'МАТРИЦА ЭЙЗЕНХАУЭРА\n\n┌─────────────────┬─────────────────┐\n│  ВАЖНО И СРОЧНО  │  ВАЖНО НЕ СРОЧНО │\n│  (Сделать сейчас) │  (Запланировать) │\n├─────────────────┼─────────────────┤\n│ НЕ ВАЖНО СРОЧНО  │ НЕ ВАЖНО НЕ СРОЧНО│\n│  (Делегировать)   │  (Удалить)       │\n└─────────────────┴─────────────────┘' },
+      { icon: '📅', name: 'Планер «Идеальная неделя»', desc: 'Недельный планер с приоритетами и обзором. PDF.', size: '1.5 MB', content: 'ИДЕАЛЬНАЯ НЕДЕЛЯ\n\nНеделя: _____\n\nЦель недели: _____\n\n┌─────┬─────┬─────┬─────┬─────┬─────┬─────┐\n│ ПН  │ ВТ  │ СР  │ ЧТ  │ ПТ  │ СБ  │ ВС  │\n├─────┼─────┼─────┼─────┼─────┼─────┼─────┤\n│     │     │     │     │     │     │     │\n└─────┴─────┴─────┴─────┴─────┴─────┴─────┘\n\nИтоги недели:\n✅ Что сделано:\n❌ Что не получилось:\n🎯 Планы на следующую:' },
+      { icon: '☀️', name: 'Чек-лист «Утренняя рутина за 15 минут»', desc: 'Список дел для продуктивного утра.', size: '340 KB', content: 'УТРЕННЯЯ РУТИНА ЗА 15 МИНУТ\n\n☐ Проснуться в одно и то же время\n☐ Выпить стакан воды\n☐ Умыться/душ\n☐ 5 минут зарядки\n☐ Застелить кровать\n☐ Записать 3 цели на день\n☐ Здоровый завтрак\n☐ 2 минуты тишины/дыхания' },
+      { icon: '🌙', name: 'Чек-лист «Вечерний обзор дня»', desc: 'Вечерняя рефлексия для осознанного завершения дня.', size: '280 KB', content: 'ВЕЧЕРНИЙ ОБЗОР ДНЯ\n\nДата: _____\n\n✅ Что я сегодня сделал(а)?\n1. _____\n2. _____\n3. _____\n\n📈 Что можно было сделать лучше?\n_____\n\n🙏 За что я благодарен(на)?\n1. _____\n2. _____\n3. _____\n\n🎯 3 задачи на завтра:\n1. _____\n2. _____\n3. _____' },
+      { icon: '🎯', name: 'SMART шаблон целей', desc: 'Форма для постановки целей по критериям SMART.', size: '420 KB', content: 'SMART ШАБЛОН ЦЕЛИ\n\nS (Specific / Конкретная): _____\nM (Measurable / Измеримая): _____\nA (Achievable / Достижимая): _____\nR (Relevant / Релевантная): _____\nT (Time-bound / Ограниченная): _____\n\nПлан достижения:\nШаг 1: _____\nШаг 2: _____\nШаг 3: _____' },
+      { icon: '🔨', name: 'Лист декомпозиции задачи', desc: 'Разбейте любую крупную задачу на маленькие шаги.', size: '310 KB', content: 'ДЕКОМПОЗИЦИЯ ЗАДАЧИ\n\nЗадача: _____\n\nМикрошаги:\n1. _____\n2. _____\n3. _____\n4. _____\n5. _____\n\nПервый шаг (прямо сейчас): _____\n\nОжидаемое время выполнения: _____' },
+      { icon: '📉', name: 'Календарь обратного планирования', desc: 'Планирование от дедлайна к первому шагу.', size: '680 KB', content: 'ОБРАТНОЕ ПЛАНИРОВАНИЕ\n\nДедлайн: _____\n\n┌──────┬──────────────────────────┐\n│ Дата │          Шаг             │\n├──────┼──────────────────────────┤\n│      │                         │\n│      │                         │\n│      │                         │\n│      │                         │\n│      │                         │\n└──────┴──────────────────────────┘\n\nНачать с: _____' },
+    ];
+
+    function renderTemplates() {
+      const grid = document.getElementById('templatesGrid');
+      grid.innerHTML = templates.map((t, i) => `
+        <div class="download-card">
+          <div class="download-icon">${t.icon}</div>
+          <div class="download-info">
+            <h4>${t.name}</h4>
+            <p>${t.desc} <span style="color:var(--text-secondary);font-size:0.8rem;">(${t.size})</span></p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openDownload(${i})">Скачать</button>
+        </div>
+      `).join('');
+    }
+
+    let currentTemplate = null;
+
+    function openDownload(index) {
+      currentTemplate = index;
+      document.getElementById('downloadModal').classList.add('active');
+      document.getElementById('downloadForm').style.display = 'block';
+      document.getElementById('downloadSuccess').style.display = 'none';
+      document.querySelector('#downloadModal .error-text').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+      renderTemplates();
+
+      document.getElementById('downloadForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('dlName').value.trim();
+        const email = document.getElementById('dlEmail').value.trim();
+        const errorEl = this.querySelector('.error-text');
+        if (name.length < 2 || !email.includes('@')) {
+          errorEl.style.display = 'block';
+          errorEl.textContent = 'Пожалуйста, заполните все поля корректно';
+          return;
+        }
+        errorEl.style.display = 'none';
+        this.style.display = 'none';
+        document.getElementById('downloadSuccess').style.display = 'block';
+        console.log('Download request:', { template: templates[currentTemplate].name, name, email });
+      });
+
+      document.getElementById('confirmDownloadBtn').addEventListener('click', function() {
+        if (currentTemplate === null) return;
+        const t = templates[currentTemplate];
+        const blob = new Blob([t.content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = t.name.replace(/[^a-zа-яё\s]/gi, '').trim() + '.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        setTimeout(() => closeModal('downloadModal'), 500);
+        showToast('📄 ' + t.name + ' скачан!', 'success');
+      });
+    });
+  </script>
+</body>
+</html>

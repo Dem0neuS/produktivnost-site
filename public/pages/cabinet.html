@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Личный кабинет — управление профилем, синхронизация данных, привычки, тесты, избранное.">
+  <title>Личный кабинет — Продуктивность и планирование</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .cabinet-header { display: flex; align-items: center; gap: 24px; padding: 32px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+    .cabinet-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+    .cabinet-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: #fff; font-weight: 700; flex-shrink: 0; box-shadow: 0 4px 16px var(--accent-glow); }
+    .cabinet-info h2 { font-size: 1.5rem; margin-bottom: 4px; }
+    .cabinet-info p { color: var(--text-secondary); font-size: 0.9rem; }
+    .cabinet-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-top: 24px; }
+    .stat-card { text-align: center; padding: 24px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); position: relative; overflow: hidden; transition: all var(--transition); }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 0 0 2px 2px; }
+    .stat-card .stat-number { font-size: 1.8rem; background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-card p { font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px; font-weight: 500; }
+    .cabinet-section { margin-top: 32px; }
+    .cabinet-section h3 { margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .no-data { text-align: center; padding: 32px; color: var(--text-secondary); }
+    .logout-btn { color: var(--danger) !important; }
+    .logout-btn:hover { background: rgba(231,76,60,0.1) !important; transform: none !important; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#6c63ff"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Продуктивность и планирование
+      </a>
+      <button class="hamburger" id="hamburger">☰</button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a><a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon">🔍</button>
+        <button class="icon-btn" id="themeToggle">🌙</button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none">
+          <div class="user-avatar"></div>
+          <span class="user-name"></span>
+          <a href="/cabinet" class="cabinet-link" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет">📋</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Личный кабинет</h1>
+    <p>Ваши данные, привычки, результаты тестов и избранное — всё в одном месте</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div id="cabinetContent">
+        <div class="no-data">
+          <div style="font-size:3rem;margin-bottom:12px;">🔒</div>
+          <h3>Войдите в аккаунт</h3>
+          <p style="margin-bottom:16px;">Чтобы увидеть личный кабинет, войдите или зарегистрируйтесь</p>
+          <button class="btn btn-primary" onclick="document.getElementById('loginBtn')?.click()">Войти</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div><h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    let currentUser = null;
+    let cabinetData = null;
+
+    function initCabinet() {
+      document.getElementById('hamburger')?.addEventListener('click', () => document.getElementById('nav')?.classList.toggle('open'));
+
+      const loginBtn = document.getElementById('loginBtn');
+      const authModal = document.getElementById('authModal');
+      if (loginBtn) loginBtn.addEventListener('click', () => openModal('authModal'));
+      document.querySelector('#authModal .modal-close')?.addEventListener('click', () => closeModal('authModal'));
+      document.querySelectorAll('.auth-tab').forEach(tab => tab.addEventListener('click', function() {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        document.getElementById(this.dataset.form)?.classList.add('active');
+      }));
+
+      document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = e.target.querySelector('[name="email"]').value;
+        const password = e.target.querySelector('[name="password"]').value;
+        const errorEl = e.target.querySelector('.error-text');
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }), credentials: 'same-origin'
+          });
+          const data = await res.json();
+          if (!res.ok) { errorEl.textContent = data.error; return; }
+          currentUser = data.user;
+          closeModal('authModal');
+          renderCabinet();
+          showToast('Вы вошли как ' + data.user.name, 'success');
+        } catch (err) {
+          errorEl.textContent = 'Ошибка соединения';
+        }
+      });
+
+      document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = e.target.querySelector('[name="name"]').value;
+        const email = e.target.querySelector('[name="email"]').value;
+        const password = e.target.querySelector('[name="password"]').value;
+        const confirm = e.target.querySelector('[name="confirm"]')?.value || '';
+        const errorEl = e.target.querySelector('.error-text');
+        if (password !== confirm) { errorEl.textContent = 'Пароли не совпадают'; return; }
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password }), credentials: 'same-origin'
+          });
+          const data = await res.json();
+          if (!res.ok) { errorEl.textContent = data.error; return; }
+          currentUser = data.user;
+          closeModal('authModal');
+          renderCabinet();
+          showToast('Регистрация успешна!', 'success');
+        } catch (err) {
+          errorEl.textContent = 'Ошибка соединения';
+        }
+      });
+
+      checkAuth();
+    }
+
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'same-origin' });
+        const data = await res.json();
+        if (data.user) {
+          currentUser = data.user;
+          renderCabinet();
+        }
+      } catch (err) {}
+    }
+
+    async function fetchSyncData() {
+      if (!currentUser) return null;
+      try {
+        const res = await fetch('/api/sync', { credentials: 'same-origin' });
+        if (res.ok) return await res.json();
+      } catch (e) {}
+      return null;
+    }
+
+    async function renderCabinet() {
+      const container = document.getElementById('cabinetContent');
+      if (!currentUser) {
+        container.innerHTML = `<div class="no-data"><div style="font-size:3rem;margin-bottom:12px;">🔒</div><h3>Войдите в аккаунт</h3><p style="margin-bottom:16px;">Чтобы увидеть личный кабинет, войдите или зарегистрируйтесь</p><button class="btn btn-primary" onclick="document.getElementById('loginBtn')?.click()">Войти</button></div>`;
+        updateUserUI();
+        return;
+      }
+
+      updateUserUI();
+      container.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:32px;">Загрузка данных...</p>';
+
+      const data = await fetchSyncData();
+      cabinetData = data;
+
+      const habits = data?.habits || JSON.parse(localStorage.getItem('habits') || '[]');
+      const favs = data?.favorites || [];
+      const tests = data?.testResults || [];
+      const microSteps = data?.microSteps || [];
+
+      const totalHabits = habits.length;
+      const totalFavs = favs.length;
+      const totalTests = tests.length;
+      let weekCount = 0;
+      const ws = getWeekStart();
+      const found = microSteps.find(s => s.weekStart === ws);
+      if (found) weekCount = found.count;
+      else weekCount = parseInt(localStorage.getItem('microstep_' + ws) || '0');
+
+      let habitPct = 0;
+      if (habits.length > 0) {
+        let total = 0, done = 0;
+        habits.forEach(h => {
+          if (!h.days || !h.completed) return;
+          const weekKey = getWeekStart();
+          const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+          const weekDays = h.days.filter(d => d <= today);
+          weekDays.forEach(d => { total++; if (h.completed[weekKey]?.includes(d)) done++; });
+        });
+        habitPct = total === 0 ? 0 : Math.round(done / total * 100);
+      }
+
+      const testList = tests.map(t => `<div style="padding:8px 12px;background:var(--bg-secondary);border-radius:var(--radius-sm);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
+        <span>${t.testType === 'method_test' ? '🧠 Тест метода' : '📊 Уровень прокрастинации'}</span>
+        <span style="font-size:0.85rem;color:var(--text-secondary);">${new Date(t.createdAt).toLocaleDateString('ru-RU')}</span>
+      </div>`) || '<p style="color:var(--text-secondary);">Вы ещё не прошли тесты</p>';
+
+      const favList = favs.length > 0
+        ? favs.map(f => `<span class="tag" style="font-size:0.85rem;padding:4px 12px;">${f.term}</span>`).join(' ')
+        : '<p style="color:var(--text-secondary);">Нет избранных терминов</p>';
+
+      container.innerHTML = `
+        <div class="cabinet-header">
+          <div class="cabinet-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+          <div class="cabinet-info">
+            <h2>${currentUser.name}</h2>
+            <p>${currentUser.email}</p>
+            <p style="font-size:0.8rem;margin-top:4px;">Тема: ${data?.theme || localStorage.getItem('theme') || 'светлая'}</p>
+          </div>
+          <div style="margin-left:auto;">
+            <button class="btn btn-sm btn-outline" onclick="syncAll()" title="Синхронизировать все данные">🔄 Синхронизировать</button>
+            <button class="btn btn-sm logout-btn" style="margin-left:8px;border-color:var(--danger);color:var(--danger);" onclick="logoutUser()">🚪 Выйти</button>
+          </div>
+        </div>
+
+        <div class="cabinet-stats">
+          <div class="stat-card"><div class="stat-number">${totalHabits}</div><p>Привычек</p></div>
+          <div class="stat-card"><div class="stat-number">${habitPct}%</div><p>Выполнение привычек</p></div>
+          <div class="stat-card"><div class="stat-number">${totalTests}</div><p>Пройдено тестов</p></div>
+          <div class="stat-card"><div class="stat-number">${totalFavs}</div><p>В избранном</p></div>
+          <div class="stat-card"><div class="stat-number">${weekCount}</div><p>Микро-шагов за неделю</p></div>
+        </div>
+
+        <div class="cabinet-section">
+          <h3>📋 Ваши привычки</h3>
+          ${totalHabits > 0
+            ? `<div style="background:var(--bg-secondary);border-radius:var(--radius-sm);padding:16px;">
+                ${habits.slice(0, 5).map(h => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);">
+                  <span>${h.name}</span>
+                  <span style="font-size:0.85rem;color:var(--text-secondary);">${h.days?.length || 0} дней в неделю</span>
+                </div>`).join('')}
+                ${totalHabits > 5 ? `<p style="text-align:center;margin-top:8px;font-size:0.85rem;color:var(--text-secondary);">...и ещё ${totalHabits - 5}</p>` : ''}
+               </div>`
+            : '<div class="no-data" style="padding:16px;">У вас нет привычек. <a href="/habits">Создать</a></div>'}
+        </div>
+
+        <div class="cabinet-section">
+          <h3>🧠 Результаты тестов</h3>
+          <div>${testList}</div>
+        </div>
+
+        <div class="cabinet-section">
+          <h3>⭐ Избранное в глоссарии</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">${favList}</div>
+        </div>
+
+        <div class="cabinet-section" style="text-align:center;padding:16px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+          <p style="font-size:0.9rem;color:var(--text-secondary);">📱 Все данные синхронизированы с сервером. При входе с другого устройства ваши данные восстановятся.</p>
+        </div>
+      `;
+    }
+
+    function getWeekStart() {
+      const d = new Date(); d.setDate(d.getDate() - d.getDay());
+      return d.toISOString().split('T')[0];
+    }
+
+    async function syncAll() {
+      if (!currentUser) return;
+      showToast('🔄 Синхронизация...', 'info');
+      try {
+        const habits = JSON.parse(localStorage.getItem('habits') || '[]');
+        if (habits.length > 0) {
+          await fetch('/api/habits/sync', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ habits }), credentials: 'same-origin'
+          });
+        }
+
+        const favs = JSON.parse(localStorage.getItem('glossary_favorites') || '[]');
+        for (const term of favs) {
+          await fetch('/api/favorites', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ term }), credentials: 'same-origin'
+          });
+        }
+
+        const ws = getWeekStart();
+        const count = parseInt(localStorage.getItem('microstep_' + ws) || '0');
+        if (count > 0) {
+          await fetch('/api/micro-steps', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ count, weekStart: ws }), credentials: 'same-origin'
+          });
+        }
+
+        showToast('✅ Данные синхронизированы', 'success');
+        renderCabinet();
+      } catch (e) {
+        showToast('❌ Ошибка синхронизации', 'error');
+      }
+    }
+
+    async function logoutUser() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+      } catch (e) {}
+      currentUser = null;
+      cabinetData = null;
+      renderCabinet();
+      showToast('Вы вышли из аккаунта', 'info');
+    }
+
+    function updateUserUI() {
+      const loginBtn = document.getElementById('loginBtn');
+      const userMenu = document.getElementById('userMenu');
+      if (currentUser && userMenu) {
+        if (loginBtn) loginBtn.style.display = 'none';
+        userMenu.style.display = 'flex';
+        userMenu.querySelector('.user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        userMenu.querySelector('.user-name').textContent = currentUser.name;
+        let link = userMenu.querySelector('a');
+        if (!link) {
+          link = document.createElement('a');
+          link.href = '/cabinet';
+          link.style.cssText = 'color:var(--accent);font-size:0.8rem;text-decoration:none;margin-left:4px;';
+          link.textContent = '📋';
+          link.title = 'Личный кабинет';
+          userMenu.appendChild(link);
+        }
+      } else if (loginBtn) {
+        if (loginBtn) loginBtn.style.display = 'inline-flex';
+        if (userMenu) userMenu.style.display = 'none';
+      }
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+    }
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    }
+    function showToast(msg, type) {
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + (type || 'info');
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', initCabinet);
+  </script>
+</body>
+</html>

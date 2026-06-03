@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Интерактивные тесты и калькуляторы: какой метод продуктивности вам подходит, уровень прокрастинации, стоимость часа, матрица Эйзенхауэра.">
+  <title>Тесты и интерактив — продуктивность</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#6c63ff"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Продуктивность и планирование</a>
+      <button class="hamburger" id="hamburger">☰</button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests" class="active">Тесты</a><a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon">🔍</button>
+        <button class="icon-btn" id="themeToggle">🌙</button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none"><div class="user-avatar"></div><span class="user-name"></span><a href="/cabinet" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет">📋</a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Тесты и интерактив</h1>
+    <p>Узнайте свой метод продуктивности, оцените уровень прокрастинации и используйте интерактивные инструменты</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="tabs" id="testTabs">
+        <button class="tab active" data-tab="methodTest">Тест: метод продуктивности</button>
+        <button class="tab" data-tab="procrastTest">Тест: уровень прокрастинации</button>
+        <button class="tab" data-tab="calcHour">Калькулятор стоимости часа</button>
+        <button class="tab" data-tab="eisenMatrix">Матрица Эйзенхауэра</button>
+        <button class="tab" data-tab="dopamine">Дофаминовая подзарядка</button>
+      </div>
+
+      <div id="methodTest" class="tab-content active">
+        <div class="widget">
+          <div class="widget-title">🧠 Какой метод продуктивности вам подходит?</div>
+          <p style="color:var(--text-secondary);margin-bottom:16px;">Ответьте на 5 вопросов и получите рекомендацию</p>
+          <div id="methodTestContent"></div>
+          <div id="methodTestResult" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div id="procrastTest" class="tab-content">
+        <div class="widget">
+          <div class="widget-title">📊 Ваш уровень прокрастинации</div>
+          <p style="color:var(--text-secondary);margin-bottom:16px;">Оцените свою склонность к откладыванию дел</p>
+          <div id="procrastTestContent"></div>
+          <div id="procrastTestResult" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div id="calcHour" class="tab-content">
+        <div class="widget">
+          <div class="widget-title">💰 Калькулятор стоимости вашего часа</div>
+          <p style="color:var(--text-secondary);margin-bottom:16px;">Узнайте реальную цену каждого часа вашей жизни</p>
+          <div class="form-group"><label>Ваш доход в месяц (руб)</label><input type="number" class="form-input" id="incomeInput" placeholder="50000" min="0"></div>
+          <div class="form-group"><label>Рабочих часов в неделю</label><input type="number" class="form-input" id="workHoursInput" placeholder="40" min="0"></div>
+          <div id="hourCostResult" style="margin-top:16px;padding:16px;background:var(--accent-light);border-radius:var(--radius-sm);min-height:60px;">
+            <p style="color:var(--text-secondary);">Введите данные для расчёта</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="eisenMatrix" class="tab-content">
+        <div class="widget">
+          <div class="widget-title">📐 Интерактивная матрица Эйзенхауэра</div>
+          <p style="color:var(--text-secondary);margin-bottom:12px;">Введите свои задачи и распределите по квадрантам</p>
+          <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+            <input type="text" class="form-input" id="eisenInput" placeholder="Новая задача..." style="flex:1;min-width:150px;">
+            <button class="btn btn-primary" id="addEisenBtn">Добавить задачу</button>
+            <button class="btn btn-outline" id="clearEisenBtn">Очистить</button>
+          </div>
+          <div class="eisenhower-matrix" id="eisenMatrixGrid">
+            <div class="quadrant quadrant-1"><h4>⚡ Важно и срочно</h4><div class="quadrant-list" data-q="1"></div></div>
+            <div class="quadrant quadrant-2"><h4>🎯 Важно, не срочно</h4><div class="quadrant-list" data-q="2"></div></div>
+            <div class="quadrant quadrant-3"><h4>📞 Не важно, срочно</h4><div class="quadrant-list" data-q="3"></div></div>
+            <div class="quadrant quadrant-4"><h4>🗑️ Не важно, не срочно</h4><div class="quadrant-list" data-q="4"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="dopamine" class="tab-content">
+        <div class="widget" style="text-align:center;">
+          <div class="widget-title" style="justify-content:center;">⚡ Дофаминовая подзарядка</div>
+          <p style="color:var(--text-secondary);margin-bottom:16px;">Нужен быстрый прилив энергии и хорошего настроения?</p>
+          <div id="dopamineDisplay" style="font-size:1.4rem;padding:24px;background:var(--accent-light);border-radius:var(--radius-sm);margin:16px 0;min-height:80px;display:flex;align-items:center;justify-content:center;">
+            Нажмите кнопку, чтобы получить идею
+          </div>
+          <button class="btn btn-primary btn-lg" id="dopamineBtn">Дайте идею!</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div><h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+
+      // Tabs
+      document.querySelectorAll('#testTabs .tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('#testTabs .tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.getElementById(this.dataset.tab).classList.add('active');
+        });
+      });
+
+      // Method Test
+      const methodQuestions = [
+        { q: 'Как вы предпочитаете работать?', opts: ['По строгому плану и расписанию', 'Гибко, в зависимости от обстоятельств', 'Сначала хаос, потом структура', 'По настроению'] },
+        { q: 'Как реагируете на дедлайны?', opts: ['Заканчиваю заранее', 'Работаю лучше под давлением', 'Стараюсь не обращать внимания', 'Паникую, но делаю'] },
+        { q: 'Что вас демотивирует больше всего?', opts: ['Отсутствие чёткого плана', 'Много незавершённых задач', 'Постоянные отвлечения', 'Слишком сложная задача'] },
+        { q: 'Сколько задач вы обычно ставите на день?', opts: ['1-2 крупные', '3-5 средних', '10+ мелких', 'Записываю всё подряд'] },
+        { q: 'Что для вас важнее всего в работе?', opts: ['Результат и сроки', 'Процесс и удовольствие', 'Качество и глубина', 'Разнообразие'] }
+      ];
+      const methodResults = {
+        'Структура': { name: 'Time Blocking + GTD', desc: 'Вам подходят жёсткие системы. Используйте Time Blocking для планирования и GTD для организации задач.', id: 'timeblocking' },
+        'Гибкость': { name: 'Pomodoro + Kanban', desc: 'Вам нужна гибкость. Pomodoro поможет с фокусом, а Kanban — с визуализацией прогресса.', id: 'pomodoro' },
+        'Приоритеты': { name: 'Эйзенхауэр + 80/20', desc: 'Фокусируйтесь на главном. Матрица Эйзенхауэра и принцип Парето — ваши лучшие инструменты.', id: 'eisenhower' },
+        'Фокус': { name: 'Deep Work + Правило 2 минут', desc: 'Вам нужно минимизировать отвлечения. Deep Work для сложных задач, 2 минуты для мелочей.', id: 'deepwork' },
+        'Цели': { name: 'SMART + OKR', desc: 'Ставьте амбициозные цели. SMART для конкретики, OKR для масштабных задач.', id: 'smart' },
+      };
+
+      let methodStep = 0;
+      let methodAnswers = [];
+
+      function renderMethodQuestion() {
+        const content = document.getElementById('methodTestContent');
+        const result = document.getElementById('methodTestResult');
+        if (methodStep >= methodQuestions.length) {
+          const counts = {};
+          methodAnswers.forEach(a => { counts[a] = (counts[a] || 0) + 1; });
+          let maxCount = 0, maxType = 'Структура';
+          Object.entries(counts).forEach(([k, v]) => { if (v > maxCount) { maxCount = v; maxType = k; } });
+          const r = methodResults[maxType] || methodResults['Структура'];
+          content.innerHTML = '';
+          result.style.display = 'block';
+          result.innerHTML = `
+            <div style="text-align:center;padding:20px;">
+              <div style="font-size:3rem;">🎉</div>
+              <h3>Вам подходит: ${r.name}</h3>
+              <p style="color:var(--text-secondary);margin:12px 0;">${r.desc}</p>
+              <a href="/methods#${r.id}" class="btn btn-primary">Перейти к методу</a>
+              <button class="btn btn-outline" style="margin-left:8px;" onclick="resetMethodTest()">Пройти заново</button>
+            </div>`;
+          if (currentUser) {
+            fetch('/api/test-results', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ testType: 'method_test', result: { answers: methodAnswers, result: r.name } }),
+              credentials: 'same-origin'
+            }).catch(() => {});
+          }
+          return;
+        }
+        const q = methodQuestions[methodStep];
+        const pct = (methodStep / methodQuestions.length) * 100;
+        result.style.display = 'none';
+        content.innerHTML = `
+          <div class="test-progress"><div class="test-progress-fill" style="width:${pct}%;"></div></div>
+          <h3 style="margin-bottom:16px;">Вопрос ${methodStep+1} из ${methodQuestions.length}</h3>
+          <p style="font-size:1.1rem;margin-bottom:16px;">${q.q}</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            ${q.opts.map((opt, i) => `<button class="btn btn-outline" style="text-align:left;justify-content:flex-start;" onclick="answerMethod(${i})">${opt}</button>`).join('')}
+          </div>`;
+      }
+
+      window.answerMethod = function(idx) {
+        const q = methodQuestions[methodStep];
+        const typeMap = ['Структура', 'Гибкость', 'Приоритеты', 'Фокус'];
+        const typeMap2 = ['Структура', 'Гибкость', 'Фокус', 'Приоритеты'];
+        const typeMap3 = ['Структура', 'Приоритеты', 'Фокус', 'Гибкость'];
+        const typeMap4 = ['Приоритеты', 'Структура', 'Гибкость', 'Фокус'];
+        const typeMap5 = ['Цели', 'Гибкость', 'Структура', 'Фокус'];
+        const maps = [typeMap, typeMap2, typeMap3, typeMap4, typeMap5];
+        methodAnswers.push(maps[methodStep][idx % maps[methodStep].length]);
+        methodStep++;
+        renderMethodQuestion();
+      };
+
+      window.resetMethodTest = function() {
+        methodStep = 0;
+        methodAnswers = [];
+        renderMethodQuestion();
+      };
+
+      renderMethodQuestion();
+
+      // Procrastination Test
+      const procQuestions = [
+        { q: 'Как часто вы откладываете важные дела?', opts: [{ t: 'Почти никогда', v: 0 }, { t: 'Иногда', v: 1 }, { t: 'Часто', v: 2 }, { t: 'Постоянно', v: 3 }] },
+        { q: 'Легко ли вы отвлекаетесь во время работы?', opts: [{ t: 'Нет, могу фокусироваться часами', v: 0 }, { t: 'Отвлекаюсь, но возвращаюсь', v: 1 }, { t: 'Трудно сосредоточиться', v: 2 }, { t: 'Постоянно проверяю телефон', v: 3 }] },
+        { q: 'Как вы реагируете на сложные задачи?', opts: [{ t: 'Начинаю сразу', v: 0 }, { t: 'Думаю, но начинаю', v: 1 }, { t: 'Откладываю на потом', v: 2 }, { t: 'Избегаю до последнего', v: 3 }] },
+        { q: 'Как часто вы заканчиваете дела в последний момент?', opts: [{ t: 'Всегда заранее', v: 0 }, { t: 'Иногда поджимает', v: 1 }, { t: 'Часто горят сроки', v: 2 }, { t: 'Всегда в дедлайн', v: 3 }] },
+        { q: 'Чувствуете ли вы вину за отложенные дела?', opts: [{ t: 'Нет, всё успеваю', v: 0 }, { t: 'Изредка', v: 1 }, { t: 'Часто', v: 2 }, { t: 'Постоянно, это стресс', v: 3 }] },
+      ];
+
+      let procStep = 0;
+      let procScore = 0;
+
+      function renderProcQuestion() {
+        const content = document.getElementById('procrastTestContent');
+        const result = document.getElementById('procrastTestResult');
+        if (procStep >= procQuestions.length) {
+          content.innerHTML = '';
+          result.style.display = 'block';
+          let level, advice, color;
+          if (procScore <= 3) { level = 'Низкий'; advice = 'Вы отлично управляете своим временем! Продолжайте в том же духе. Ознакомьтесь с методами Deep Work для углубления навыков.'; color = 'var(--success)'; }
+          else if (procScore <= 7) { level = 'Средний'; advice = 'У вас есть склонность к прокрастинации. Начните с Правила 2 минут и Pomodoro — это поможет снизить откладывание.'; color = 'var(--warning)'; }
+          else { level = 'Высокий'; advice = 'Прокрастинация мешает вашей жизни. Рекомендуем начать с микро-шагов, техники «Съешь лягушку» и чек-листа экстренной помощи.'; color = 'var(--danger)'; }
+          result.innerHTML = `
+            <div style="text-align:center;padding:20px;">
+              <h3>Уровень прокрастинации: <span style="color:${color};">${level}</span></h3>
+              <p style="font-size:2rem;font-weight:800;color:${color};">${procScore}/15</p>
+              <p style="color:var(--text-secondary);margin:12px 0;">${advice}</p>
+              <a href="/antiprocrastination" class="btn btn-primary">Техники антипрокрастинации</a>
+              <button class="btn btn-outline" style="margin-left:8px;" onclick="resetProcTest()">Пройти заново</button>
+            </div>`;
+          if (currentUser) {
+            fetch('/api/test-results', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ testType: 'procrast_test', result: { score: procScore, level } }),
+              credentials: 'same-origin'
+            }).catch(() => {});
+          }
+          return;
+        }
+        const q = procQuestions[procStep];
+        const pct = (procStep / procQuestions.length) * 100;
+        result.style.display = 'none';
+        content.innerHTML = `
+          <div class="test-progress"><div class="test-progress-fill" style="width:${pct}%;"></div></div>
+          <h3 style="margin-bottom:16px;">Вопрос ${procStep+1} из ${procQuestions.length}</h3>
+          <p style="font-size:1.1rem;margin-bottom:16px;">${q.q}</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            ${q.opts.map((opt, i) => `<button class="btn btn-outline" style="text-align:left;justify-content:flex-start;" onclick="answerProc(${i})">${opt.t}</button>`).join('')}
+          </div>`;
+      }
+
+      window.answerProc = function(idx) {
+        procScore += procQuestions[procStep].opts[idx].v;
+        procStep++;
+        renderProcQuestion();
+      };
+
+      window.resetProcTest = function() {
+        procStep = 0; procScore = 0;
+        renderProcQuestion();
+      };
+
+      renderProcQuestion();
+
+      // Hour cost calculator
+      document.getElementById('incomeInput').addEventListener('input', calcHourCost);
+      document.getElementById('workHoursInput').addEventListener('input', calcHourCost);
+
+      function calcHourCost() {
+        const income = parseFloat(document.getElementById('incomeInput').value) || 0;
+        const hours = parseFloat(document.getElementById('workHoursInput').value) || 0;
+        const result = document.getElementById('hourCostResult');
+        if (!income || !hours) { result.innerHTML = '<p style="color:var(--text-secondary);">Введите данные для расчёта</p>'; return; }
+        const perWeek = hours;
+        const perMonth = perWeek * 4.33;
+        const hourCost = income / perMonth;
+        const minCost = hourCost / 60;
+        result.innerHTML = `
+          <p><strong>Стоимость вашего часа:</strong> ${Math.round(hourCost).toLocaleString()} ₽</p>
+          <p><strong>Стоимость минуты:</strong> ${Math.round(minCost)} ₽</p>
+          <p style="margin-top:8px;font-weight:600;color:var(--accent);">💡 Каждый час стоит ${Math.round(hourCost).toLocaleString()} ₽. Не тратьте его на то, что не приносит ценности!</p>`;
+        localStorage.setItem('hour_cost', JSON.stringify({ income, hours }));
+      }
+      const savedCost = JSON.parse(localStorage.getItem('hour_cost'));
+      if (savedCost) { document.getElementById('incomeInput').value = savedCost.income; document.getElementById('workHoursInput').value = savedCost.hours; calcHourCost(); }
+
+      // Eisenhower Matrix
+      let eisenTasks = JSON.parse(localStorage.getItem('eisen_tasks') || '[]');
+
+      function renderEisen() {
+        document.querySelectorAll('.quadrant-list').forEach(el => {
+          const q = el.dataset.q;
+          const tasks = eisenTasks.filter(t => t.q == q);
+          el.innerHTML = tasks.map((t, i) =>
+            `<div class="quadrant-item">${t.text} <button class="remove-task" onclick="removeEisenTask(${t.id})">&times;</button></div>`
+          ).join('');
+        });
+        localStorage.setItem('eisen_tasks', JSON.stringify(eisenTasks));
+      }
+
+      window.removeEisenTask = function(id) {
+        eisenTasks = eisenTasks.filter(t => t.id !== id);
+        renderEisen();
+      };
+
+      document.getElementById('addEisenBtn').addEventListener('click', function() {
+        const input = document.getElementById('eisenInput');
+        const text = input.value.trim();
+        if (!text) return;
+        showToast('Выберите квадрант для задачи: нажмите на номер', 'info');
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay active';
+        overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+        overlay.innerHTML = `<div class="modal" style="text-align:center;">
+          <h3>В какой квадрант добавить?</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+            <button class="btn btn-outline" onclick="addEisenTask(1,'${text.replace(/'/g, "\\'")}');this.closest('.modal-overlay').remove()">⚡ Важно и срочно</button>
+            <button class="btn btn-outline" onclick="addEisenTask(2,'${text.replace(/'/g, "\\'")}');this.closest('.modal-overlay').remove()">🎯 Важно, не срочно</button>
+            <button class="btn btn-outline" onclick="addEisenTask(3,'${text.replace(/'/g, "\\'")}');this.closest('.modal-overlay').remove()">📞 Не важно, срочно</button>
+            <button class="btn btn-outline" onclick="addEisenTask(4,'${text.replace(/'/g, "\\'")}');this.closest('.modal-overlay').remove()">🗑️ Не важно, не срочно</button>
+          </div>
+        </div>`;
+        document.body.appendChild(overlay);
+        input.value = '';
+      });
+
+      window.addEisenTask = function(q, text) {
+        eisenTasks.push({ id: Date.now(), q: q.toString(), text });
+        renderEisen();
+        showToast('✅ Задача добавлена в квадрант ' + q, 'success');
+      };
+
+      document.getElementById('clearEisenBtn').addEventListener('click', function() {
+        eisenTasks = [];
+        renderEisen();
+        showToast('🗑️ Матрица очищена', 'info');
+      });
+
+      renderEisen();
+
+      // Dopamine recharge
+      const dopamineActions = [
+        'Сделайте 5 отжиманий', 'Посмотрите забавное видео 30 сек', 'Выйдите на балкон на 1 минуту',
+        'Напишите другу приятное сообщение', 'Съешьте кусочек тёмного шоколада', 'Включите любимую песню и подпойте',
+        'Сделайте 10 глубоких вдохов', 'Умойтесь прохладной водой', 'Потанцуйте 30 секунд',
+        'Прочитайте смешной анекдот', 'Погладьте кота/собаку (если нет — представьте)', 'Сожмите и разожмите кулаки 10 раз',
+        'Посмотрите в окно на небо', 'Напишите 3 вещи, за которые вы благодарны', 'Сделайте 10 приседаний'
+      ];
+
+      document.getElementById('dopamineBtn').addEventListener('click', function() {
+        const action = dopamineActions[Math.floor(Math.random() * dopamineActions.length)];
+        document.getElementById('dopamineDisplay').textContent = '⚡ ' + action;
+      });
+
+      // Load saved test results
+      window.addEventListener('synced', function() {
+        try {
+          const synced = JSON.parse(localStorage.getItem('synced_tests') || '[]');
+          synced.forEach(t => {
+            if (t.testType === 'method_test' && !localStorage.getItem('synced_method')) {
+              localStorage.setItem('synced_method', 'true');
+            }
+          });
+        } catch(e) {}
+      });
+    });
+  </script>
+</body>
+</html>

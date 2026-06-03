@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Работающие техники борьбы с прокрастинацией: калькулятор цены, разбивалка задач, 7 техник здесь и сейчас, чек-лист.">
+  <title>Антипрокрастинация — техники для немедленного действия</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#6c63ff"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Продуктивность и планирование
+      </a>
+      <button class="hamburger" id="hamburger">☰</button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a><a href="/habits">Привычки</a><a href="/antiprocrastination" class="active">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a><a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon">🔍</button>
+        <button class="icon-btn" id="themeToggle">🌙</button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none"><div class="user-avatar"></div><span class="user-name"></span><a href="/cabinet" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет">📋</a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Прокрастинируете прямо сейчас? Нажмите сюда</h1>
+    <p>Работающие инструменты для немедленного действия и борьбы с откладыванием</p>
+    <div style="margin-top:20px;">
+      <button class="btn btn-primary btn-lg" id="quickActionBtn">Сделать первое микро-действие за 30 секунд</button>
+    </div>
+    <div id="quickActionResult" style="margin-top:12px;font-size:1.1rem;font-weight:600;color:var(--accent);min-height:30px;"></div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Почему мы откладываем</h2>
+      <div class="grid grid-3" style="margin-top:24px;">
+        <div class="card" style="text-align:center;"><div class="card-icon">😰</div><h3>Эмоциональная регуляция</h3><p>Мы избегаем негативных эмоций: страха неудачи, скуки, тревоги. Прокрастинация — это не лень, а попытка справиться с дискомфортом.</p></div>
+        <div class="card" style="text-align:center;"><div class="card-icon">🧪</div><h3>Дофаминовая ловушка</h3><p>Мозг выбирает быстрое вознаграждение (соцсети, видео) вместо долгосрочных результатов. Дофамин от лайков сильнее, чем от выполненной задачи.</p></div>
+        <div class="card" style="text-align:center;"><div class="card-icon">🧊</div><h3>Страх начала</h3><p>Крупная задача кажется неподъёмной. Мозг воспринимает её как угрозу и включает режим избегания. Решение — разбить на микрошаги.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-secondary);">
+    <div class="container">
+      <h2 class="section-title">Топ-7 техник «здесь и сейчас»</h2>
+      <p class="section-subtitle">Примените прямо сейчас, чтобы начать действовать</p>
+      <div class="grid grid-2">
+        <div class="card"><div class="card-icon">5️⃣</div><h3>Правило 5 секунд</h3><p>Сосчитайте 5-4-3-2-1 и сразу действуйте. Мел Роббинс: это прерывает цикл сомнений и запускает префронтальную кору.</p></div>
+        <div class="card"><div class="card-icon">⏱️</div><h3>Правило 2 минут</h3><p>Если задача занимает меньше 2 минут — сделайте её прямо сейчас. Не записывайте, не откладывайте — просто сделайте.</p></div>
+        <div class="card"><div class="card-icon">🍅</div><h3>Помодоро для прокрастинатора</h3><p>Всего 5 минут работы. Заведите таймер на 5 минут и работайте. Через 5 минут можно остановиться. Чаще всего вы продолжите.</p></div>
+        <div class="card"><div class="card-icon">🐸</div><h3>Техника «Съешь лягушку»</h3><p>Начните день с самой неприятной задачи. Сделайте её первой — остаток дня покажется лёгким. Марк Твен: «Съешь лягушку с утра».</p></div>
+        <div class="card"><div class="card-icon">🔨</div><h3>Разбивка до первого шага</h3><p>Задача кажется огромной? Запишите только первый шаг. «Написать отчёт» → «Открыть документ и написать заголовок».</p></div>
+        <div class="card"><div class="card-icon">🎯</div><h3>«Если — то» для прокрастинации</h3><p>«Если я чувствую желание отложить, то я делаю одно маленькое действие». Создаёт автоматическую реакцию на триггер.</p></div>
+        <div class="card" style="grid-column:1/-1;"><div class="card-icon">🔄</div><h3>Смена позы / Разрыв шаблона</h3><p>Встаньте, выйдите из комнаты, умойтесь. Физическое движение сбрасывает ментальный ступор. Мозг связывает позу с состоянием — смените позу, смените состояние.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="split-layout">
+        <div class="widget">
+          <div class="widget-title">💰 Калькулятор «Цена прокрастинации»</div>
+          <p style="color:var(--text-secondary);margin-bottom:16px;">Узнайте, сколько вы теряете из-за откладывания дел</p>
+          <div class="form-group"><label>Ваша ставка в час (руб)</label><input type="number" class="form-input" id="rateInput" placeholder="500" min="0"></div>
+          <div class="form-group"><label>Часов прокрастинации в неделю</label><input type="number" class="form-input" id="procrastHoursInput" placeholder="5" min="0"></div>
+          <div id="procrastResult" style="margin-top:16px;padding:16px;background:var(--accent-light);border-radius:var(--radius-sm);min-height:60px;">
+            <p style="color:var(--text-secondary);">Введите данные, чтобы увидеть расчёт</p>
+          </div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">🔨 Разбивалка задач</div>
+          <p style="color:var(--text-secondary);margin-bottom:16px;">Напишите задачу, которую откладываете, и получите микрошаги</p>
+          <div class="form-group"><input type="text" class="form-input" id="taskBreakInput" placeholder="Например: Подготовить презентацию"></div>
+          <button class="btn btn-primary" id="breakTaskBtn" style="width:100%;">Разбить</button>
+          <div id="breakResult" style="margin-top:16px;min-height:40px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-secondary);">
+    <div class="container">
+      <h2 class="section-title">Инструменты против прокрастинации</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Инструмент</th><th>Что блокирует</th><th>Цена</th><th>Для кого</th></tr></thead>
+          <tbody>
+            <tr><td>Forest</td><td>Телефон, приложения</td><td>Бесплатно / 149₽</td><td>Все, кто хочет фокусироваться</td></tr>
+            <tr><td>Focusmate</td><td>Одиночество, лень</td><td>$4.99/мес</td><td>Фрилансеры, удалёнщики</td></tr>
+            <tr><td>Cold Turkey</td><td>Сайты, приложения, весь интернет</td><td>Бесплатно / $25</td><td>Жёсткий фокус</td></tr>
+            <tr><td>Toggl Track</td><td>Неосознанная трата времени</td><td>Бесплатно</td><td>Фрилансеры, команды</td></tr>
+            <tr><td>Focus To-Do</td><td>Комбинация Pomodoro + трекер задач</td><td>Бесплатно</td><td>Студенты, работающие</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Чек-лист «Экстренная помощь при прокрастинации»</h2>
+      <p class="section-subtitle">Выполните эти 6 шагов, когда чувствуете, что застряли</p>
+      <div style="max-width:500px;margin:0 auto;">
+        <div class="checklist-item"><input type="checkbox" class="procrast-check"> 1. Признайте: «Я сейчас прокрастинирую» — осознание разрывает автоматизм</div>
+        <div class="checklist-item"><input type="checkbox" class="procrast-check"> 2. Назовите эмоцию: страх, скука, тревога? — названная эмоция теряет силу</div>
+        <div class="checklist-item"><input type="checkbox" class="procrast-check"> 3. Таймер на 5 минут — работайте только 5 минут. Просто начните</div>
+        <div class="checklist-item"><input type="checkbox" class="procrast-check"> 4. Смените позу: встаньте, потянитесь, выпейте воды</div>
+        <div class="checklist-item"><input type="checkbox" class="procrast-check"> 5. Запишите первый шаг — самый маленький возможный</div>
+        <div class="checklist-item"><input type="checkbox" class="procrast-check"> 6. Пообещайте себе награду — сделали шаг? Похвалите себя</div>
+      </div>
+      <div style="text-align:center;margin-top:20px;">
+        <button class="btn btn-outline" id="downloadChecklistBtn">📄 Скачать чек-лист (PDF)</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div><h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+
+      const quickActions = ['Выпейте стакан воды', 'Откройте самый важный документ', 'Напишите одну строчку', 'Сделайте 5 глубоких вдохов', 'Разомните шею', 'Закройте лишнюю вкладку'];
+      document.getElementById('quickActionBtn').addEventListener('click', function() {
+        const action = quickActions[Math.floor(Math.random() * quickActions.length)];
+        document.getElementById('quickActionResult').textContent = '👉 ' + action;
+      });
+
+      document.getElementById('rateInput').addEventListener('input', calcProcrastCost);
+      document.getElementById('procrastHoursInput').addEventListener('input', calcProcrastCost);
+
+      function calcProcrastCost() {
+        const rate = parseFloat(document.getElementById('rateInput').value) || 0;
+        const hours = parseFloat(document.getElementById('procrastHoursInput').value) || 0;
+        const result = document.getElementById('procrastResult');
+        if (!rate || !hours) { result.innerHTML = '<p style="color:var(--text-secondary);">Введите данные, чтобы увидеть расчёт</p>'; return; }
+        const perWeek = rate * hours;
+        const perMonth = perWeek * 4.33;
+        const perYear = perWeek * 52;
+        result.innerHTML = `
+          <p><strong>В неделю:</strong> ${perWeek.toLocaleString()} ₽</p>
+          <p><strong>В месяц:</strong> ${Math.round(perMonth).toLocaleString()} ₽</p>
+          <p><strong>В год:</strong> ${Math.round(perYear).toLocaleString()} ₽</p>
+          <p style="margin-top:8px;font-weight:600;color:var(--accent);">💪 Каждый час на счету! Начните с 5 минут прямо сейчас.</p>
+        `;
+        localStorage.setItem('procrast_calc', JSON.stringify({ rate, hours }));
+      }
+      const saved = JSON.parse(localStorage.getItem('procrast_calc'));
+      if (saved) { document.getElementById('rateInput').value = saved.rate; document.getElementById('procrastHoursInput').value = saved.hours; calcProcrastCost(); }
+
+      document.getElementById('breakTaskBtn').addEventListener('click', function() {
+        const task = document.getElementById('taskBreakInput').value.trim();
+        const result = document.getElementById('breakResult');
+        if (!task) { result.innerHTML = '<p style="color:var(--danger);">Введите задачу</p>'; return; }
+        const steps = generateSteps(task);
+        result.innerHTML = `<p style="font-weight:600;margin-bottom:8px;">✅ Микрошаги для: ${task}</p>
+          <ol style="padding-left:20px;color:var(--text-secondary);">${steps.map(s => `<li style="margin-bottom:4px;">${s}</li>`).join('')}</ol>`;
+      });
+
+      function generateSteps(task) {
+        const templates = [
+          ['Создайте файл/документ с названием', 'Напишите первые 3 пункта', 'Установите таймер на 15 минут для работы'],
+          ['Откройте программу/инструмент', 'Сделайте набросок структуры', 'Найдите 1-2 примера для вдохновения'],
+          ['Запишите цель задачи', 'Определите критерии готовности', 'Сделайте первый шаг прямо сейчас'],
+        ];
+        return templates[Math.floor(Math.random() * templates.length)];
+      }
+
+      document.getElementById('downloadChecklistBtn').addEventListener('click', function() {
+        const content = 'ЧЕК-ЛИСТ: ЭКСТРЕННАЯ ПОМОЩЬ ПРИ ПРОКРАСТИНАЦИИ\n\n1. Признайте: "Я сейчас прокрастинирую"\n2. Назовите эмоцию\n3. Таймер на 5 минут\n4. Смените позу\n5. Запишите первый шаг\n6. Пообещайте награду\n\nСкачано с сайта Продуктивность и планирование';
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'checklist_procrastinacia.txt'; a.click();
+        URL.revokeObjectURL(url);
+        showToast('📄 Чек-лист скачан!', 'success');
+      });
+
+      document.querySelectorAll('.procrast-check').forEach(cb => cb.addEventListener('change', function() {
+        const all = document.querySelectorAll('.procrast-check');
+        const checked = document.querySelectorAll('.procrast-check:checked');
+        localStorage.setItem('procrast_checklist', checked.length.toString());
+      }));
+    });
+  </script>
+</body>
+</html>

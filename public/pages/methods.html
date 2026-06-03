@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="База знаний по методам продуктивности: Эйзенхауэр, Pomodoro, GTD, SMART, OKR, Time Blocking и другие. Фильтр по времени и сфере.">
+  <title>Методы продуктивности — база знаний</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#6c63ff"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Продуктивность и планирование</a>
+      <button class="hamburger" id="hamburger">☰</button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods" class="active">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a><a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon">🔍</button>
+        <button class="icon-btn" id="themeToggle">🌙</button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none"><div class="user-avatar"></div><span class="user-name"></span><a href="/cabinet" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет">📋</a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Методы продуктивности</h1>
+    <p>База знаний: 15+ проверенных техник тайм-менеджмента, целеполагания и фокуса</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div style="margin-bottom:24px;">
+        <input type="text" class="form-input" id="methodSearch" placeholder="🔍 Поиск по методам..." style="max-width:400px;">
+      </div>
+      <div class="filters" id="methodFilters">
+        <button class="filter-btn active" data-filter="all">Все</button>
+        <button class="filter-btn" data-filter="fast">До 10 мин</button>
+        <button class="filter-btn" data-filter="medium">1 час</button>
+        <button class="filter-btn" data-filter="long">Неделя</button>
+        <button class="filter-btn" data-filter="time">Тайм-менеджмент</button>
+        <button class="filter-btn" data-filter="goals">Целеполагание</button>
+        <button class="filter-btn" data-filter="focus">Фокус</button>
+      </div>
+      <div class="grid grid-3" id="methodsGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-secondary);">
+    <div class="container">
+      <h2 class="section-title">Как выбрать метод под себя</h2>
+      <p class="section-subtitle">Ответьте на вопросы и найдите свою технику</p>
+      <div style="max-width:600px;margin:0 auto;">
+        <div class="accordion"><div class="accordion-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'−':'+'">У вас хаос в задачах? <span>+</span></div><div class="accordion-body"><p>Попробуйте <a href="#gtd">GTD</a> или <a href="#kanban">Kanban</a> для систематизации. Эти методы помогут разобрать завалы.</p></div></div>
+        <div class="accordion"><div class="accordion-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'−':'+'">Вам сложно выбрать, за что взяться? <span>+</span></div><div class="accordion-body"><p>Используйте <a href="#eisenhower">Матрицу Эйзенхауэра</a> или <a href="#ivylee">Метод Айви Ли</a> для расстановки приоритетов.</p></div></div>
+        <div class="accordion"><div class="accordion-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'−':'+'">Вы отвлекаетесь и теряете фокус? <span>+</span></div><div class="accordion-body"><p>Начните с <a href="#pomodoro">Pomodoro</a> или <a href="#deepwork">Deep Work</a> для тренировки концентрации.</p></div></div>
+        <div class="accordion"><div class="accordion-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'−':'+'">Не знаете, какие цели ставить? <span>+</span></div><div class="accordion-body"><p>Освойте <a href="#smart">SMART</a> и <a href="#okr">OKR</a> — лучшие системы целеполагания.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div><h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    const methods = [
+      { id: 'eisenhower', name: 'Матрица Эйзенхауэра', desc: 'Приоритизация задач по двум осям: срочность и важность. 4 квадранта для принятия решений.', stars: 3, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Выпишите все задачи</li><li>Оцените каждую по срочности и важности</li><li>Распределите по 4 квадрантам:<ul><li>Важно и срочно → делать немедленно</li><li>Важно, но не срочно → запланировать</li><li>Не важно, но срочно → делегировать</li><li>Не важно и не срочно → удалить</li></ul></li><li>Работайте с квадрантом 2 (важное несрочное)</li></ol><h4>Совет:</h4><p>80% времени уделяйте квадранту 2 — это зона стратегического роста.</p>' },
+      { id: 'pomodoro', name: 'Pomodoro', desc: 'Работа интервалами: 25 минут фокуса, 5 минут отдыха. После 4 циклов — большой перерыв.', stars: 4, tags: ['time', 'focus', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Выберите задачу</li><li>Установите таймер на 25 минут</li><li>Работайте без отвлечений</li><li>Отдых 5 минут</li><li>После 4 помодоро — отдых 15-30 минут</li></ol><h4>Вариант для прокрастинаторов:</h4><p>Начните с 5-минутных интервалов. Постепенно увеличивайте до 25 минут.</p>' },
+      { id: 'gtd', name: 'GTD (Getting Things Done)', desc: 'Система Дэвида Аллена: 5 этапов управления задачами от сбора до выполнения.', stars: 5, tags: ['time', 'long'], time: 'Неделя', details: '<h4>5 этапов GTD:</h4><ol><li><strong>Сбор</strong> — запишите всё, что занимает внимание</li><li><strong>Обработка</strong> — что это? Нужно ли действие?</li><li><strong>Организация</strong> — разложите по категориям: проекты, контексты, когда-нибудь</li><li><strong>Обзор</strong> — еженедельный обзор всех списков</li><li><strong>Выполнение</strong> — выбирайте задачи по контексту и энергии</li></ol><h4>Принцип:</h4><p>Мозг — для мыслей, а не для хранения задач. Выгрузите всё в систему.</p>' },
+      { id: 'timeblocking', name: 'Time Blocking', desc: 'Планирование дня блоками по 1-2 часа на конкретные типы задач. Борьба с переключением контекста.', stars: 4, tags: ['time', 'focus', 'medium'], time: '1 час', details: '<h4>Как применять:</h4><ol><li>Определите типы задач (глубокая работа, встречи, администрирование)</li><li>Назначьте каждому типу временной блок в расписании</li><li>Не смешивайте типы в одном блоке</li><li>Оставьте буферные блоки на непредвиденное</li></ol><h4>Пример:</h4><p>9:00-11:00 Глубокая работа<br>11:00-12:00 Встречи<br>14:00-15:00 Администрирование<br>15:00-16:00 Планирование</p>' },
+      { id: 'smart', name: 'SMART', desc: 'Критерии постановки целей: Specific, Measurable, Achievable, Relevant, Time-bound.', stars: 4, tags: ['goals', 'fast'], time: 'До 10 мин', details: '<h4>Расшифровка:</h4><ul><li><strong>S</strong> — Конкретная (что именно?)</li><li><strong>M</strong> — Измеримая (как узнать, что сделано?)</li><li><strong>A</strong> — Достижимая (реально?)</li><li><strong>R</strong> — Релевантная (зачем это?)</li><li><strong>T</strong> — Ограниченная по времени (когда?)</li></ul><h4>Пример:</h4><p>Вместо «Начать учить английский» → «Сдать IELTS на 7.0 до 31 декабря, занимаясь 3 раза в неделю по 1 часу».</p>' },
+      { id: 'clear', name: 'CLEAR', desc: 'Современная альтернатива SMART: Collaborative, Limited, Emotional, Appreciable, Refinable.', stars: 3, tags: ['goals', 'medium'], time: '1 час', details: '<h4>Расшифровка:</h4><ul><li><strong>C</strong> — Совместная (есть поддержка)</li><li><strong>L</strong> — Ограниченная (по времени/ресурсам)</li><li><strong>E</strong> — Эмоциональная (вдохновляет)</li><li><strong>A</strong> — Ощутимая (можно разбить на шаги)</li><li><strong>R</strong> — Улучшаемая (можно корректировать)</li></ul><p>Подходит для творческих и гибких проектов, где SMART слишком жёсткий.</p>' },
+      { id: 'okr', name: 'OKR', desc: 'Objectives and Key Results — метод целеполагания для амбициозных целей с измеримыми результатами.', stars: 4, tags: ['goals', 'medium'], time: '1 час', details: '<h4>Структура OKR:</h4><ul><li><strong>Objective</strong> — вдохновляющая цель (1-3 слова)</li><li><strong>Key Results</strong> — 3-5 измеримых результата</li></ul><h4>Пример:</h4><p>O: Стать продуктивнее в 2026<br>KR1: Внедрить 3 новых привычки<br>KR2: Прочитать 12 книг по продуктивности<br>KR3: Уменьшить прокрастинацию на 50%</p>' },
+      { id: 'pareto', name: '80/20 (Парето)', desc: '20% усилий дают 80% результата. Сфокусируйтесь на ключевых 20% задач.', stars: 4, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Выпишите все задачи/клиенты/проекты</li><li>Определите, какие 20% приносят 80% результата</li><li>Увеличьте время на эти 20%</li><li>Сократите или делегируйте остальные 80%</li></ol><h4>Примеры:</h4><p>80% продаж приносят 20% клиентов<br>80% проблем — из-за 20% причин<br>80% ценности книги — в 20% глав</p>' },
+      { id: 'eatfrog', name: 'Съешь лягушку', desc: 'Начинайте день с самой сложной и неприятной задачи. Всё остальное покажется лёгким.', stars: 3, tags: ['focus', 'fast'], time: 'До 10 мин', details: '<h4>Правило:</h4><p>«Если ваша задача — съесть лягушку, делайте это с утра. Если нужно съесть двух — начните с самой большой».</p><h4>Как применять:</h4><ol><li>Вечером определите «лягушку» на завтра</li><li>Утром, не проверяя почту и соцсети, сделайте её</li><li>После этого — награда (кофе, прогулка)</li></ol>' },
+      { id: '2minrule', name: 'Правило 2 минут', desc: 'Если задача выполняется за 2 минуты или быстрее — сделайте её сразу, не записывая.', stars: 3, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Принцип:</h4><p>Большинство мелких задач занимают больше времени на запись и обработку, чем на выполнение.</p><h4>Примеры:</h4><ul><li>Ответить на сообщение</li><li>Подписать документ</li><li>Положить вещь на место</li><li>Открыть файл</li></ul><p>Это правило — часть системы GTD.</p>' },
+      { id: 'habitstacking', name: 'Habit Stacking', desc: 'Привязка новой привычки к существующей: «После [триггер] я сделаю [новая привычка]».', stars: 4, tags: ['focus', 'fast'], time: 'До 10 мин', details: '<h4>Формула:</h4><p><strong>После/Перед [текущая привычка], я сделаю [новая привычка].</strong></p><h4>Примеры:</h4><ul><li>«После утреннего кофе я читаю 2 страницы»</li><li>«После чистки зубов я делаю 10 приседаний»</li><li>«Перед сном я записываю 3 задачи на завтра»</li></ul><p>Метод Джеймса Клира из книги «Атомные привычки».</p>' },
+      { id: 'weeklyreview', name: 'Weekly Review', desc: 'Еженедельный 30-минутный обзор: очистка списков, обновление целей, планирование недели.', stars: 4, tags: ['time', 'medium'], time: '1 час', details: '<h4>Процесс еженедельного обзора:</h4><ol><li>Соберите все записи и заметки</li><li>Очистите почту и мессенджеры</li><li>Обновите списки задач</li><li>Проверьте календарь на неделю</li><li>Оцените прогресс по целям</li><li>Запланируйте задачи на неделю</li></ol><p>Лучшее время: пятница после обеда или воскресенье вечером.</p>' },
+      { id: 'deepwork', name: 'Deep Work', desc: 'Режим глубокой работы без отвлечений. 2-4 часа в день для сложных интеллектуальных задач.', stars: 5, tags: ['focus', 'medium'], time: '1 час', details: '<h4>Правила глубокой работы:</h4><ol><li>Выделите 2-4 часа без уведомлений</li><li>Закройте все вкладки, кроме нужной</li><li>Используйте технику Pomodoro (50/10)</li><li>Тренируйте концентрацию постепенно</li></ol><h4>Методы:</h4><ul><li><strong>Монастырский</strong> — полная изоляция</li><li><strong>Бимодальный</strong> — несколько часов утром</li><li><strong>Ритмичный</strong> — ежедневно в одно время</li><li><strong>Журналистский</strong> — урывками между делами</li></ul><p>Метод Кэла Ньюпорта из книги «Deep Work».</p>' },
+      { id: 'ivylee', name: 'Метод Айви Ли', desc: 'Ежедневное планирование 6 главных задач. В конце дня выберите 6 задач на завтра по порядку.', stars: 3, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Каждый вечер записывайте 6 самых важных задач на завтра</li><li>Расположите их в порядке истинной важности</li><li>Начинайте день с задачи №1</li><li>Работайте над ней, пока не закончите</li><li>Переходите к следующей задаче</li><li>Невыполненные задачи перенесите на следующий день</li></ol><p>Метод повысил продуктивность Bethlehem Steel на 50% за 3 месяца.</p>' },
+      { id: 'kanban', name: 'Kanban', desc: 'Визуальное управление задачами через доску с колонками: Нужно сделать → В процессе → Готово.', stars: 4, tags: ['time', 'medium'], time: '1 час', details: '<h4>Базовая доска Kanban:</h4><ul><li><strong>Нужно сделать</strong> — все задачи в очереди</li><li><strong>В процессе</strong> — не более 3 задач одновременно</li><li><strong>Готово</strong> — выполненные задачи</li></ul><h4>Правила:</h4><ul><li>Ограничьте WIP (work in progress) — не берите больше 2-3 задач</li><li>Визуализируйте поток работы</li><li>Измеряйте время выполнения</li><li>Постоянно улучшайте процесс</li></ul><p>Инструменты: Trello, Notion, Jira или физическая доска.</p>' },
+    ];
+    const detailViews = {
+      eisenhower: '<h4>Как применять:</h4><ol><li>Выпишите все задачи</li><li>Оцените каждую по срочности и важности</li><li>Распределите по 4 квадрантам:<ul><li>Важно и срочно → делать немедленно</li><li>Важно, но не срочно → запланировать</li><li>Не важно, но срочно → делегировать</li><li>Не важно и не срочно → удалить</li></ul></li><li>Работайте с квадрантом 2 (важное несрочное)</li></ol><h4>Совет:</h4><p>80% времени уделяйте квадранту 2 — это зона стратегического роста.</p>',
+      pomodoro: '<h4>Как применять:</h4><ol><li>Выберите задачу</li><li>Установите таймер на 25 минут</li><li>Работайте без отвлечений</li><li>Отдых 5 минут</li><li>После 4 помодоро — отдых 15-30 минут</li></ol><h4>Вариант для прокрастинаторов:</h4><p>Начните с 5-минутных интервалов. Постепенно увеличивайте до 25 минут.</p>',
+      gtd: '<h4>5 этапов GTD:</h4><ol><li><strong>Сбор</strong> — запишите всё, что занимает внимание</li><li><strong>Обработка</strong> — что это? Нужно ли действие?</li><li><strong>Организация</strong> — разложите по категориям</li><li><strong>Обзор</strong> — еженедельный обзор всех списков</li><li><strong>Выполнение</strong> — выбирайте по контексту и энергии</li></ol><h4>Принцип:</h4><p>Мозг — для мыслей, а не для хранения задач.</p>',
+    };
+
+    function renderMethods(filter = 'all', search = '') {
+      const grid = document.getElementById('methodsGrid');
+      const filtered = methods.filter(m => {
+        const matchFilter = filter === 'all' || m.tags.includes(filter);
+        const matchSearch = !search || m.name.toLowerCase().includes(search) || m.desc.toLowerCase().includes(search);
+        return matchFilter && matchSearch;
+      });
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);padding:40px;">Методы не найдены</p>';
+        return;
+      }
+      grid.innerHTML = filtered.map(m => `
+        <div class="card">
+          <div class="stars">${'★'.repeat(m.stars)}${'☆'.repeat(5-m.stars)}</div>
+          <h3>${m.name}</h3>
+          <p>${m.desc}</p>
+          <div style="font-size:0.8rem;color:var(--text-secondary);margin:8px 0;">⏱ ${m.time}</div>
+          <div class="card-tags">${m.tags.map(t => `<span class="tag">${t === 'time' ? 'Тайм-менеджмент' : t === 'focus' ? 'Фокус' : t === 'goals' ? 'Целеполагание' : t === 'fast' ? 'Быстро' : t === 'medium' ? '1 час' : t === 'long' ? 'Неделя' : t}</span>`).join('')}</div>
+          <button class="btn btn-sm btn-primary" onclick="openMethodModal('${m.id}')">Подробнее</button>
+        </div>
+      `).join('');
+    }
+
+    function openMethodModal(id) {
+      const m = methods.find(x => x.id === id);
+      if (!m) return;
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay active';
+      overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+      overlay.innerHTML = `<div class="modal"><button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+        <h2>${m.name}</h2>
+        <div class="stars" style="margin-bottom:12px;">${'★'.repeat(m.stars)}${'☆'.repeat(5-m.stars)}</div>
+        <p style="color:var(--text-secondary);margin-bottom:16px;">${m.desc}</p>
+        <div>${m.details || detailViews[m.id] || 'Подробное описание готовится...'}</div>
+      </div>`;
+      document.body.appendChild(overlay);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+
+      renderMethods();
+
+      document.querySelectorAll('#methodFilters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('#methodFilters .filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          const search = document.getElementById('methodSearch').value.toLowerCase();
+          renderMethods(this.dataset.filter, search);
+        });
+      });
+
+      document.getElementById('methodSearch').addEventListener('input', function() {
+        const active = document.querySelector('#methodFilters .filter-btn.active');
+        renderMethods(active ? active.dataset.filter : 'all', this.value.toLowerCase());
+      });
+
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        setTimeout(() => {
+          const m = methods.find(x => x.id === hash);
+          if (m) openMethodModal(hash);
+        }, 300);
+      }
+    });
+  </script>
+</body>
+</html>

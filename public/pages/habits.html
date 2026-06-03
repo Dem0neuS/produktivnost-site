@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Как внедрить полезные привычки без силы воли: трекер, гайд за 30 дней, научная модель, 10 популярных привычек.">
+  <title>Привычки — система внедрения полезных привычек</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#6c63ff"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Продуктивность и планирование
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Меню">☰</button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a>
+        <a href="/habits" class="active">Привычки</a>
+        <a href="/antiprocrastination">Антипрокрастинация</a>
+        <a href="/methods">Методы</a>
+        <a href="/templates">Шаблоны</a>
+        <a href="/glossary">Глоссарий</a>
+        <a href="/tests">Тесты</a>
+        <a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon" aria-label="Поиск">🔍</button>
+        <button class="icon-btn" id="themeToggle" aria-label="Тема">🌙</button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none">
+          <div class="user-avatar"></div>
+          <span class="user-name"></span>
+          <a href="/cabinet" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет">📋</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Как автоматизировать полезные действия без силы воли</h1>
+    <p>Научный подход к внедрению привычек: от модели «Сигнал → Рутина → Награда» до пошагового плана на 30 дней</p>
+    <div style="margin-top:20px;">
+      <a href="/templates" class="btn btn-primary">Скачать трекер привычек (Excel/PDF)</a>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Научная основа привычек</h2>
+      <div class="grid grid-3" style="margin-top:24px;">
+        <div class="card" style="text-align:center;">
+          <div class="card-icon">🔔</div>
+          <h3>Сигнал (Cue)</h3>
+          <p>Триггер, который запускает автоматическое поведение. Это может быть время, место, эмоция или действие.</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="card-icon">🔄</div>
+          <h3>Рутина (Routine)</h3>
+          <p>Само действие — физическое, ментальное или эмоциональное. Чем проще рутина, тем выше шанс закрепления.</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="card-icon">🎁</div>
+          <h3>Награда (Reward)</h3>
+          <p>Положительное подкрепление, которое закрепляет привычку. Мозг запоминает: «Сигнал → Действие → Приятно».</p>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:20px;color:var(--text-secondary);font-size:0.9rem;">Модель Чарльза Дахигга из книги «Сила привычки» + закон малых шагов Джеймса Клира</p>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-secondary);">
+    <div class="container">
+      <h2 class="section-title">Как внедрить привычку за 30 дней</h2>
+      <p class="section-subtitle">Пошаговый гайд с чек-листами</p>
+      <div class="steps" style="max-width:600px;margin:0 auto;">
+        <div class="step">
+          <h3>Выберите одну привычку</h3>
+          <p style="color:var(--text-secondary);">Не пытайтесь внедрить всё сразу. Выберите одну маленькую привычку — например, «Читать 5 минут в день».</p>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="1"> Я выбрал(а) конкретную привычку</div>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="1"> Привычка занимает меньше 2 минут</div>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="1"> Я знаю, зачем мне эта привычка</div>
+        </div>
+        <div class="step">
+          <h3>Привяжите к существующей привычке</h3>
+          <p style="color:var(--text-secondary);">Используйте технику Habit Stacking: «После [текущая привычка] я сделаю [новая привычка]».</p>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="2"> Я определил(а) триггер (сигнал)</div>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="2"> Новая привычка привязана к существующей</div>
+        </div>
+        <div class="step">
+          <h3>Ведите отметки</h3>
+          <p style="color:var(--text-secondary);">Используйте трекер привычек ниже. Отмечайте выполнение каждый день. Визуализация прогресса закрепляет мотивацию.</p>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="3"> Я настроил(а) трекер</div>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="3"> Я отметил(а) выполнение сегодня</div>
+        </div>
+        <div class="step">
+          <h3>Не пропускайте два дня подряд</h3>
+          <p style="color:var(--text-secondary);">Один пропуск — нормально. Два пропуска подряд — сигнал пересмотреть подход. Снизьте планку или смените триггер.</p>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="4"> У меня нет двух пропусков подряд</div>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="4"> Я готов(а) снизить планку, если сложно</div>
+          <div class="checklist-item"><input type="checkbox" class="step-check" data-step="4"> Я поощрил(а) себя за прогресс</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px;">
+        <div id="stepProgress" style="font-weight:700;color:var(--accent);margin-bottom:8px;">Прогресс: 0/10</div>
+        <div class="progress-bar" style="max-width:400px;margin:0 auto;"><div class="progress-fill" id="stepProgressFill" style="width:0%;"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Трекер привычек</h2>
+      <p class="section-subtitle">Добавьте привычку, выберите дни и отмечайте выполнение</p>
+      <div class="widget" style="max-width:700px;margin:0 auto;">
+        <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;">
+          <input type="text" id="habitInput" class="form-input" placeholder="Название привычки..." style="flex:1;min-width:150px;">
+          <button class="btn btn-primary" id="addHabitBtn">Добавить</button>
+        </div>
+        <div id="habitList"></div>
+        <div id="habitProgress" style="text-align:center;margin-top:16px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-sm);">
+          <div style="font-weight:700;color:var(--accent);">Общий прогресс за неделю</div>
+          <div class="progress-bar" style="max-width:400px;margin:8px auto;"><div class="progress-fill" id="habitProgressFill" style="width:0%;"></div></div>
+          <div id="habitProgressText" style="font-size:0.85rem;color:var(--text-secondary);">0% выполнено</div>
+        </div>
+        <div style="text-align:center;margin-top:12px;">
+          <button class="btn btn-sm btn-outline" id="resetHabitsBtn">Сбросить неделю</button>
+          <button class="btn btn-sm btn-outline" id="syncHabitsBtn" style="display:none;">Синхронизировать</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-secondary);">
+    <div class="container">
+      <h2 class="section-title">10 популярных привычек для старта</h2>
+      <p class="section-subtitle">Начните с малого — каждая привычка занимает не более 15 минут</p>
+      <div class="grid grid-2">
+        <div class="card"><div class="card-icon">🌅</div><h3>Утренняя рутина (15 мин)</h3><p>Проснувшись: вода, лёгкая разминка, планирование дня. Заряжает энергией и задаёт тон.</p></div>
+        <div class="card"><div class="card-icon">📝</div><h3>Планирование дня с вечера</h3><p>За 5 минут перед сном запишите 3 главные задачи на завтра. Утро начнётся с ясности.</p></div>
+        <div class="card"><div class="card-icon">🔄</div><h3>Ежедневный обзор (Daily Review)</h3><p>5 минут вечером: что сделано, что можно улучшить, планы на завтра.</p></div>
+        <div class="card"><div class="card-icon">🏋️</div><h3>Зарядка 5 минут</h3><p>Короткая разминка: растяжка, 20 приседаний, планка 30 сек. Достаточно для бодрости.</p></div>
+        <div class="card"><div class="card-icon">📖</div><h3>Чтение 10 страниц в день</h3><p>10 страниц = ~1 книга в месяц. Через год это 12 книг. Начните сегодня.</p></div>
+        <div class="card"><div class="card-icon">🙏</div><h3>Список благодарностей</h3><p>Запишите 3 вещи, за которые вы благодарны. Повышает осознанность и улучшает настроение.</p></div>
+        <div class="card"><div class="card-icon">💧</div><h3>Стакан воды после пробуждения</h3><p>Запускает метаболизм, восполняет жидкость после сна. Минимальное усилие — максимум пользы.</p></div>
+        <div class="card"><div class="card-icon">🧹</div><h3>5 минут уборки</h3><p>Таймер на 5 минут: уберите на столе, сложите вещи. Чистота снижает тревожность.</p></div>
+        <div class="card"><div class="card-icon">📵</div><h3>Экранное время: 30 минут без телефона</h3><p>Один блок в день без уведомлений. Повышает концентрацию и снижает дофаминовую зависимость.</p></div>
+        <div class="card"><div class="card-icon">🌿</div><h3>Минута осознанности</h3><p>60 секунд глубокого дыхания. Снижает стресс, улучшает фокус. Можно делать в любое время.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Сравнение приложений для привычек</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Приложение</th><th>Платформы</th><th>Геймификация</th><th>Статистика</th><th>Бесплатно</th></tr></thead>
+          <tbody>
+            <tr><td>Habitify</td><td>iOS, macOS</td><td>⭐</td><td>⭐ ⭐ ⭐</td><td>Частично</td></tr>
+            <tr><td>Loop Habit Tracker</td><td>Android</td><td>⭐</td><td>⭐ ⭐ ⭐ ⭐</td><td>Да</td></tr>
+            <tr><td>Habitica</td><td>iOS, Android, Web</td><td>⭐ ⭐ ⭐ ⭐ ⭐</td><td>⭐ ⭐ ⭐</td><td>Да</td></tr>
+            <tr><td>Everyday</td><td>iOS</td><td>⭐ ⭐</td><td>⭐ ⭐ ⭐</td><td>Частично</td></tr>
+            <tr><td>Streaks</td><td>iOS</td><td>⭐ ⭐ ⭐</td><td>⭐ ⭐ ⭐</td><td>Нет</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-secondary);">
+    <div class="container">
+      <h2 class="section-title">Как избавиться от вредной привычки</h2>
+      <div class="split-layout">
+        <div>
+          <div class="card" style="height:100%;">
+            <div class="card-icon">🔄</div>
+            <h3>Метод замены</h4>
+            <p>Не удаляйте привычку — замените её на полезную. Вредная привычка удовлетворяет потребность. Найдите здоровый способ получить то же самое.</p>
+            <p style="margin-top:8px;color:var(--text-secondary);"><strong>Пример:</strong> Вместо листания соцсетей — 2 минуты чтения статьи.</p>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="height:100%;">
+            <div class="card-icon">🚧</div>
+            <h3>Создание барьеров</h4>
+            <p>Увеличьте трение для вредной привычки. Уберите телефон из спальни, удалите приложения, заблокируйте сайты.</p>
+            <p style="margin-top:8px;color:var(--text-secondary);"><strong>Пример:</strong> Оставьте телефон в другой комнате во время работы.</p>
+          </div>
+        </div>
+        <div style="grid-column:1/-1;">
+          <div class="card">
+            <div class="card-icon">🎯</div>
+            <h3>Техника «Если — то» (Implementation Intention)</h4>
+            <p>Сформулируйте план: «Если [триггер], то я сделаю [полезное действие]». Это снижает силу автоматизма вредной привычки и создаёт новый паттерн.</p>
+            <p style="margin-top:8px;color:var(--text-secondary);"><strong>Пример:</strong> «Если я чувствую желание проверить соцсети, то я делаю 5 глубоких вдохов».</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div>        <h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..." style="width:100%;"><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+
+      const dayNames = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+      let habits = JSON.parse(localStorage.getItem('habits') || '[]');
+      const habitInput = document.getElementById('habitInput');
+      const addBtn = document.getElementById('addHabitBtn');
+      const habitList = document.getElementById('habitList');
+      const progressFill = document.getElementById('habitProgressFill');
+      const progressText = document.getElementById('habitProgressText');
+
+      function getToday() { return new Date().getDay() === 0 ? 6 : new Date().getDay() - 1; }
+
+      function saveHabits() {
+        localStorage.setItem('habits', JSON.stringify(habits));
+        renderHabits();
+        updateProgress();
+      }
+
+      function renderHabits() {
+        habitList.innerHTML = habits.map((h, i) => {
+          const today = getToday();
+          return `<div class="habit-item">
+            <span class="habit-name">${h.name}</span>
+            <div class="habit-days">${dayNames.map((d, di) =>
+              `<div class="day-checkbox${h.days.includes(di) && h.completed && h.completed[getWeekKey()] && h.completed[getWeekKey()].includes(di) ? ' checked' : ''}" data-habit="${i}" data-day="${di}">${d}</div>`
+            ).join('')}</div>
+            <button class="icon-btn remove-habit" data-habit="${i}" style="color:var(--danger);">&times;</button>
+          </div>`;
+        }).join('');
+
+        habitList.querySelectorAll('.day-checkbox').forEach(el => {
+          el.addEventListener('click', function() {
+            const hi = parseInt(this.dataset.habit);
+            const day = parseInt(this.dataset.day);
+            const h = habits[hi];
+            const weekKey = getWeekKey();
+            if (!h.completed) h.completed = {};
+            if (!h.completed[weekKey]) h.completed[weekKey] = [];
+            const idx = h.completed[weekKey].indexOf(day);
+            if (idx > -1) h.completed[weekKey].splice(idx, 1);
+            else h.completed[weekKey].push(day);
+            saveHabits();
+            if (currentUser) {
+              fetch('/api/habits/' + h.serverId, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed: h.completed }), credentials: 'same-origin'
+              }).catch(() => {});
+            }
+          });
+        });
+
+        habitList.querySelectorAll('.remove-habit').forEach(el => {
+          el.addEventListener('click', function() {
+            const hi = parseInt(this.dataset.habit);
+            const h = habits[hi];
+            habits.splice(hi, 1);
+            saveHabits();
+            if (currentUser && h.serverId) {
+              fetch('/api/habits/' + h.serverId, { method: 'DELETE', credentials: 'same-origin' }).catch(() => {});
+            }
+          });
+        });
+      }
+
+      function getWeekKey() {
+        const d = new Date(); d.setDate(d.getDate() - d.getDay());
+        return d.toISOString().split('T')[0];
+      }
+
+      function updateProgress() {
+        const weekKey = getWeekKey();
+        let total = 0, done = 0;
+        habits.forEach(h => {
+          if (!h.days || h.days.length === 0) return;
+          const weekDays = h.days.filter(d => d <= getToday());
+          weekDays.forEach(d => {
+            total++;
+            if (h.completed && h.completed[weekKey] && h.completed[weekKey].includes(d)) done++;
+          });
+        });
+        const pct = total === 0 ? 0 : Math.round(done / total * 100);
+        progressFill.style.width = pct + '%';
+        progressText.textContent = `${done}/${total} выполнено (${pct}%)`;
+      }
+
+      addBtn.addEventListener('click', function() {
+        const name = habitInput.value.trim();
+        if (!name) return;
+        habits.push({ name, days: [0,1,2,3,4,5,6], completed: {}, serverId: null });
+        habitInput.value = '';
+        saveHabits();
+        if (currentUser) {
+          fetch('/api/habits', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, days: [0,1,2,3,4,5,6], completed: {} }), credentials: 'same-origin'
+          }).then(r => r.json()).then(data => {
+            if (data.habit) {
+              habits[habits.length - 1].serverId = data.habit.id;
+              localStorage.setItem('habits', JSON.stringify(habits));
+            }
+          }).catch(() => {});
+        }
+      });
+
+      habitInput.addEventListener('keypress', e => { if (e.key === 'Enter') addBtn.click(); });
+
+      document.getElementById('resetHabitsBtn').addEventListener('click', function() {
+        habits.forEach(h => { h.completed = {}; });
+        saveHabits();
+        showToast('🔄 Неделя сброшена', 'info');
+      });
+
+      document.getElementById('syncHabitsBtn').addEventListener('click', function() {
+        if (!currentUser) { showToast('Войдите для синхронизации', 'info'); return; }
+        fetch('/api/habits/sync', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ habits }), credentials: 'same-origin'
+        }).then(r => r.json()).then(data => {
+          if (data.habits) {
+            data.habits.forEach((sh, i) => { if (habits[i]) habits[i].serverId = sh.id; });
+            localStorage.setItem('habits', JSON.stringify(habits));
+            showToast('✅ Привычки синхронизированы', 'success');
+          }
+        }).catch(() => showToast('Ошибка синхронизации', 'error'));
+      });
+
+      window.addEventListener('synced', function() {
+        try {
+          const synced = JSON.parse(localStorage.getItem('synced_habits') || '[]');
+          if (synced.length > 0 && habits.length === 0) {
+            habits = synced.map(h => ({ name: h.name, days: h.days || [], completed: h.completed || {}, serverId: h.id }));
+            saveHabits();
+          }
+          document.getElementById('syncHabitsBtn').style.display = currentUser ? 'inline-flex' : 'none';
+        } catch(e) {}
+      });
+
+      renderHabits();
+      updateProgress();
+
+      // Step checklist
+      document.querySelectorAll('.step-check').forEach(cb => {
+        cb.addEventListener('change', function() {
+          const all = document.querySelectorAll('.step-check');
+          const checked = document.querySelectorAll('.step-check:checked');
+          const total = all.length;
+          const done = checked.length;
+          document.getElementById('stepProgress').textContent = `Прогресс: ${done}/${total}`;
+          document.getElementById('stepProgressFill').style.width = (done / total * 100) + '%';
+          localStorage.setItem('habit_steps', done.toString());
+        });
+        const done = parseInt(localStorage.getItem('habit_steps') || '0');
+        if (done > 0) { /* just show saved */ }
+      });
+    });
+  </script>
+</body>
+</html>
