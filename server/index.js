@@ -16,7 +16,12 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const sessionStore = new SequelizeStore({ db: sequelize });
+let sessionStore;
+try {
+  sessionStore = new SequelizeStore({ db: sequelize });
+} catch (e) {
+  sessionStore = new session.MemoryStore();
+}
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'produktivnost-secret',
@@ -53,7 +58,14 @@ pages.forEach(page => {
 
 async function start() {
   await initDb();
-  await sessionStore.sync();
+  if (sessionStore.sync) {
+    try {
+      await sessionStore.sync();
+      console.log('Session store synced');
+    } catch (e) {
+      console.log('Session store sync failed, using memory fallback');
+    }
+  }
   app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
   });

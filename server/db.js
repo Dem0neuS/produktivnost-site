@@ -1,27 +1,47 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const isRailway = !!process.env.DATABASE_URL;
-
-const sequelize = isRailway
-  ? new Sequelize(process.env.DATABASE_URL, {
+function getSequelize() {
+  if (process.env.DATABASE_URL) {
+    return new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       dialectOptions: { ssl: { rejectUnauthorized: false } },
       logging: false,
       pool: { max: 5, min: 0, acquire: 30000, idle: 10000 }
-    })
-  : new Sequelize(
-      process.env.DB_NAME || 'produktivnost',
-      process.env.DB_USER || 'postgres',
-      process.env.DB_PASSWORD || 'postgres',
+    });
+  }
+
+  if (process.env.PGHOST) {
+    return new Sequelize(
+      process.env.PGDATABASE || 'railway',
+      process.env.PGUSER || 'postgres',
+      process.env.PGPASSWORD || '',
       {
-        host: process.env.DB_HOST || 'localhost',
-        port: process.env.DB_PORT || 5432,
+        host: process.env.PGHOST,
+        port: parseInt(process.env.PGPORT || '5432'),
         dialect: 'postgres',
+        dialectOptions: { ssl: { rejectUnauthorized: false } },
         logging: false,
         pool: { max: 5, min: 0, acquire: 30000, idle: 10000 }
       }
     );
+  }
+
+  return new Sequelize(
+    process.env.DB_NAME || 'produktivnost',
+    process.env.DB_USER || 'postgres',
+    process.env.DB_PASSWORD || 'postgres',
+    {
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      dialect: 'postgres',
+      logging: false,
+      pool: { max: 5, min: 0, acquire: 30000, idle: 10000 }
+    }
+  );
+}
+
+const sequelize = getSequelize();
 
 const User = require('./models/User')(sequelize);
 const Habit = require('./models/Habit')(sequelize);
