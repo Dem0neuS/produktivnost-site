@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // Must create store AFTER Session model is defined in db.js
 let sessionStore;
 try {
-  sessionStore = new SequelizeStore({ db: sequelize, table: 'Session' });
+  sessionStore = new SequelizeStore({ db: sequelize, table: 'Sessions' });
 } catch (e) {
   console.error('Session store init error:', e.message);
   sessionStore = new session.MemoryStore();

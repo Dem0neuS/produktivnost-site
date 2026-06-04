@@ -68,7 +68,7 @@ const sessionAttrs = {
   expires: Sequelize.DATE,
   data: Sequelize.TEXT
 };
-const Session = sequelize.define('Session', sessionAttrs, { tableName: 'Sessions' });
+const Session = sequelize.define('Session', sessionAttrs, { tableName: 'Sessions', timestamps: false });
 
 // Трекер продуктивности
 User.hasMany(Habit, { foreignKey: 'userId' });
