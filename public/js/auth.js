@@ -35,6 +35,10 @@ function initAuth() {
     document.getElementById(tab.dataset.form)?.classList.add('active');
   }));
 
+  // novalidate — браузерная валидация ломает submit из-за скрытых required-полей восстановления пароля
+  if (loginForm) loginForm.setAttribute('novalidate', '');
+  if (registerForm) registerForm.setAttribute('novalidate', '');
+
   initForgotPassword(loginForm);
 
   loginForm?.addEventListener('submit', async (e) => {
