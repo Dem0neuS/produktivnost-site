@@ -153,4 +153,34 @@ router.post('/lessons/:id/uncomplete', async (req, res) => {
   }
 });
 
+// Миграция данных курсов (заполнение новых полей для существующих записей)
+router.post('/migrate', async (req, res) => {
+  try {
+    const courseData = {
+      1: { icon: '🚀', tag: 'beginner', description: 'Собрать работающую систему из инструментов сайта: Эйзенхауэр + Pomodoro + Time Blocking + GTD.', audience: 'Новички и те, кто пробовал всё, но ничего не прижилось', result: 'PDF «Мой спокойный день» + снижение тревожности', isFree: true },
+      2: { icon: '🎓', tag: 'student', description: 'Перестать учиться ночью и начать успевать отдыхать.', audience: 'Студенты', result: 'Готовый план на семестр', isFree: true },
+      3: { icon: '👨‍👩‍👧‍👦', tag: 'parent', description: 'Совмещать быт, ребёнка и собственные проекты без чувства вины.', audience: 'Родители в декрете', result: 'Система покажет — вы сделали главное', isFree: true },
+      4: { icon: '💼', tag: 'work', description: 'Полный GTD, адаптированный под бережное отношение к себе.', audience: 'Работающие и фрилансеры', result: 'Mind like water — спокойный ум', isFree: true },
+      5: { icon: '👥', tag: 'work', description: 'Единая логика планирования для семьи или команды.', audience: 'Пары, родители + дети, небольшие команды', result: 'Меньше обид и ссор', isFree: true }
+    };
+    const results = { courses: 0, lessons: 0 };
+    for (const [id, data] of Object.entries(courseData)) {
+      const course = await Course.findByPk(parseInt(id));
+      if (course) { await course.update(data); results.courses++; }
+    }
+    const lessons = await Lesson.findAll();
+    for (const lesson of lessons) {
+      if (!lesson.content || lesson.content === '') {
+        lesson.content = '<p>Содержание урока пока не загружено.</p>';
+        await lesson.save();
+        results.lessons++;
+      }
+    }
+    res.json({ success: true, migrated: results });
+  } catch (e) {
+    console.error('Migration error:', e);
+    res.status(500).json({ error: 'Ошибка миграции' });
+  }
+});
+
 module.exports = router;

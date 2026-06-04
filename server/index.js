@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const path = require('path');
-const { sequelize, initDb } = require('./db');
+const { sequelize, initDb, Course, Lesson } = require('./db');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const cabinetRoutes = require('./routes/cabinet');
@@ -73,8 +73,33 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
 });
 
+async function migrateCourses() {
+  try {
+    const courseMeta = [
+      { id: 1, icon: '🚀', tag: 'beginner', description: 'Собрать работающую систему из инструментов сайта: Эйзенхауэр + Pomodoro + Time Blocking + GTD.', audience: 'Новички и те, кто пробовал всё, но ничего не прижилось', result: 'PDF «Мой спокойный день» + снижение тревожности', isFree: true },
+      { id: 2, icon: '🎓', tag: 'student', description: 'Перестать учиться ночью и начать успевать отдыхать.', audience: 'Студенты', result: 'Готовый план на семестр', isFree: true },
+      { id: 3, icon: '👨‍👩‍👧‍👦', tag: 'parent', description: 'Совмещать быт, ребёнка и собственные проекты без чувства вины.', audience: 'Родители в декрете', result: 'Система покажет — вы сделали главное', isFree: true },
+      { id: 4, icon: '💼', tag: 'work', description: 'Полный GTD, адаптированный под бережное отношение к себе.', audience: 'Работающие и фрилансеры', result: 'Mind like water — спокойный ум', isFree: true },
+      { id: 5, icon: '👥', tag: 'work', description: 'Единая логика планирования для семьи или команды.', audience: 'Пары, родители + дети, небольшие команды', result: 'Меньше обид и ссор', isFree: true }
+    ];
+    let count = 0;
+    for (const data of courseMeta) {
+      const c = await Course.findByPk(data.id);
+      if (c && (!c.icon || c.icon === '📚')) { await c.update(data); count++; }
+    }
+    if (count > 0) console.log(`Migrated ${count} courses`);
+    const lessons = await Lesson.findAll({ where: { content: '' } });
+    if (lessons.length > 0) {
+      const defaultContent = '<p>Содержание урока пока не загружено. Пожалуйста, обновите страницу позже.</p>';
+      for (const l of lessons) { l.content = defaultContent; await l.save(); }
+      console.log(`Migrated ${lessons.length} lessons`);
+    }
+  } catch (e) { console.error('Auto-migration error:', e.message); }
+}
+
 async function start() {
   await initDb();
+  await migrateCourses();
   if (sessionStore.sync) {
     try {
       await sessionStore.sync();
