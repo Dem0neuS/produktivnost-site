@@ -90,7 +90,12 @@ router.post('/:id/enroll', async (req, res) => {
     const existing = await UserCourse.findOne({
       where: { userId: uid, courseId: course.id }
     });
-    if (existing) return res.json({ success: true, enrollment: existing });
+    if (existing) {
+      if (existing.status === 'completed') {
+        return res.status(400).json({ error: 'Курс уже пройден' });
+      }
+      return res.json({ success: true, enrollment: existing });
+    }
 
     const enrollment = await UserCourse.create({
       userId: uid,
@@ -108,7 +113,7 @@ router.post('/lessons/:id/complete', async (req, res) => {
   const uid = await getUserId(req);
   if (!uid) return res.status(401).json({ error: 'Не авторизован' });
   try {
-    const lesson = await Lesson.findByPk(req.params.id, { include: [Course] });
+    const lesson = await Lesson.findByPk(req.params.id);
     if (!lesson) return res.status(404).json({ error: 'Урок не найден' });
 
     const uc = await UserCourse.findOne({
@@ -116,11 +121,10 @@ router.post('/lessons/:id/complete', async (req, res) => {
     });
     if (!uc) return res.status(400).json({ error: 'Вы не записаны на курс' });
 
-    const allLessons = await Lesson.count({ where: { courseId: lesson.courseId, statusId: { [require('sequelize').Op.ne]: 2 } }});
-    const total = allLessons || 1;
+    const total = await Lesson.count({ where: { courseId: lesson.courseId } }) || 1;
 
     const completed = uc.completedLessons || [];
-    const arr = Array.isArray(completed) ? completed : [];
+    const arr = Array.isArray(completed) ? [...completed] : [];
     if (!arr.includes(lesson.id)) arr.push(lesson.id);
     const progress = Math.min(100, Math.round((arr.length / total) * 100));
     const status = progress >= 100 ? 'completed' : 'in_progress';
@@ -144,7 +148,7 @@ router.post('/lessons/:id/uncomplete', async (req, res) => {
   const uid = await getUserId(req);
   if (!uid) return res.status(401).json({ error: 'Не авторизован' });
   try {
-    const lesson = await Lesson.findByPk(req.params.id, { include: [Course] });
+    const lesson = await Lesson.findByPk(req.params.id);
     if (!lesson) return res.status(404).json({ error: 'Урок не найден' });
 
     const uc = await UserCourse.findOne({
@@ -152,11 +156,10 @@ router.post('/lessons/:id/uncomplete', async (req, res) => {
     });
     if (!uc) return res.status(400).json({ error: 'Вы не записаны на курс' });
 
-    const allLessons = await Lesson.count({ where: { courseId: lesson.courseId, statusId: { [require('sequelize').Op.ne]: 2 } }});
-    const total = allLessons || 1;
+    const total = await Lesson.count({ where: { courseId: lesson.courseId } }) || 1;
 
     const completed = uc.completedLessons || [];
-    const arr = Array.isArray(completed) ? completed : [];
+    const arr = Array.isArray(completed) ? [...completed] : [];
     const idx = arr.indexOf(lesson.id);
     if (idx !== -1) arr.splice(idx, 1);
     const progress = Math.min(100, Math.round((arr.length / total) * 100));

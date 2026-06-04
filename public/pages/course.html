@@ -111,7 +111,11 @@
 
       const ea = document.getElementById('enrollArea');
       if (enrolled) {
-        ea.innerHTML = '<span style="color:var(--success);font-weight:600;">✓ Вы записаны на курс</span>';
+        if (progress >= 100) {
+          ea.innerHTML = '<span style="color:var(--success,#2ecc71);font-weight:600;">🎉 Курс успешно пройден!</span>';
+        } else {
+          ea.innerHTML = '<span style="color:var(--success);font-weight:600;">✓ Вы записаны на курс</span>';
+        }
       } else if (currentUser) {
         ea.innerHTML = '<button class="btn btn-primary" onclick="enrollCourse()">Записаться на курс</button>';
       } else {
@@ -137,8 +141,14 @@
       document.getElementById('lessonModalTitle').textContent = m.data;
       document.getElementById('lessonModalBody').innerHTML = m.content || '<p>Нет содержимого</p>';
       const done = completedLessons.includes(id);
+      const total = (currentCourse.Lessons || []).length;
+      const isCourseCompleted = total > 0 && completedLessons.length >= total;
       const btn = document.getElementById('completeLessonBtn');
-      if (done) {
+      if (isCourseCompleted) {
+        btn.textContent = '🎉 Курс пройден!';
+        btn.onclick = null;
+        btn.disabled = true;
+      } else if (done) {
         btn.textContent = 'Снять отметку';
         btn.onclick = uncompleteLesson;
         btn.disabled = false;
