@@ -80,8 +80,8 @@
         const completed = enrolled && enrollment.progress >= 100;
         return `
         <div class="course-card" onclick="location.href='/course?id=${c.id}'" style="position:relative;">
-          ${completed ? '<span style="position:absolute;top:8px;right:8px;background:var(--success,#2ecc71);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:999px;z-index:1;">✅ Завершён</span>' : ''}
-          ${enrolled && !completed ? '<span style="position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:999px;z-index:1;">📖 В процессе</span>' : ''}
+          ${completed ? '<span style="position:absolute;bottom:10px;right:12px;background:var(--success,#2ecc71);color:#fff;font-size:0.7rem;padding:4px 10px;border-radius:999px;z-index:1;font-weight:600;letter-spacing:0.3px;">✅ Завершён</span>' : ''}
+          ${enrolled && !completed ? '<span style="position:absolute;bottom:10px;right:12px;background:var(--accent);color:#fff;font-size:0.7rem;padding:4px 10px;border-radius:999px;z-index:1;font-weight:600;letter-spacing:0.3px;">📖 В процессе</span>' : ''}
           <div style="font-size:2rem;margin-bottom:8px;">${c.icon}</div>
           <h3 style="font-size:1.1rem;margin:0 0 4px;">${c.name}</h3>
           ${c.isFree ? '<span style="font-size:0.75rem;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">Бесплатно</span>' : ''}
