@@ -214,19 +214,14 @@
 
     document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
-      // ждём загрузку currentUser из auth.js
-      setTimeout(async () => {
-        await loadEnrollment();
-        renderCourse();
-      }, 300);
-    });
-
-    // Перехватываем установку currentUser из auth.js
-    const origSet = Object.getOwnPropertyDescriptor(window, 'currentUser');
-    Object.defineProperty(window, 'currentUser', {
-      get() { return currentUser; },
-      set(v) { currentUser = v; if (v) { loadEnrollment().then(renderCourse); } },
-      configurable: true
+      // проверяем авторизацию напрямую (не полагаясь на auth.js)
+      try {
+        const me = await fetch('/api/auth/me', { credentials: 'same-origin' });
+        const data = await me.json();
+        currentUser = data.user;
+      } catch(e) {}
+      await loadEnrollment();
+      renderCourse();
     });
   </script>
 </body>
