@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Страница не найдена — Продуктивность и планирование">
+  <title>404 — Страница не найдена | Продуктивность и планирование</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .error-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .error-page h1 {
+      font-size: 6rem;
+      font-weight: 900;
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .error-page h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .error-page p {
+      color: var(--text-secondary);
+      max-width: 440px;
+      margin-bottom: 28px;
+    }
+    .error-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .error-svg { margin-bottom: 16px; opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <div class="error-page">
+    <div class="error-svg">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+        <path d="M30 50 L50 30 M50 50 L30 30" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1>404</h1>
+    <h2>Страница не найдена</h2>
+    <p>Кажется, вы забрели не туда. Так бывает, когда планируешь слишком много дел.</p>
+    <div class="error-actions">
+      <a href="/" class="btn btn-primary">На главную</a>
+      <a href="/methods" class="btn btn-outline">Все методы</a>
+    </div>
+  </div>
+  <script src="/js/theme.js"></script>
+</body>
+</html>

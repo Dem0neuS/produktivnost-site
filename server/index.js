@@ -56,6 +56,10 @@ pages.forEach(page => {
   app.get(route, (req, res) => res.sendFile(filePath));
 });
 
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
+});
+
 async function start() {
   await initDb();
   if (sessionStore.sync) {
