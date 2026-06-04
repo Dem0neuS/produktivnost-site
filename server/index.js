@@ -41,6 +41,7 @@ app.use('/css', express.static(path.join(__dirname, '..', 'public', 'css')));
 app.use('/js', express.static(path.join(__dirname, '..', 'public', 'js')));
 app.use('/assets', express.static(path.join(__dirname, '..', 'public', 'assets')));
 app.use('/pages', express.static(path.join(__dirname, '..', 'public', 'pages')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api', apiRoutes);
