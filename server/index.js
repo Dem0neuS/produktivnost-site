@@ -3,7 +3,7 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const path = require('path');
 const { Op } = require('sequelize');
-const { sequelize, initDb, Course, Lesson } = require('./db');
+const { sequelize, initDb, Role, User, Course, Lesson } = require('./db');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const cabinetRoutes = require('./routes/cabinet');
@@ -74,6 +74,18 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
 });
 
+async function migrateRoles() {
+  try {
+    const count = await User.count({ where: { roleId: null } });
+    if (count > 0) {
+      const userRole = await Role.findOne({ where: { name: 'Пользователь' } });
+      const roleId = userRole ? userRole.id : 2;
+      await User.update({ roleId }, { where: { roleId: null } });
+      console.log(`Assigned role 'Пользователь' to ${count} existing users`);
+    }
+  } catch (e) { console.log('Role migration:', e.message); }
+}
+
 async function migrateCourses() {
   try {
     const courseMeta = [
@@ -122,6 +134,7 @@ async function migrateCourses() {
 
 async function start() {
   await initDb();
+  await migrateRoles();
   await migrateCourses();
   if (sessionStore.sync) {
     try {
