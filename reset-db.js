@@ -28,10 +28,10 @@ require('dotenv').config();
       'pomodoro_sessions',
       'habits',
       'users',
-      'sessions',
+      'Sessions',
 
       // Старые таблицы (если остались от предыдущей версии)
-      'Sessions',
+      'sessions',
       'Users',
       'Habits',
       'PomodoroSessions',

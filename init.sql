@@ -2,14 +2,8 @@
 -- 1. СЛУЖЕБНЫЕ ТАБЛИЦЫ, СПРАВОЧНИКИ И НЕЗАВИСИМЫЕ СУЩНОСТИ
 -- =====================================================================
 
--- Сессии авторизации (создаётся connect-session-sequelize)
-CREATE TABLE IF NOT EXISTS sessions (
-    sid VARCHAR PRIMARY KEY,
-    expires TIMESTAMPTZ NOT NULL,
-    data TEXT,
-    "createdAt" TIMESTAMPTZ NOT NULL,
-    "updatedAt" TIMESTAMPTZ NOT NULL
-);
+-- Сессии авторизации (создаётся connect-session-sequelize автоматически)
+-- Таблица: "Sessions" (modelKey: 'Session', tableName: 'Sessions' по умолчанию)
 
 -- Подписки (из ER-диаграммы: справочник наименований подписок)
 CREATE TABLE IF NOT EXISTS subscriptions (
