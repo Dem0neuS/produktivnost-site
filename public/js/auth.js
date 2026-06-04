@@ -58,7 +58,6 @@ function initAuth() {
       setLoading(btn, false);
       if (!res.ok) { errorEl.textContent = data.error; return; }
       currentUser = data.user;
-      window.__currentUser = data.user;
       closeModal('authModal');
       updateUserUI();
       showToast('Вы вошли как ' + data.user.name, 'success');
@@ -90,7 +89,6 @@ function initAuth() {
       setLoading(btn, false);
       if (!res.ok) { errorEl.textContent = data.error; return; }
       currentUser = data.user;
-      window.__currentUser = data.user;
       closeModal('authModal');
       updateUserUI();
       showToast('Регистрация успешна!', 'success');
