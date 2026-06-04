@@ -1,50 +1,161 @@
--- Создание базы данных (выполнить от суперпользователя)
--- CREATE DATABASE produktivnost;
+-- =====================================================================
+-- 1. СЛУЖЕБНЫЕ ТАБЛИЦЫ, СПРАВОЧНИКИ И НЕЗАВИСИМЫЕ СУЩНОСТИ
+-- =====================================================================
 
--- Таблицы создаются автоматически Sequelize через server/db.js
--- Для ручного создания таблиц:
-
-CREATE TABLE IF NOT EXISTS "Users" (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  theme VARCHAR(255) DEFAULT 'light',
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Сессии авторизации (создаётся connect-session-sequelize)
+CREATE TABLE IF NOT EXISTS sessions (
+    sid VARCHAR PRIMARY KEY,
+    expires TIMESTAMPTZ NOT NULL,
+    data TEXT,
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "Habits" (
-  id SERIAL PRIMARY KEY,
-  "userId" INTEGER NOT NULL REFERENCES "Users"(id),
-  name VARCHAR(255) NOT NULL,
-  days JSONB DEFAULT '[]',
-  completed JSONB DEFAULT '{}',
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Подписки (из ER-диаграммы: справочник наименований подписок)
+CREATE TABLE IF NOT EXISTS subscriptions (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "TestResults" (
-  id SERIAL PRIMARY KEY,
-  "userId" INTEGER NOT NULL REFERENCES "Users"(id),
-  "testType" VARCHAR(255) NOT NULL,
-  result JSONB NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Статусы Уроков (из ER-диаграммы: справочник статусов)
+CREATE TABLE IF NOT EXISTS lesson_statuses (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "GlossaryFavorites" (
-  id SERIAL PRIMARY KEY,
-  "userId" INTEGER NOT NULL REFERENCES "Users"(id),
-  term VARCHAR(255) NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Статусы Тестов (из ER-диаграммы: справочник статусов)
+CREATE TABLE IF NOT EXISTS test_statuses (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "MicroSteps" (
-  id SERIAL PRIMARY KEY,
-  "userId" INTEGER NOT NULL REFERENCES "Users"(id),
-  count INTEGER DEFAULT 0,
-  "weekStart" VARCHAR(255) NOT NULL,
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+-- Курсы (из ER-диаграммы)
+CREATE TABLE IF NOT EXISTS courses (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMPTZ,
+    "updatedAt" TIMESTAMPTZ
 );
+
+
+-- =====================================================================
+-- 2. ОСНОВНАЯ ТАБЛИЦА ПОЛЬЗОВАТЕЛЕЙ (СВЯЗУЮЩЕЕ ЗВЕНО)
+-- =====================================================================
+
+-- Users — пользователи (с добавлением связи СтатусПодписки(FK) из диаграммы)
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    theme VARCHAR(255) DEFAULT 'light',
+    "resetToken" VARCHAR(255) NULL,
+    "resetTokenExpires" TIMESTAMPTZ NULL,
+    subscription_status_id INTEGER REFERENCES subscriptions(id) ON DELETE SET NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
+);
+
+
+-- =====================================================================
+-- 3. ТАБЛИЦЫ ТРЕКЕРА ПРОДУКТИВНОСТИ (ВАША ТЕКУЩАЯ СТРУКТУРА)
+-- =====================================================================
+
+-- Habits — привычки (User → Habit)
+CREATE TABLE IF NOT EXISTS habits (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    days JSONB DEFAULT '[]',
+    completed JSONB DEFAULT '{}',
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
+);
+
+-- PomodoroSessions — сессии таймера (User → PomodoroSession)
+CREATE TABLE IF NOT EXISTS pomodoro_sessions (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    duration INTEGER NOT NULL,
+    type VARCHAR(255) DEFAULT 'work',
+    "completedAt" TIMESTAMPTZ,
+    "createdAt" TIMESTAMPTZ NOT NULL
+);
+
+-- TestResults — результаты психологических тестов/тестов продуктивности
+CREATE TABLE IF NOT EXISTS test_results (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    "testType" VARCHAR(255) NOT NULL,
+    result JSONB NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
+);
+
+-- GlossaryFavorites — избранные термины (User → GlossaryFavorite)
+CREATE TABLE IF NOT EXISTS glossary_favorites (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    term VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL
+);
+
+-- MicroSteps — микро-шаги (User → MicroStep)
+CREATE TABLE IF NOT EXISTS micro_steps (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    count INTEGER DEFAULT 0,
+    "weekStart" VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
+);
+
+
+-- =====================================================================
+-- 4. ТАБЛИЦЫ МОДУЛЯ ОБУЧЕНИЯ (ИЗ ER-ДИАГРАММЫ)
+-- =====================================================================
+
+-- Уроки (Курсы --> Уроки)
+CREATE TABLE IF NOT EXISTS lessons (
+    id SERIAL PRIMARY KEY,
+    course_id INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    lesson_number INTEGER NOT NULL,
+    data TEXT NOT NULL,
+    status_id INTEGER NOT NULL REFERENCES lesson_statuses(id) ON DELETE RESTRICT,
+    "createdAt" TIMESTAMPTZ,
+    "updatedAt" TIMESTAMPTZ
+);
+
+-- Тесты (Курсы --> Тесты)
+CREATE TABLE IF NOT EXISTS course_tests (
+    id SERIAL PRIMARY KEY,
+    course_id INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    data JSONB NOT NULL,
+    status_id INTEGER NOT NULL REFERENCES test_statuses(id) ON DELETE RESTRICT,
+    "createdAt" TIMESTAMPTZ,
+    "updatedAt" TIMESTAMPTZ
+);
+
+-- РезультатыТестов (связующая таблица между Юзером и Тестом курса)
+CREATE TABLE IF NOT EXISTS course_test_results (
+    id SERIAL PRIMARY KEY,
+    test_id INTEGER NOT NULL REFERENCES course_tests(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    correct_answers INTEGER NOT NULL,
+    wrong_answers INTEGER NOT NULL,
+    grade VARCHAR(50) NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
+);
+
+
+-- =====================================================================
+-- 5. ИНДЕКСЫ ДЛЯ ОПТИМИЗАЦИИ СВЯЗЕЙ (FOREIGN KEYS)
+-- =====================================================================
+CREATE INDEX IF NOT EXISTS idx_habits_user_id ON habits("userId");
+CREATE INDEX IF NOT EXISTS idx_pomodoro_user_id ON pomodoro_sessions("userId");
+CREATE INDEX IF NOT EXISTS idx_lessons_course_id ON lessons(course_id);
+CREATE INDEX IF NOT EXISTS idx_course_tests_course_id ON course_tests(course_id);
+CREATE INDEX IF NOT EXISTS idx_course_test_results_test_id ON course_test_results(test_id);
+CREATE INDEX IF NOT EXISTS idx_course_test_results_user_id ON course_test_results(user_id);

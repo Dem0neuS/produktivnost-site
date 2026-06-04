@@ -1,14 +1,12 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  return sequelize.define('TestResult', {
+  return sequelize.define('Course', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false },
-    testType: { type: DataTypes.STRING, allowNull: false },
-    result: { type: DataTypes.JSONB, allowNull: false },
+    name: { type: DataTypes.STRING, allowNull: false },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   }, {
-    tableName: 'test_results'
+    tableName: 'courses'
   });
 };

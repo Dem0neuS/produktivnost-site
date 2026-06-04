@@ -8,5 +8,7 @@ module.exports = (sequelize) => {
     weekStart: { type: DataTypes.STRING, allowNull: false },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  }, {
+    tableName: 'micro_steps'
   });
 };

@@ -8,5 +8,8 @@ module.exports = (sequelize) => {
     type: { type: DataTypes.STRING, defaultValue: 'work' },
     completedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  }, {
+    tableName: 'pomodoro_sessions',
+    updatedAt: false
   });
 };

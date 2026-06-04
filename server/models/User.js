@@ -9,7 +9,10 @@ module.exports = (sequelize) => {
     theme: { type: DataTypes.STRING, defaultValue: 'light' },
     resetToken: { type: DataTypes.STRING, allowNull: true },
     resetTokenExpires: { type: DataTypes.DATE, allowNull: true },
+    subscriptionStatusId: { type: DataTypes.INTEGER, allowNull: true, field: 'subscription_status_id' },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+  }, {
+    tableName: 'users'
   });
 };

@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 let sessionStore;
 try {
-  sessionStore = new SequelizeStore({ db: sequelize });
+  sessionStore = new SequelizeStore({ db: sequelize, table: 'sessions' });
 } catch (e) {
   sessionStore = new session.MemoryStore();
 }
