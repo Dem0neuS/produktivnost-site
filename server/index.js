@@ -90,9 +90,8 @@ async function migrateCourses() {
     }
     if (count > 0) console.log(`Migrated ${count} courses`);
     const { Op } = require('sequelize');
-    const lessons = await Lesson.findAll({ where: { [Op.or]: [{ content: null }, { content: '' }] }, order: [['courseId', 'ASC'], ['lessonNumber', 'ASC']] });
-    if (lessons.length > 0) {
-      const allContent = [
+    const lessons = await Lesson.findAll({ order: [['courseId', 'ASC'], ['lessonNumber', 'ASC']] });
+    const allContent = [
         '<p>Научитесь за 5 минут отфильтровать хаос из задач с помощью матрицы Эйзенхауэра.</p><h3>Практика</h3><p>Возьмите список всех дел на сегодня. Разделите лист на 4 квадранта:</p><ul><li><strong>Важно и срочно</strong> — делаем сразу</li><li><strong>Важно, не срочно</strong> — планируем</li><li><strong>Не важно, срочно</strong> — делегируем</li><li><strong>Не важно, не срочно</strong> — удаляем</li></ul><p>Результат: перед вами не хаос, а чёткая картина дня.</p>',
         '<p>Техника Pomodoro внутри жёстких блоков — работаем 25 мин, отдыхаем, не переключаясь.</p><h3>Как совместить</h3><p>Разбейте день на 2-часовые блоки. В каждом блоке — 3 помодоро по 25 мин с перерывами 5 мин. После каждого блока — большой перерыв 15-30 мин.</p><p><strong>Важно:</strong> внутри блока никаких переключений — только одна задача.</p>',
         '<p>Мини-GTD (обзор дня) и ритуал «Стоп» — чтобы мысли о работе не шли в личную жизнь.</p><h3>Вечерний ритуал (5 минут)</h3><ol><li>Запишите 3 главных достижения дня</li><li>Перенесите несделанное на завтра</li><li>Скажите вслух: «Рабочий день окончен»</li></ol><p>Этот ритуал снижает тревожность и помогает мозгу переключиться на отдых.</p>',
@@ -109,14 +108,15 @@ async function migrateCourses() {
         '<p>Когда никого не дёргать по работе / домашним вопросам.</p><h3>Правила для дома</h3><p>Определите «тихие часы» (например, 9:00-11:00 утра) — время глубокой работы, когда никто никого не отвлекает. «Зелёные зоны» — время для семейных дел и общения. Это снижает конфликты и повышает продуктивность всех.</p>',
         '<p>10 минут в воскресенье синхронизировать планы, чтобы не было «А ты что, забыл?».</p><h3>Воскресный ритуал</h3><p>В воскресенье вечером соберитесь на 10 минут: (1) что было классного на неделе, (2) что не получилось, (3) планы на следующую неделю. Записывайте договорённости в общий календарь. Это убирает 90% бытовых конфликтов.</p>'
       ];
-      for (let i = 0; i < lessons.length; i++) {
-        if (i < allContent.length) {
-          lessons[i].content = allContent[i];
-          await lessons[i].save();
-        }
+    let migratedCount = 0;
+    for (let i = 0; i < lessons.length; i++) {
+      if (i < allContent.length) {
+        lessons[i].content = allContent[i];
+        await lessons[i].save();
+        migratedCount++;
       }
-      console.log(`Migrated ${lessons.length} lessons`);
     }
+    if (migratedCount > 0) console.log(`Migrated ${migratedCount} lessons`);
   } catch (e) { console.error('Auto-migration error:', e.message); }
 }
 
