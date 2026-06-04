@@ -1,5 +1,5 @@
 const express = require('express');
-const { Habit, TestResult, GlossaryFavorite, MicroStep, User } = require('../db');
+const { Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession, User } = require('../db');
 
 const router = express.Router();
 
@@ -17,8 +17,9 @@ router.get('/sync', requireAuth, async (req, res) => {
     const testResults = await TestResult.findAll({ where: { userId } });
     const favorites = await GlossaryFavorite.findAll({ where: { userId } });
     const microSteps = await MicroStep.findAll({ where: { userId } });
+    const pomodoroSessions = await PomodoroSession.findAll({ where: { userId }, order: [['createdAt', 'DESC']], limit: 50 });
     const user = await User.findByPk(userId, { attributes: ['theme'] });
-    res.json({ habits, testResults, favorites, microSteps, theme: user.theme });
+    res.json({ habits, testResults, favorites, microSteps, pomodoroSessions, theme: user.theme });
   } catch (err) {
     res.status(500).json({ error: 'Ошибка синхронизации' });
   }
@@ -125,6 +126,29 @@ router.post('/micro-steps', requireAuth, async (req, res) => {
     res.json({ success: true, microStep });
   } catch (err) {
     res.status(500).json({ error: 'Ошибка' });
+  }
+});
+
+router.post('/pomodoro', requireAuth, async (req, res) => {
+  try {
+    const { duration, type } = req.body;
+    const session = await PomodoroSession.create({ userId: req.session.userId, duration, type: type || 'work' });
+    res.json({ success: true, session });
+  } catch (err) {
+    res.status(500).json({ error: 'Ошибка сохранения сессии' });
+  }
+});
+
+router.get('/pomodoro', requireAuth, async (req, res) => {
+  try {
+    const sessions = await PomodoroSession.findAll({
+      where: { userId: req.session.userId },
+      order: [['createdAt', 'DESC']],
+      limit: 50
+    });
+    res.json({ sessions });
+  } catch (err) {
+    res.status(500).json({ error: 'Ошибка загрузки' });
   }
 });
 

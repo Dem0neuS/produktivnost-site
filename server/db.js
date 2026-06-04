@@ -48,6 +48,7 @@ const Habit = require('./models/Habit')(sequelize);
 const TestResult = require('./models/TestResult')(sequelize);
 const GlossaryFavorite = require('./models/GlossaryFavorite')(sequelize);
 const MicroStep = require('./models/MicroStep')(sequelize);
+const PomodoroSession = require('./models/PomodoroSession')(sequelize);
 
 User.hasMany(Habit, { foreignKey: 'userId' });
 Habit.belongsTo(User, { foreignKey: 'userId' });
@@ -61,6 +62,9 @@ GlossaryFavorite.belongsTo(User, { foreignKey: 'userId' });
 User.hasMany(MicroStep, { foreignKey: 'userId' });
 MicroStep.belongsTo(User, { foreignKey: 'userId' });
 
+User.hasMany(PomodoroSession, { foreignKey: 'userId' });
+PomodoroSession.belongsTo(User, { foreignKey: 'userId' });
+
 async function initDb() {
   try {
     await sequelize.authenticate();
@@ -73,4 +77,4 @@ async function initDb() {
   }
 }
 
-module.exports = { sequelize, User, Habit, TestResult, GlossaryFavorite, MicroStep, initDb };
+module.exports = { sequelize, User, Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession, initDb };
