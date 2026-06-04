@@ -1,5 +1,20 @@
 let currentUser = null;
 
+function setLoading(btn, loading) {
+  if (!btn) return;
+  if (loading) {
+    btn.classList.add('loading');
+    btn.disabled = true;
+    const orig = btn.textContent;
+    btn.dataset.origText = orig;
+    btn.innerHTML = '<span class="spinner"></span>' + orig;
+  } else {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    btn.textContent = btn.dataset.origText || btn.textContent;
+  }
+}
+
 function initAuth() {
   const loginBtn = document.getElementById('loginBtn');
   const authModal = document.getElementById('authModal');
@@ -22,15 +37,19 @@ function initAuth() {
 
   loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const btn = loginForm.querySelector('button[type="submit"]');
     const email = loginForm.querySelector('[name="email"]').value;
     const password = loginForm.querySelector('[name="password"]').value;
     const errorEl = loginForm.querySelector('.error-text');
+    errorEl.textContent = '';
+    setLoading(btn, true);
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }), credentials: 'same-origin'
       });
       const data = await res.json();
+      setLoading(btn, false);
       if (!res.ok) { errorEl.textContent = data.error; return; }
       currentUser = data.user;
       closeModal('authModal');
@@ -38,24 +57,29 @@ function initAuth() {
       showToast('Вы вошли как ' + data.user.name, 'success');
       syncFromServer();
     } catch (err) {
+      setLoading(btn, false);
       errorEl.textContent = 'Ошибка соединения с сервером';
     }
   });
 
   registerForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const btn = registerForm.querySelector('button[type="submit"]');
     const name = registerForm.querySelector('[name="name"]').value;
     const email = registerForm.querySelector('[name="email"]').value;
     const password = registerForm.querySelector('[name="password"]').value;
     const confirm = registerForm.querySelector('[name="confirm"]')?.value || '';
     const errorEl = registerForm.querySelector('.error-text');
     if (password !== confirm) { errorEl.textContent = 'Пароли не совпадают'; return; }
+    errorEl.textContent = '';
+    setLoading(btn, true);
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }), credentials: 'same-origin'
       });
       const data = await res.json();
+      setLoading(btn, false);
       if (!res.ok) { errorEl.textContent = data.error; return; }
       currentUser = data.user;
       closeModal('authModal');
@@ -63,6 +87,7 @@ function initAuth() {
       showToast('Регистрация успешна!', 'success');
       syncFromServer();
     } catch (err) {
+      setLoading(btn, false);
       errorEl.textContent = 'Ошибка соединения с сервером';
     }
   });
