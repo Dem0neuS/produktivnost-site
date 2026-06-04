@@ -58,10 +58,12 @@ function initAuth() {
       setLoading(btn, false);
       if (!res.ok) { errorEl.textContent = data.error; return; }
       currentUser = data.user;
+      window.__currentUser = data.user;
       closeModal('authModal');
       updateUserUI();
       showToast('Вы вошли как ' + data.user.name, 'success');
       syncFromServer();
+      window.dispatchEvent(new CustomEvent('auth:changed'));
     } catch (err) {
       setLoading(btn, false);
       errorEl.textContent = 'Ошибка соединения с сервером';
@@ -88,10 +90,12 @@ function initAuth() {
       setLoading(btn, false);
       if (!res.ok) { errorEl.textContent = data.error; return; }
       currentUser = data.user;
+      window.__currentUser = data.user;
       closeModal('authModal');
       updateUserUI();
       showToast('Регистрация успешна!', 'success');
       syncFromServer();
+      window.dispatchEvent(new CustomEvent('auth:changed'));
     } catch (err) {
       setLoading(btn, false);
       errorEl.textContent = 'Ошибка соединения с сервером';

@@ -106,60 +106,7 @@
 
       initForgotPasswordCabinet(document.getElementById('loginForm'));
 
-      document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        const email = e.target.querySelector('[name="email"]').value;
-        const password = e.target.querySelector('[name="password"]').value;
-        const errorEl = e.target.querySelector('.error-text');
-        errorEl.textContent = '';
-        setLoading(btn, true);
-        try {
-          const res = await fetch('/api/auth/login', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }), credentials: 'same-origin'
-          });
-          const data = await res.json();
-          setLoading(btn, false);
-          if (!res.ok) { errorEl.textContent = data.error; return; }
-          currentUser = data.user;
-          closeModal('authModal');
-          renderCabinet();
-          showToast('Вы вошли как ' + data.user.name, 'success');
-        } catch (err) {
-          setLoading(btn, false);
-          errorEl.textContent = 'Ошибка соединения';
-        }
-      });
-
-      document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button[type="submit"]');
-        const name = e.target.querySelector('[name="name"]').value;
-        const email = e.target.querySelector('[name="email"]').value;
-        const password = e.target.querySelector('[name="password"]').value;
-        const confirm = e.target.querySelector('[name="confirm"]')?.value || '';
-        const errorEl = e.target.querySelector('.error-text');
-        if (password !== confirm) { errorEl.textContent = 'Пароли не совпадают'; return; }
-        errorEl.textContent = '';
-        setLoading(btn, true);
-        try {
-          const res = await fetch('/api/auth/register', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password }), credentials: 'same-origin'
-          });
-          const data = await res.json();
-          setLoading(btn, false);
-          if (!res.ok) { errorEl.textContent = data.error; return; }
-          currentUser = data.user;
-          closeModal('authModal');
-          renderCabinet();
-          showToast('Регистрация успешна!', 'success');
-        } catch (err) {
-          setLoading(btn, false);
-          errorEl.textContent = 'Ошибка соединения';
-        }
-      });
+      window.addEventListener('auth:changed', () => { currentUser = window.__currentUser; renderCabinet(); });
 
       checkAuth();
     }
