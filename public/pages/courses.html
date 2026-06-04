@@ -71,8 +71,6 @@
       { id: 5, title: 'Синхронизация без конфликтов', tag: 'work', icon: '👥', desc: 'Единая логика планирования для семьи или команды.', audience: 'Пары, родители + дети, небольшие команды', modules: ['Общий календарь', '«Тихие часы» и «Зелёные зоны»', 'Общий обзор 10 минут в воскресенье'], result: 'Меньше обид и ссор' }
     ];
 
-    let currentUser = null;
-
     function renderCourses(filter = 'all') {
       const grid = document.getElementById('coursesGrid');
       const filtered = filter === 'all' ? coursesData : coursesData.filter(c => c.tag === filter);
