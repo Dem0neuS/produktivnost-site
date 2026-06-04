@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
     req.session.userId = user.id;
     req.session.userEmail = user.email;
     req.session.userName = user.name;
-    res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, theme: user.theme } });
+    res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, theme: user.theme, roleId: user.roleId, role: 'Пользователь' } });
   } catch (err) {
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(400).json({ error: 'Пользователь с таким email уже существует' });
@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ error: 'Введите email и пароль' });
     }
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email }, include: [Role] });
     if (!user) {
       return res.status(400).json({ error: 'Неверный email или пароль' });
     }
@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
     req.session.userId = user.id;
     req.session.userEmail = user.email;
     req.session.userName = user.name;
-    res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, theme: user.theme } });
+    res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, theme: user.theme, roleId: user.roleId, role: user.Role?.name } });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Ошибка входа' });
@@ -105,8 +105,8 @@ router.get('/me', async (req, res) => {
     return res.json({ user: null });
   }
   try {
-    const user = await User.findByPk(req.session.userId, { attributes: ['id', 'name', 'email', 'theme'] });
-    res.json({ user });
+    const user = await User.findByPk(req.session.userId, { include: [Role], attributes: ['id', 'name', 'email', 'theme', 'roleId'] });
+    res.json({ user: { id: user.id, name: user.name, email: user.email, theme: user.theme, roleId: user.roleId, role: user.Role?.name } });
   } catch (err) {
     res.json({ user: null });
   }

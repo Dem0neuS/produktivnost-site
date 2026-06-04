@@ -1,4 +1,4 @@
-let currentUser = null;
+var currentUser = null;
 
 function setLoading(btn, loading) {
   if (!btn) return;
@@ -221,6 +221,7 @@ async function checkAuth() {
       currentUser = data.user;
       updateUserUI();
       syncFromServer();
+      window.dispatchEvent(new CustomEvent('auth:changed'));
     }
   } catch (err) {}
 }

@@ -48,6 +48,12 @@
   <!-- Модальное окно урока -->
   <div class="modal-overlay" id="lessonModal"><div class="modal" style="max-width:700px;"><button class="modal-close" onclick="closeLessonModal()">&times;</button><h2 id="lessonModalTitle"></h2><div id="lessonModalBody" style="line-height:1.7;"></div><div style="margin-top:16px;text-align:right;"><button class="btn btn-primary" id="completeLessonBtn" onclick="completeLesson()">Отметить пройденным</button></div></div></div>
 
+  <!-- Админ: редактирование курса -->
+  <div class="modal-overlay" id="adminCourseEditModal"><div class="modal" style="max-width:500px;"><button class="modal-close" onclick="closeModal('adminCourseEditModal')">&times;</button><h2>Редактировать курс</h2><div class="form-group"><label>Название</label><input type="text" id="aceName" class="form-input" required></div><div class="form-group"><label>Иконка (emoji)</label><input type="text" id="aceIcon" class="form-input"></div><div class="form-group"><label>Тег</label><input type="text" id="aceTag" class="form-input"></div><div class="form-group"><label>Описание</label><textarea id="aceDesc" class="form-input" rows="3"></textarea></div><div class="form-group"><label>Для кого</label><input type="text" id="aceAudience" class="form-input"></div><div class="form-group"><label>Результат</label><input type="text" id="aceResult" class="form-input"></div><div class="form-group"><label><input type="checkbox" id="aceIsFree" checked> Бесплатный</label></div><div class="error-text" id="aceError"></div><button class="btn btn-primary" id="aceSaveBtn" style="width:100%;">Сохранить</button></div></div>
+
+  <!-- Админ: редактирование/создание урока -->
+  <div class="modal-overlay" id="adminLessonModal"><div class="modal" style="max-width:700px;"><button class="modal-close" onclick="closeModal('adminLessonModal')">&times;</button><h2 id="almHeader">Редактировать модуль</h2><div class="form-group"><label>Название модуля</label><input type="text" id="almTitle" class="form-input" required></div><div class="form-group"><label>Содержание (HTML)</label><textarea id="almContent" class="form-input" rows="12" style="font-family:monospace;"></textarea></div><div class="error-text" id="almError"></div><button class="btn btn-primary" id="almSaveBtn" style="width:100%;">Сохранить</button><input type="hidden" id="almLessonId" value=""></div></div>
+
   <footer class="footer">
     <div class="footer-inner">
       <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
@@ -79,12 +85,13 @@
       const total = lessons.length;
       const done = completedLessons.length;
       const progress = total > 0 ? Math.round((done / total) * 100) : 0;
+      const isAdmin = window.currentUser?.roleId === 1;
 
       document.getElementById('courseContent').innerHTML = `
         <div class="course-layout">
           <div>
             <div style="font-size:2.5rem;margin-bottom:8px;">${c.icon}</div>
-            <h1 style="margin:0 0 8px;">${c.name}</h1>
+            <h1 style="margin:0 0 8px;">${c.name} ${isAdmin ? '<button class="btn btn-sm btn-outline" onclick="adminEditCourse()" style="vertical-align:middle;font-size:0.8rem;">✏️</button>' : ''}</h1>
             <p style="color:var(--text-secondary);margin:0 0 16px;">${c.description}</p>
             <p style="font-size:0.9rem;"><strong>Для кого:</strong> ${c.audience}</p>
             <p style="font-size:0.9rem;color:var(--success);"><strong>Результат:</strong> ${c.result}</p>
@@ -97,7 +104,10 @@
             <p id="statusBadge" style="margin:8px 0 0;font-size:0.85rem;"></p>
           </div>
         </div>
-        <h2 style="margin:32px 0 16px;">Программа курса</h2>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:32px 0 16px;">
+          <h2 style="margin:0;">Программа курса</h2>
+          ${isAdmin ? '<button class="btn btn-sm btn-primary" onclick="adminAddLesson()">+ Добавить модуль</button>' : ''}
+        </div>
         <div id="lessonsList"></div>
       `;
 
@@ -105,6 +115,12 @@
         <div class="lesson-row ${completedLessons.includes(m.id) ? 'completed' : ''}" onclick="openLesson(${m.id})">
           <div class="lesson-check">${completedLessons.includes(m.id) ? '✓' : i + 1}</div>
           <div style="flex:1;"><strong>${m.data}</strong></div>
+          ${isAdmin ? `
+            <span style="display:flex;gap:4px;margin-right:8px;">
+              <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();adminEditLesson(${m.id})" style="font-size:0.75rem;padding:2px 6px;">✏️</button>
+              <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();adminDeleteLesson(${m.id})" style="font-size:0.75rem;padding:2px 6px;color:var(--danger,#e74c3c);">🗑️</button>
+            </span>
+          ` : ''}
           <span style="color:var(--text-secondary);font-size:0.8rem;">${completedLessons.includes(m.id) ? 'Пройдено' : 'Начать →'}</span>
         </div>
       `).join('');
@@ -233,13 +249,121 @@
       document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
     }
 
+    // ---- Admin functions ----
+    function adminEditCourse() {
+      const c = currentCourse;
+      document.getElementById('aceName').value = c.name || '';
+      document.getElementById('aceIcon').value = c.icon || '';
+      document.getElementById('aceTag').value = c.tag || '';
+      document.getElementById('aceDesc').value = c.description || '';
+      document.getElementById('aceAudience').value = c.audience || '';
+      document.getElementById('aceResult').value = c.result || '';
+      document.getElementById('aceIsFree').checked = c.isFree !== false;
+      document.getElementById('aceError').textContent = '';
+      document.getElementById('aceSaveBtn').onclick = adminSaveCourse;
+      openModal('adminCourseEditModal');
+    }
+
+    async function adminSaveCourse() {
+      const id = getCourseId();
+      const name = document.getElementById('aceName').value;
+      const icon = document.getElementById('aceIcon').value;
+      const tag = document.getElementById('aceTag').value;
+      const description = document.getElementById('aceDesc').value;
+      const audience = document.getElementById('aceAudience').value;
+      const result = document.getElementById('aceResult').value;
+      const isFree = document.getElementById('aceIsFree').checked;
+      const errorEl = document.getElementById('aceError');
+      if (!name) { errorEl.textContent = 'Название обязательно'; return; }
+      errorEl.textContent = '';
+      const btn = document.getElementById('aceSaveBtn');
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/courses/admin/${id}`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon, tag, description, audience, result, isFree }),
+          credentials: 'same-origin'
+        });
+        const data = await res.json();
+        btn.disabled = false;
+        if (!res.ok) { errorEl.textContent = data.error; return; }
+        closeModal('adminCourseEditModal');
+        currentCourse = data.course;
+        renderCourse();
+        showToast('Курс обновлён');
+      } catch(e) { btn.disabled = false; errorEl.textContent = 'Ошибка'; }
+    }
+
+    function adminEditLesson(id) {
+      const lesson = (currentCourse.Lessons || []).find(m => m.id == id);
+      if (!lesson) return;
+      document.getElementById('almHeader').textContent = 'Редактировать модуль';
+      document.getElementById('almLessonId').value = id;
+      document.getElementById('almTitle').value = lesson.data || '';
+      document.getElementById('almContent').value = lesson.content || '';
+      document.getElementById('almError').textContent = '';
+      document.getElementById('almSaveBtn').onclick = adminSaveLesson;
+      openModal('adminLessonModal');
+    }
+
+    function adminAddLesson() {
+      document.getElementById('almHeader').textContent = 'Добавить модуль';
+      document.getElementById('almLessonId').value = '';
+      document.getElementById('almTitle').value = '';
+      document.getElementById('almContent').value = '';
+      document.getElementById('almError').textContent = '';
+      document.getElementById('almSaveBtn').onclick = adminSaveLesson;
+      openModal('adminLessonModal');
+    }
+
+    async function adminSaveLesson() {
+      const id = document.getElementById('almLessonId').value;
+      const title = document.getElementById('almTitle').value;
+      const content = document.getElementById('almContent').value;
+      const errorEl = document.getElementById('almError');
+      if (!title) { errorEl.textContent = 'Название обязательно'; return; }
+      errorEl.textContent = '';
+      const btn = document.getElementById('almSaveBtn');
+      btn.disabled = true;
+      try {
+        if (id) {
+          const res = await fetch(`/api/courses/admin/lessons/${id}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: title, content }),
+            credentials: 'same-origin'
+          });
+          const data = await res.json();
+          btn.disabled = false;
+          if (!res.ok) { errorEl.textContent = data.error; return; }
+        } else {
+          const res = await fetch('/api/courses/admin/lessons', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courseId: parseInt(getCourseId()), title, content }),
+            credentials: 'same-origin'
+          });
+          const data = await res.json();
+          btn.disabled = false;
+          if (!res.ok) { errorEl.textContent = data.error; return; }
+        }
+        closeModal('adminLessonModal');
+        await loadCourse();
+        showToast(id ? 'Модуль обновлён' : 'Модуль создан');
+      } catch(e) { btn.disabled = false; errorEl.textContent = 'Ошибка'; }
+    }
+
+    async function adminDeleteLesson(id) {
+      if (!confirm('Удалить модуль?')) return;
+      try {
+        const res = await fetch(`/api/courses/admin/lessons/${id}`, { method: 'DELETE', credentials: 'same-origin' });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error); return; }
+        await loadCourse();
+        showToast('Модуль удалён');
+      } catch(e) { showToast('Ошибка'); }
+    }
+
     document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
-      try {
-        const me = await fetch('/api/auth/me', { credentials: 'same-origin' });
-        const data = await me.json();
-        currentUser = data.user;
-      } catch(e) {}
       loadCourse();
     });
   </script>

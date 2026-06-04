@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { Course, Lesson, LessonStatus, CourseTest, CourseTestQuestion, UserCourse, User, sequelize } = require('../db');
+const { Role, Course, Lesson, LessonStatus, CourseTest, CourseTestQuestion, UserCourse, User, sequelize } = require('../db');
+
+async function isAdmin(req) {
+  if (!req.session?.userId) return false;
+  const user = await User.findByPk(req.session.userId, { include: [Role], attributes: ['id', 'roleId'] });
+  if (!user) return false;
+  return user.Role?.name === 'Администратор';
+}
 
 async function getUserId(req) {
   if (req.session?.userId) {
@@ -206,6 +213,89 @@ router.post('/migrate', async (req, res) => {
   } catch (e) {
     console.error('Migration error:', e);
     res.status(500).json({ error: 'Ошибка миграции' });
+  }
+});
+
+// ---- Admin CRUD ----
+
+async function adminOnly(req, res, next) {
+  if (await isAdmin(req)) return next();
+  res.status(403).json({ error: 'Доступ только администратору' });
+}
+
+// Создать курс
+router.post('/admin/courses', adminOnly, async (req, res) => {
+  try {
+    const { name, icon, tag, description, audience, result, isFree } = req.body;
+    if (!name) return res.status(400).json({ error: 'Название обязательно' });
+    const course = await Course.create({ name, icon: icon || '📚', tag: tag || 'beginner', description, audience, result, isFree: isFree ?? true });
+    res.json({ success: true, course });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка создания курса' });
+  }
+});
+
+// Обновить курс
+router.put('/admin/courses/:id', adminOnly, async (req, res) => {
+  try {
+    const course = await Course.findByPk(req.params.id);
+    if (!course) return res.status(404).json({ error: 'Курс не найден' });
+    const { name, icon, tag, description, audience, result, isFree } = req.body;
+    await course.update({ name, icon, tag, description, audience, result, isFree });
+    res.json({ success: true, course });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка обновления курса' });
+  }
+});
+
+// Удалить курс
+router.delete('/admin/courses/:id', adminOnly, async (req, res) => {
+  try {
+    const course = await Course.findByPk(req.params.id);
+    if (!course) return res.status(404).json({ error: 'Курс не найден' });
+    await course.destroy();
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка удаления курса' });
+  }
+});
+
+// Создать урок
+router.post('/admin/lessons', adminOnly, async (req, res) => {
+  try {
+    const { courseId, lessonNumber, title, data, content } = req.body;
+    if (!courseId || !title) return res.status(400).json({ error: 'courseId и title обязательны' });
+    const maxNum = await Lesson.max('lessonNumber', { where: { courseId } });
+    const lesson = await Lesson.create({ courseId, lessonNumber: lessonNumber || (maxNum || 0) + 1, data: data || title, content: content || '', statusId: 1 });
+    res.json({ success: true, lesson });
+  } catch (e) {
+    console.error('Create lesson error:', e);
+    res.status(500).json({ error: 'Ошибка создания урока' });
+  }
+});
+
+// Обновить урок
+router.put('/admin/lessons/:id', adminOnly, async (req, res) => {
+  try {
+    const lesson = await Lesson.findByPk(req.params.id);
+    if (!lesson) return res.status(404).json({ error: 'Урок не найден' });
+    const { lessonNumber, data, content } = req.body;
+    await lesson.update({ lessonNumber, data, content });
+    res.json({ success: true, lesson });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка обновления урока' });
+  }
+});
+
+// Удалить урок
+router.delete('/admin/lessons/:id', adminOnly, async (req, res) => {
+  try {
+    const lesson = await Lesson.findByPk(req.params.id);
+    if (!lesson) return res.status(404).json({ error: 'Урок не найден' });
+    await lesson.destroy();
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Ошибка удаления урока' });
   }
 });
 

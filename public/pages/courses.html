@@ -57,6 +57,7 @@
   </footer>
 
   <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="modal-overlay" id="adminCourseModal"><div class="modal" style="max-width:500px;"><button class="modal-close" onclick="closeModal('adminCourseModal')">&times;</button><h2 id="adminCourseTitle">Редактировать курс</h2><div id="adminCourseForm"><div class="form-group"><label>Название</label><input type="text" id="acName" class="form-input" required></div><div class="form-group"><label>Иконка (emoji)</label><input type="text" id="acIcon" class="form-input" value="📚"></div><div class="form-group"><label>Тег (beginner/student/parent/work)</label><input type="text" id="acTag" class="form-input" value="beginner"></div><div class="form-group"><label>Описание</label><textarea id="acDesc" class="form-input" rows="3"></textarea></div><div class="form-group"><label>Для кого</label><input type="text" id="acAudience" class="form-input"></div><div class="form-group"><label>Результат</label><input type="text" id="acResult" class="form-input"></div><div class="form-group"><label><input type="checkbox" id="acIsFree" checked> Бесплатный</label></div><div class="error-text" id="acError"></div><button type="button" class="btn btn-primary" id="acSaveBtn" style="width:100%;">Сохранить</button><input type="hidden" id="acCourseId" value=""></div></div></div>
   <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
 
   <script src="/js/theme.js"></script>
@@ -78,8 +79,9 @@
         const enrollment = myCourses.find(m => m.courseId === c.id);
         const enrolled = !!enrollment;
         const completed = enrolled && enrollment.progress >= 100;
+        const isAdmin = window.currentUser?.roleId === 1;
         return `
-        <div class="course-card" onclick="location.href='/course?id=${c.id}'" style="position:relative;">
+        <div class="course-card" style="position:relative;">
           ${completed ? '<span style="position:absolute;top:8px;right:8px;background:var(--success,#2ecc71);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:999px;z-index:1;">✅ Завершён</span>' : ''}
           ${enrolled && !completed ? '<span style="position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:999px;z-index:1;">📖 В процессе</span>' : ''}
           <div style="font-size:2rem;margin-bottom:8px;">${c.icon}</div>
@@ -89,7 +91,13 @@
           <p style="font-size:0.8rem;color:var(--text);font-weight:500;"><strong>Для кого:</strong> ${c.audience}</p>
           <p style="font-size:0.8rem;color:var(--text-secondary);margin:4px 0 8px;"><strong>Модули:</strong> ${c.lessonCount || 0}</p>
           <p style="font-size:0.8rem;color:var(--success);margin:0;"><strong>Результат:</strong> ${c.result}</p>
-          <div style="margin-top:12px;"><span class="btn btn-sm ${c.isFree ? 'btn-primary' : 'btn-outline'}" style="pointer-events:none;">${completed ? '✅ Пройден' : (enrolled ? '📖 Продолжить' : (c.isFree ? 'Начать бесплатно' : 'Подробнее'))}</span></div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="btn btn-sm ${c.isFree ? 'btn-primary' : 'btn-outline'}" onclick="event.stopPropagation();location.href='/course?id=${c.id}'" style="pointer-events:auto;cursor:pointer;">${completed ? '✅ Пройден' : (enrolled ? '📖 Продолжить' : (c.isFree ? 'Начать бесплатно' : 'Подробнее'))}</span>
+            ${isAdmin ? `
+              <span class="btn btn-sm btn-outline" onclick="event.stopPropagation();openCourseEdit(${c.id})" style="pointer-events:auto;cursor:pointer;">✏️</span>
+              <span class="btn btn-sm btn-outline" onclick="event.stopPropagation();deleteCourse(${c.id})" style="pointer-events:auto;cursor:pointer;color:var(--danger,#e74c3c);">🗑️</span>
+            ` : ''}
+          </div>
         </div>
       `;}).join('');
     }
@@ -119,6 +127,85 @@
       }
     }
 
+    function openCourseEdit(id) {
+      const course = coursesData.find(c => c.id === id);
+      if (!course) return;
+      document.getElementById('adminCourseTitle').textContent = 'Редактировать курс';
+      document.getElementById('acCourseId').value = id;
+      document.getElementById('acName').value = course.name || '';
+      document.getElementById('acIcon').value = course.icon || '📚';
+      document.getElementById('acTag').value = course.tag || 'beginner';
+      document.getElementById('acDesc').value = course.description || '';
+      document.getElementById('acAudience').value = course.audience || '';
+      document.getElementById('acResult').value = course.result || '';
+      document.getElementById('acIsFree').checked = course.isFree !== false;
+      document.getElementById('acError').textContent = '';
+      document.getElementById('acSaveBtn').onclick = saveCourse;
+      openModal('adminCourseModal');
+    }
+
+    function openCourseCreate() {
+      document.getElementById('adminCourseTitle').textContent = 'Создать курс';
+      document.getElementById('acCourseId').value = '';
+      document.getElementById('acName').value = '';
+      document.getElementById('acIcon').value = '📚';
+      document.getElementById('acTag').value = 'beginner';
+      document.getElementById('acDesc').value = '';
+      document.getElementById('acAudience').value = '';
+      document.getElementById('acResult').value = '';
+      document.getElementById('acIsFree').checked = true;
+      document.getElementById('acError').textContent = '';
+      document.getElementById('acSaveBtn').onclick = saveCourse;
+      openModal('adminCourseModal');
+    }
+
+    async function saveCourse() {
+      const id = document.getElementById('acCourseId').value;
+      const name = document.getElementById('acName').value;
+      const icon = document.getElementById('acIcon').value;
+      const tag = document.getElementById('acTag').value;
+      const description = document.getElementById('acDesc').value;
+      const audience = document.getElementById('acAudience').value;
+      const result = document.getElementById('acResult').value;
+      const isFree = document.getElementById('acIsFree').checked;
+      const errorEl = document.getElementById('acError');
+      if (!name) { errorEl.textContent = 'Название обязательно'; return; }
+      errorEl.textContent = '';
+      const btn = document.getElementById('acSaveBtn');
+      btn.disabled = true;
+      try {
+        const url = id ? `/api/courses/admin/${id}` : '/api/courses/admin';
+        const method = id ? 'PUT' : 'POST';
+        const res = await fetch(url, {
+          method, headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon, tag, description, audience, result, isFree }),
+          credentials: 'same-origin'
+        });
+        const data = await res.json();
+        btn.disabled = false;
+        if (!res.ok) { errorEl.textContent = data.error; return; }
+        closeModal('adminCourseModal');
+        showToast(id ? 'Курс обновлён' : 'Курс создан', 'success');
+        loadCourses();
+      } catch (e) {
+        btn.disabled = false;
+        errorEl.textContent = 'Ошибка';
+      }
+    }
+
+    async function deleteCourse(id) {
+      if (!confirm('Удалить курс? Это действие необратимо.')) return;
+      try {
+        const res = await fetch(`/api/courses/admin/${id}`, { method: 'DELETE', credentials: 'same-origin' });
+        const data = await res.json();
+        if (!res.ok) { showToast(data.error, 'error'); return; }
+        showToast('Курс удалён', 'success');
+        loadCourses();
+      } catch (e) {
+        showToast('Ошибка удаления', 'error');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
       loadCourses();
@@ -130,6 +217,10 @@
           renderCourses();
         });
       });
+    });
+
+    window.addEventListener('auth:changed', function() {
+      loadCourses();
     });
   </script>
 </body>
