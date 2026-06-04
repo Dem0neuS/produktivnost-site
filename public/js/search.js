@@ -53,7 +53,7 @@ function initSearch() {
     searchOverlay.classList.add('active');
     setTimeout(() => searchInput?.focus(), 100);
     searchInput.value = '';
-    searchResults.innerHTML = '<p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p>';
+    searchResults.innerHTML = '<p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p><div class="search-shortcut">Ctrl+K — быстрый поиск</div>';
   });
 
   searchOverlay.addEventListener('click', (e) => {

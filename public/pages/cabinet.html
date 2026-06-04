@@ -104,6 +104,8 @@
         document.getElementById(this.dataset.form)?.classList.add('active');
       }));
 
+      initForgotPasswordCabinet(document.getElementById('loginForm'));
+
       document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = e.target.querySelector('button[type="submit"]');
@@ -355,6 +357,116 @@
         if (loginBtn) loginBtn.style.display = 'inline-flex';
         if (userMenu) userMenu.style.display = 'none';
       }
+    }
+
+    function initForgotPasswordCabinet(loginForm) {
+      if (!loginForm) return;
+      if (document.getElementById('forgotContainer')) return;
+
+      const container = document.createElement('div');
+      container.id = 'forgotContainer';
+      container.style.cssText = 'text-align:center;margin-top:10px;';
+
+      const forgotLink = document.createElement('a');
+      forgotLink.href = '#';
+      forgotLink.textContent = 'Забыли пароль?';
+      forgotLink.style.cssText = 'font-size:0.85rem;color:var(--text-secondary);';
+      container.appendChild(forgotLink);
+
+      const forgotForm = document.createElement('div');
+      forgotForm.id = 'forgotForm';
+      forgotForm.style.display = 'none';
+      forgotForm.style.marginTop = '10px';
+
+      const step1 = document.createElement('div');
+      step1.id = 'forgotStep1';
+      step1.innerHTML = '<div class="form-group"><label>Ваш email</label><input type="email" id="forgotEmail" class="form-input" placeholder="example@mail.ru" required></div><div class="error-text" id="forgotError"></div><button type="button" class="btn btn-primary" id="forgotSendBtn" style="width:100%;">Получить код</button>';
+      forgotForm.appendChild(step1);
+
+      const step2 = document.createElement('div');
+      step2.id = 'forgotStep2';
+      step2.style.display = 'none';
+      step2.innerHTML = '<div class="form-group"><label>Код из письма</label><input type="text" id="forgotToken" class="form-input" placeholder="Введите код" required></div><div class="form-group"><label>Новый пароль</label><input type="password" id="forgotNewPassword" class="form-input" placeholder="Не менее 4 символов" minlength="4" required></div><button type="button" class="btn btn-primary" id="forgotResetBtn" style="width:100%;">Сбросить пароль</button>';
+      forgotForm.appendChild(step2);
+
+      const backLink = document.createElement('div');
+      backLink.style.marginTop = '8px';
+      backLink.innerHTML = '<a href="#" id="forgotBack" style="font-size:0.85rem;color:var(--text-secondary);">← Вернуться ко входу</a>';
+      forgotForm.appendChild(backLink);
+
+      container.appendChild(forgotForm);
+      loginForm.appendChild(container);
+
+      forgotLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.querySelector('button[type="submit"]').style.display = 'none';
+        document.querySelectorAll('.auth-tab').forEach(t => t.style.display = 'none');
+        forgotLink.style.display = 'none';
+        forgotForm.style.display = 'block';
+        step1.style.display = 'block';
+        step2.style.display = 'none';
+      });
+
+      document.getElementById('forgotBack')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        forgotForm.style.display = 'none';
+        forgotLink.style.display = '';
+        loginForm.querySelector('button[type="submit"]').style.display = '';
+        document.querySelectorAll('.auth-tab').forEach(t => t.style.display = '');
+      });
+
+      document.getElementById('forgotSendBtn')?.addEventListener('click', async () => {
+        const email = document.getElementById('forgotEmail').value;
+        const errorEl = document.getElementById('forgotError');
+        const btn = document.getElementById('forgotSendBtn');
+        if (!email) { errorEl.textContent = 'Введите email'; return; }
+        errorEl.textContent = '';
+        setLoading(btn, true);
+        try {
+          const res = await fetch('/api/auth/forgot-password', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }), credentials: 'same-origin'
+          });
+          const data = await res.json();
+          setLoading(btn, false);
+          if (!res.ok) { errorEl.textContent = data.error; return; }
+          if (data.token) {
+            showToast('Ваш код: ' + data.token + ' (демо-режим)', 'info');
+          }
+          step1.style.display = 'none';
+          step2.style.display = 'block';
+          document.getElementById('forgotToken').dataset.email = email;
+        } catch (err) {
+          setLoading(btn, false);
+          errorEl.textContent = 'Ошибка соединения';
+        }
+      });
+
+      document.getElementById('forgotResetBtn')?.addEventListener('click', async () => {
+        const email = document.getElementById('forgotToken').dataset.email;
+        const token = document.getElementById('forgotToken').value;
+        const newPassword = document.getElementById('forgotNewPassword').value;
+        const errorEl = document.getElementById('forgotError');
+        const btn = document.getElementById('forgotResetBtn');
+        if (!token || !newPassword) { errorEl.textContent = 'Заполните все поля'; return; }
+        if (newPassword.length < 4) { errorEl.textContent = 'Пароль должен быть не менее 4 символов'; return; }
+        errorEl.textContent = '';
+        setLoading(btn, true);
+        try {
+          const res = await fetch('/api/auth/reset-password', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, newPassword }), credentials: 'same-origin'
+          });
+          const data = await res.json();
+          setLoading(btn, false);
+          if (!res.ok) { errorEl.textContent = data.error; return; }
+          showToast('Пароль изменён! Теперь войдите с новым паролем.', 'success');
+          document.getElementById('forgotBack')?.click();
+        } catch (err) {
+          setLoading(btn, false);
+          errorEl.textContent = 'Ошибка соединения';
+        }
+      });
     }
 
     function setLoading(btn, loading) {

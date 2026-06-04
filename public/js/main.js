@@ -52,6 +52,9 @@ function initMicroStep() {
   btn.addEventListener('click', () => {
     const random = actions[Math.floor(Math.random() * actions.length)];
     display.textContent = random;
+    display.classList.remove('pop');
+    void display.offsetWidth;
+    display.classList.add('pop');
     let count = updateCounter();
     count++;
     saveCounter(count);

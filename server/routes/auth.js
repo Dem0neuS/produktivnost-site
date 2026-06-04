@@ -59,6 +59,43 @@ router.post('/logout', (req, res) => {
   });
 });
 
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Введите email' });
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.json({ success: true, message: 'Если пользователь с таким email существует, ссылка для сброса отправлена' });
+    const token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+    user.resetToken = token;
+    user.resetTokenExpires = new Date(Date.now() + 3600000);
+    await user.save();
+    res.json({ success: true, token, message: 'В демо-режиме код сброса показан ниже. В реальном проекте он был бы отправлен на email.' });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { email, token, newPassword } = req.body;
+    if (!email || !token || !newPassword) return res.status(400).json({ error: 'Все поля обязательны' });
+    if (newPassword.length < 4) return res.status(400).json({ error: 'Пароль должен быть не менее 4 символов' });
+    const user = await User.findOne({ where: { email, resetToken: token } });
+    if (!user || user.resetTokenExpires < new Date()) {
+      return res.status(400).json({ error: 'Неверный или просроченный код сброса' });
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetToken = null;
+    user.resetTokenExpires = null;
+    await user.save();
+    res.json({ success: true, message: 'Пароль успешно изменён' });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
 router.get('/me', async (req, res) => {
   if (!req.session.userId) {
     return res.json({ user: null });
