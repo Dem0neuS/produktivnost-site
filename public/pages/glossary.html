@@ -195,7 +195,7 @@
       }
       localStorage.setItem('glossary_favorites', JSON.stringify(favorites));
       updateFavCount();
-      renderGlossary(document.getElementById('glossarySearch').value.toLowerCase());
+      renderGlossary(document.getElementById('glossarySearch').value.toLowerCase(), currentPage);
 
       if (currentUser) {
         fetch('/api/favorites', {
@@ -225,7 +225,7 @@
             favorites = synced;
             localStorage.setItem('glossary_favorites', JSON.stringify(favorites));
             updateFavCount();
-            renderGlossary(document.getElementById('glossarySearch').value.toLowerCase());
+            renderGlossary(document.getElementById('glossarySearch').value.toLowerCase(), currentPage);
           }
         } catch(e) {}
       });
