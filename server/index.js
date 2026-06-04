@@ -61,6 +61,14 @@ pages.forEach(page => {
   app.get(route, (req, res) => res.sendFile(filePath));
 });
 
+// JSON parse error handler (body-parser malformed JSON)
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ error: 'Неверный формат JSON' });
+  }
+  next();
+});
+
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
 });
