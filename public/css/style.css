@@ -1252,3 +1252,30 @@ body { animation: pageIn 0.35s ease-out; }
   border-color: var(--accent);
   box-shadow: 0 2px 12px var(--accent-light);
 }
+
+/* Course cards */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+.course-card {
+  display: block;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent);
+}
+.course-card h3 {
+  font-size: 1.1rem;
+  margin: 0 0 4px;
+}

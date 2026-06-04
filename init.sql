@@ -160,6 +160,19 @@ CREATE TABLE IF NOT EXISTS user_question_answers (
     "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Записи пользователей на курсы с прогрессом
+CREATE TABLE IF NOT EXISTS user_courses (
+    id SERIAL PRIMARY KEY,
+    "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    "courseId" INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+    status VARCHAR(50) DEFAULT 'in_progress',
+    progress REAL DEFAULT 0,
+    "completedLessons" JSONB DEFAULT '[]'::jsonb,
+    "completedAt" TIMESTAMPTZ,
+    "createdAt" TIMESTAMPTZ NOT NULL,
+    "updatedAt" TIMESTAMPTZ NOT NULL
+);
+
 
 -- =====================================================================
 -- 5. ИНДЕКСЫ ДЛЯ ОПТИМИЗАЦИИ СВЯЗЕЙ (FOREIGN KEYS)
@@ -173,3 +186,5 @@ CREATE INDEX IF NOT EXISTS idx_course_test_results_test_id ON course_test_result
 CREATE INDEX IF NOT EXISTS idx_course_test_results_user_id ON course_test_results(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_question_answers_test_question ON user_question_answers(test_id, question_id);
 CREATE INDEX IF NOT EXISTS idx_user_question_answers_user ON user_question_answers(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_courses_user_id ON user_courses("userId");
+CREATE INDEX IF NOT EXISTS idx_user_courses_course_id ON user_courses("courseId");

@@ -25,6 +25,7 @@ require('dotenv').config();
       'micro_steps',
       'glossary_favorites',
       'test_results',
+      'user_courses',
       'pomodoro_sessions',
       'habits',
       'users',

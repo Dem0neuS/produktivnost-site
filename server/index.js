@@ -6,6 +6,7 @@ const { sequelize, initDb } = require('./db');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const cabinetRoutes = require('./routes/cabinet');
+const coursesRoutes = require('./routes/courses');
 require('dotenv').config();
 
 const app = express();
@@ -46,8 +47,9 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api', apiRoutes);
 app.use('/api/cabinet', cabinetRoutes);
+app.use('/api/courses', coursesRoutes);
 
-const pages = ['index', 'habits', 'antiprocrastination', 'methods', 'templates', 'glossary', 'tests', 'about', 'cabinet', 'pomodoro'];
+const pages = ['index', 'habits', 'antiprocrastination', 'methods', 'templates', 'glossary', 'tests', 'about', 'cabinet', 'pomodoro', 'courses', 'course'];
 
 pages.forEach(page => {
   const filePath = page === 'index'

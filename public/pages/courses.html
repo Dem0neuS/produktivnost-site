@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Курсы по продуктивности: от базовой системы до продвинутого GTD. Для студентов, родителей, работающих и фрилансеров.">
+  <title>Курсы по продуктивности</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo"><svg viewBox="0 0 32 32"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6c63ff"/><stop offset="100%" stop-color="#ff6b9d"/></linearGradient></defs><rect width="32" height="32" rx="7" fill="url(#lg)"/><path d="M8 18 L14 24 L24 10" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Продуктивность и планирование</a>
+      <button class="hamburger" id="hamburger" aria-label="Меню"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+      <nav class="nav" id="nav">
+        <a href="/">Главная</a><a href="/pomodoro">Pomodoro</a><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/courses" class="active">Курсы</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a><a href="/about">О проекте</a>
+      </nav>
+      <div class="header-actions">
+        <button class="icon-btn" id="searchIcon" aria-label="Поиск"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-4.35-4.35"/></svg></button>
+        <button class="icon-btn" id="themeToggle" aria-label="Тема"><svg class="theme-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <button class="btn btn-primary btn-sm" id="loginBtn">Войти</button>
+        <div class="user-menu" id="userMenu" style="display:none"><div class="user-avatar"></div><span class="user-name"></span><a href="/cabinet" style="color:var(--accent);font-size:1.1rem;text-decoration:none;margin-left:4px;padding:4px;border-radius:4px;" title="Личный кабинет"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header">
+    <h1>Обучитесь системе за 5 шагов</h1>
+    <p>Выберите свой курс и соберите работающую систему продуктивности под ваш ритм жизни</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="filters" style="justify-content:center;margin-bottom:32px;">
+        <button class="filter-btn active" data-filter="all">Все курсы</button>
+        <button class="filter-btn" data-filter="student">Для студентов</button>
+        <button class="filter-btn" data-filter="work">Для работающих</button>
+        <button class="filter-btn" data-filter="parent">Для родителей</button>
+        <button class="filter-btn" data-filter="beginner">Для новичков</button>
+      </div>
+      <div id="coursesGrid" class="course-grid"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><h4>Продуктивность и планирование</h4><p style="color:var(--text-secondary);font-size:0.9rem;">Система продуктивности,<br>которая работает без выгорания</p></div>
+      <div><h4>Разделы</h4><a href="/pomodoro">Pomodoro</a><a href="/habits">Привычки</a><a href="/antiprocrastination">Антипрокрастинация</a><a href="/methods">Методы</a><a href="/templates">Шаблоны</a><a href="/courses">Курсы</a><a href="/glossary">Глоссарий</a><a href="/tests">Тесты</a></div>
+      <div><h4>Контакты</h4><a href="mailto:info@produktivnost.ru">info@produktivnost.ru</a><a href="tel:89538381765">8-953-838-17-65</a><a href="/about">О проекте</a></div>
+      <div><h4>Правовая</h4><a href="#">Политика конфиденциальности</a><a href="#">Пользовательское соглашение</a></div>
+    </div>
+    <div class="footer-bottom">© 2026 — Информационный сайт про Продуктивность и Планирование. Все права защищены.</div>
+  </footer>
+
+  <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
+  <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+
+  <script src="/js/theme.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/search.js"></script>
+  <script>
+    const coursesData = [
+      { id: 1, title: 'Ваша первая система из 4 блоков', tag: 'beginner', icon: '🚀', desc: 'Собрать работающую систему из инструментов сайта: Эйзенхауэр + Pomodoro + Time Blocking + GTD.', audience: 'Новички и те, кто пробовал всё, но ничего не прижилось', modules: ['Утро: матрица Эйзенхауэра за 5 минут', 'День: Pomodoro внутри Time Blocking', 'Вечер: мини-GTD и ритуал «Стоп»'], result: 'PDF «Мой спокойный день» + снижение тревожности', free: true },
+      { id: 2, title: 'Сессия без нервов: учёба и жизнь', tag: 'student', icon: '🎓', desc: 'Перестать учиться ночью и начать успевать отдыхать.', audience: 'Студенты', modules: ['Декомпозиция курсача (80/20)', 'Карта экзаменов: приоритеты + вес предмета', 'Режим «Фрилансер» для студента'], result: 'Готовый план на семестр' },
+      { id: 3, title: 'Сделать, отвлечься, не забыть', tag: 'parent', icon: '👨‍👩‍👧‍👦', desc: 'Совмещать быт, ребёнка и собственные проекты без чувства вины.', audience: 'Родители в декрете', modules: ['Уровни задач: «можно с ребёнком» / «только когда спит»', 'Правило 3-х дел', 'Свой проект без прокрастинации: 45 минут «на себя»'], result: 'Система покажет — вы сделали главное' },
+      { id: 4, title: 'Мастер-контроль без выгорания', tag: 'work', icon: '💼', desc: 'Полный GTD, адаптированный под бережное отношение к себе.', audience: 'Работающие и фрилансеры', modules: ['Полная «Корзина» для задач', 'Контексты вместо дедлайнов', 'Еженедельный обзор по-человечески'], result: 'Mind like water — спокойный ум' },
+      { id: 5, title: 'Синхронизация без конфликтов', tag: 'work', icon: '👥', desc: 'Единая логика планирования для семьи или команды.', audience: 'Пары, родители + дети, небольшие команды', modules: ['Общий календарь', '«Тихие часы» и «Зелёные зоны»', 'Общий обзор 10 минут в воскресенье'], result: 'Меньше обид и ссор' }
+    ];
+
+    let currentUser = null;
+
+    function renderCourses(filter = 'all') {
+      const grid = document.getElementById('coursesGrid');
+      const filtered = filter === 'all' ? coursesData : coursesData.filter(c => c.tag === filter);
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">Нет курсов в этой категории</p>';
+        return;
+      }
+      grid.innerHTML = filtered.map(c => `
+        <div class="course-card" onclick="location.href='/course?id=${c.id}'">
+          <div style="font-size:2rem;margin-bottom:8px;">${c.icon}</div>
+          <h3 style="font-size:1.1rem;margin:0 0 4px;">${c.title}</h3>
+          ${c.free ? '<span style="font-size:0.75rem;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">Бесплатно</span>' : ''}
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 8px;">${c.desc}</p>
+          <p style="font-size:0.8rem;color:var(--text);font-weight:500;"><strong>Для кого:</strong> ${c.audience}</p>
+          <p style="font-size:0.8rem;color:var(--text-secondary);margin:4px 0 8px;"><strong>Модули:</strong> ${c.modules.length}</p>
+          <p style="font-size:0.8rem;color:var(--success);margin:0;"><strong>Результат:</strong> ${c.result}</p>
+          <div style="margin-top:12px;"><span class="btn btn-sm ${c.free ? 'btn-primary' : 'btn-outline'}" style="pointer-events:none;">${c.free ? 'Начать бесплатно' : 'Подробнее'}</span></div>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
+      renderCourses();
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          renderCourses(this.dataset.filter);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 // Внимание: предварительно запустите reset-db.js для чистой БД
 
 const bcrypt = require('bcryptjs');
-const { sequelize, initDb, User, Habit, PomodoroSession, TestResult, GlossaryFavorite, MicroStep, Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestQuestion, CourseTestResult, UserQuestionAnswer } = require('./server/db');
+const { sequelize, initDb, User, Habit, PomodoroSession, TestResult, GlossaryFavorite, MicroStep, Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestQuestion, CourseTestResult, UserQuestionAnswer, UserCourse } = require('./server/db');
 require('dotenv').config();
 
 (async () => {
@@ -44,9 +44,11 @@ require('dotenv').config();
     // =====================================================================
     console.log('\n--- Courses ---');
     const courses = await Course.bulkCreate([
-      { name: 'Основы тайм-менеджмента' },
-      { name: 'Продвинутая продуктивность' },
-      { name: 'Эмоциональный интеллект' }
+      { name: 'Ваша первая система из 4 блоков' },
+      { name: 'Сессия без нервов: учёба и жизнь' },
+      { name: 'Сделать, отвлечься, не забыть' },
+      { name: 'Мастер-контроль без выгорания' },
+      { name: 'Синхронизация без конфликтов' }
     ]);
     console.log(`  ${courses.length} created`);
 
@@ -136,29 +138,47 @@ require('dotenv').config();
     // =====================================================================
     console.log('\n--- Lessons ---');
     const lessons = await Lesson.bulkCreate([
-      { courseId: courses[0].id, lessonNumber: 1, data: '# Введение в тайм-менеджмент\n\nЧто такое тайм-менеджмент и зачем он нужен? В этом уроке разберём базовые понятия.', statusId: lessonStatuses[0].id },
-      { courseId: courses[0].id, lessonNumber: 2, data: '# Матрица Эйзенхауэра\n\nКак расставлять приоритеты с помощью матрицы срочности и важности.', statusId: lessonStatuses[0].id },
-      { courseId: courses[0].id, lessonNumber: 3, data: '# Pomodoro-техника\n\n25 минут фокуса — 5 минут отдыха. Освойте главную технику интервальной работы.', statusId: lessonStatuses[2].id },
-      { courseId: courses[1].id, lessonNumber: 1, data: '# GTD — Getting Things Done\n\nПолная система управления задачами от Дэвида Аллена.', statusId: lessonStatuses[0].id },
-      { courseId: courses[1].id, lessonNumber: 2, data: '# Deep Work\n\nКак входить в состояние глубокой работы и не отвлекаться.', statusId: lessonStatuses[1].id },
-      { courseId: courses[2].id, lessonNumber: 1, data: '# Что такое эмоциональный интеллект\n\nEQ vs IQ: почему эмоции важнее IQ для успеха.', statusId: lessonStatuses[0].id },
-      { courseId: courses[2].id, lessonNumber: 2, data: '# Управление стрессом\n\nТехники быстрого восстановления в стрессовых ситуациях.', statusId: lessonStatuses[0].id },
-      { courseId: courses[2].id, lessonNumber: 3, data: '# Эмпатия в коммуникации\n\nКак понимать эмоции других и строить доверительные отношения.', statusId: lessonStatuses[0].id }
+      { courseId: courses[0].id, lessonNumber: 1, data: 'Утро: матрица Эйзенхауэра за 5 минут', statusId: lessonStatuses[0].id },
+      { courseId: courses[0].id, lessonNumber: 2, data: 'День: Pomodoro внутри Time Blocking', statusId: lessonStatuses[0].id },
+      { courseId: courses[0].id, lessonNumber: 3, data: 'Вечер: мини-GTD и ритуал «Стоп»', statusId: lessonStatuses[0].id },
+      { courseId: courses[1].id, lessonNumber: 1, data: 'Декомпозиция курсача (80/20)', statusId: lessonStatuses[0].id },
+      { courseId: courses[1].id, lessonNumber: 2, data: 'Карта экзаменов', statusId: lessonStatuses[0].id },
+      { courseId: courses[1].id, lessonNumber: 3, data: 'Режим «Фрилансер» для студента', statusId: lessonStatuses[0].id },
+      { courseId: courses[2].id, lessonNumber: 1, data: 'Уровни задач: «можно с ребёнком» / «только когда спит»', statusId: lessonStatuses[0].id },
+      { courseId: courses[2].id, lessonNumber: 2, data: 'Правило 3-х дел', statusId: lessonStatuses[0].id },
+      { courseId: courses[2].id, lessonNumber: 3, data: 'Свой проект без прокрастинации', statusId: lessonStatuses[0].id },
+      { courseId: courses[3].id, lessonNumber: 1, data: 'Полная «Корзина» для задач', statusId: lessonStatuses[0].id },
+      { courseId: courses[3].id, lessonNumber: 2, data: 'Контексты вместо дедлайнов', statusId: lessonStatuses[0].id },
+      { courseId: courses[3].id, lessonNumber: 3, data: 'Еженедельный обзор по-человечески', statusId: lessonStatuses[0].id },
+      { courseId: courses[4].id, lessonNumber: 1, data: 'Общий календарь', statusId: lessonStatuses[0].id },
+      { courseId: courses[4].id, lessonNumber: 2, data: '«Тихие часы» и «Зелёные зоны»', statusId: lessonStatuses[0].id },
+      { courseId: courses[4].id, lessonNumber: 3, data: 'Общий обзор', statusId: lessonStatuses[0].id }
     ]);
     console.log(`  ${lessons.length} created`);
 
+    console.log('--- User Courses (enrollments) ---');
+    const enrollments = await UserCourse.bulkCreate([
+      { userId: users[0].id, courseId: courses[0].id, status: 'in_progress', progress: 33, completedLessons: [1] },
+      { userId: users[0].id, courseId: courses[2].id, status: 'in_progress', progress: 0, completedLessons: [] },
+      { userId: users[1].id, courseId: courses[3].id, status: 'in_progress', progress: 66, completedLessons: [10, 11] },
+      { userId: users[2].id, courseId: courses[2].id, status: 'completed', progress: 100, completedLessons: [7, 8, 9], completedAt: new Date() },
+      { userId: users[3].id, courseId: courses[0].id, status: 'in_progress', progress: 66, completedLessons: [1, 2] }
+    ]);
+    console.log(`  ${enrollments.length} created`);
+
     console.log('--- Course Tests ---');
     const courseTests = await CourseTest.bulkCreate([
-      { courseId: courses[0].id, name: 'Входной тест по тайм-менеджменту', statusId: testStatuses[0].id },
-      { courseId: courses[0].id, name: 'Итоговый тест по основам', statusId: testStatuses[0].id },
-      { courseId: courses[1].id, name: 'Тест по GTD', statusId: testStatuses[0].id },
-      { courseId: courses[2].id, name: 'Тест по EQ', statusId: testStatuses[1].id }
+      { courseId: courses[0].id, name: 'Самопроверка: блок 1', statusId: testStatuses[0].id },
+      { courseId: courses[0].id, name: 'Самопроверка: блок 2', statusId: testStatuses[0].id },
+      { courseId: courses[1].id, name: 'Тест по декомпозиции', statusId: testStatuses[0].id },
+      { courseId: courses[3].id, name: 'Тест по GTD', statusId: testStatuses[0].id },
+      { courseId: courses[4].id, name: 'Тест по синхронизации', statusId: testStatuses[1].id }
     ]);
     console.log(`  ${courseTests.length} created`);
 
     console.log('--- Course Test Questions ---');
     const questions = await CourseTestQuestion.bulkCreate([
-      // Входной тест (id=1)
+      // Самопроверка блок 1 (id=1)
       { testId: courseTests[0].id, question: 'Что означает аббревиатура GTD?' },
       { testId: courseTests[0].id, question: 'Сколько минут длится один Pomodoro-цикл?' },
       { testId: courseTests[0].id, question: 'Какие оси использует матрица Эйзенхауэра?' },
