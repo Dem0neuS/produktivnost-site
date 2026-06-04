@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 let sessionStore;
 try {
-  sessionStore = new SequelizeStore({ db: sequelize });
+  sessionStore = new SequelizeStore({ db: sequelize, table: 'Session' });
 } catch (e) {
   console.error('Session store init error:', e.message);
   sessionStore = new session.MemoryStore();
@@ -159,10 +159,11 @@ async function start() {
   await migrateCourses();
   if (sessionStore.sync) {
     try {
+      await sequelize.query('DROP TABLE IF EXISTS "Sessions" CASCADE');
       await sessionStore.sync();
       console.log('Session store synced');
     } catch (e) {
-      console.log('Session store sync failed, using memory fallback');
+      console.log('Session store sync failed:', e.message);
     }
   }
   app.listen(PORT, () => {
