@@ -47,7 +47,12 @@ router.get('/my/list', async (req, res) => {
   try {
     const userCourses = await UserCourse.findAll({
       where: { userId: uid },
-      include: [Course],
+      include: [{
+        model: Course,
+        attributes: {
+          include: [[sequelize.literal('(SELECT COUNT(*) FROM "lessons" WHERE "lessons"."course_id" = "Course"."id")'), 'lessonCount']]
+        }
+      }],
       order: [['createdAt', 'DESC']]
     });
     res.json({ courses: userCourses });
