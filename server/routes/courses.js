@@ -47,21 +47,30 @@ router.get('/my/list', async (req, res) => {
   try {
     const userCourses = await UserCourse.findAll({
       where: { userId: uid },
-      include: [Course],
       order: [['createdAt', 'DESC']]
     });
     const courseIds = [...new Set(userCourses.map(uc => uc.courseId))];
-    const counts = {};
-    if (courseIds.length > 0) {
-      const rows = await sequelize.query(
-        'SELECT course_id, COUNT(*) AS cnt FROM lessons WHERE course_id IN (:ids) GROUP BY course_id',
-        { replacements: { ids: courseIds }, type: sequelize.QueryTypes.SELECT }
-      );
-      rows.forEach(r => { counts[r.course_id] = parseInt(r.cnt, 10); });
-    }
+    const [courses, counts] = await Promise.all([
+      courseIds.length > 0
+        ? Course.findAll({ where: { id: courseIds } })
+        : Promise.resolve([]),
+      courseIds.length > 0
+        ? sequelize.query(
+            'SELECT course_id, COUNT(*) AS cnt FROM lessons WHERE course_id IN (:ids) GROUP BY course_id',
+            { replacements: { ids: courseIds }, type: sequelize.QueryTypes.SELECT }
+          )
+        : Promise.resolve([])
+    ]);
+    const courseMap = Object.fromEntries(courses.map(c => [c.id, c]));
+    const countMap = {};
+    counts.forEach(r => { countMap[r.course_id] = parseInt(r.cnt, 10); });
     const result = userCourses.map(uc => {
       const plain = uc.toJSON();
-      if (plain.course) plain.course.lessonCount = counts[uc.courseId] || 0;
+      const course = courseMap[uc.courseId];
+      if (course) {
+        plain.course = course.toJSON();
+        plain.course.lessonCount = countMap[uc.courseId] || 0;
+      }
       return plain;
     });
     res.json({ courses: result });
