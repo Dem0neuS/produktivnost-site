@@ -57,6 +57,8 @@ const Course = require('./models/Course')(sequelize);
 const Lesson = require('./models/Lesson')(sequelize);
 const CourseTest = require('./models/CourseTest')(sequelize);
 const CourseTestResult = require('./models/CourseTestResult')(sequelize);
+const CourseTestQuestion = require('./models/CourseTestQuestion')(sequelize);
+const UserQuestionAnswer = require('./models/UserQuestionAnswer')(sequelize);
 
 // Трекер продуктивности
 User.hasMany(Habit, { foreignKey: 'userId' });
@@ -96,6 +98,18 @@ CourseTestResult.belongsTo(CourseTest, { foreignKey: 'test_id' });
 User.hasMany(CourseTestResult, { foreignKey: 'user_id' });
 CourseTestResult.belongsTo(User, { foreignKey: 'user_id' });
 
+CourseTest.hasMany(CourseTestQuestion, { foreignKey: 'test_id' });
+CourseTestQuestion.belongsTo(CourseTest, { foreignKey: 'test_id' });
+
+CourseTest.hasMany(UserQuestionAnswer, { foreignKey: 'test_id' });
+UserQuestionAnswer.belongsTo(CourseTest, { foreignKey: 'test_id' });
+
+CourseTestQuestion.hasMany(UserQuestionAnswer, { foreignKey: 'question_id' });
+UserQuestionAnswer.belongsTo(CourseTestQuestion, { foreignKey: 'question_id' });
+
+User.hasMany(UserQuestionAnswer, { foreignKey: 'user_id' });
+UserQuestionAnswer.belongsTo(User, { foreignKey: 'user_id' });
+
 async function initDb() {
   try {
     await sequelize.authenticate();
@@ -111,5 +125,6 @@ async function initDb() {
 module.exports = {
   sequelize, User, Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession,
   Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestResult,
+  CourseTestQuestion, UserQuestionAnswer,
   initDb
 };

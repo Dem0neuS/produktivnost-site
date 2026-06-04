@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS courses (
 -- 2. ОСНОВНАЯ ТАБЛИЦА ПОЛЬЗОВАТЕЛЕЙ (СВЯЗУЮЩЕЕ ЗВЕНО)
 -- =====================================================================
 
--- Users — пользователи (с добавлением связи СтатусПодписки(FK) из диаграммы)
+-- Users — пользователи (со связью СтатусПодписки(FK) из диаграммы)
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 -- =====================================================================
--- 3. ТАБЛИЦЫ ТРЕКЕРА ПРОДУКТИВНОСТИ (ВАША ТЕКУЩАЯ СТРУКТУРА)
+-- 3. ТАБЛИЦЫ ТРЕКЕРА ПРОДУКТИВНОСТИ
 -- =====================================================================
 
 -- Habits — привычки (User → Habit)
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS glossary_favorites (
     "createdAt" TIMESTAMPTZ NOT NULL
 );
 
--- MicroSteps — микро-шаги (User → MicroStep)
+-- MicroSteps — micro-шаги (User → MicroStep)
 CREATE TABLE IF NOT EXISTS micro_steps (
     id SERIAL PRIMARY KEY,
     "userId" INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -126,18 +126,25 @@ CREATE TABLE IF NOT EXISTS lessons (
     "updatedAt" TIMESTAMPTZ
 );
 
--- Тесты (Курсы --> Тесты)
+-- Тесты внутри курсов (Курсы --> Тесты)
 CREATE TABLE IF NOT EXISTS course_tests (
     id SERIAL PRIMARY KEY,
     course_id INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
-    data JSONB NOT NULL,
     status_id INTEGER NOT NULL REFERENCES test_statuses(id) ON DELETE RESTRICT,
     "createdAt" TIMESTAMPTZ,
     "updatedAt" TIMESTAMPTZ
 );
 
--- РезультатыТестов (связующая таблица между Юзером и Тестом курса)
+-- Вопросы к тестам (Тесты --> Вопросы к тестам)
+CREATE TABLE IF NOT EXISTS course_test_questions (
+    id SERIAL PRIMARY KEY,
+    test_id INTEGER NOT NULL REFERENCES course_tests(id) ON DELETE CASCADE,
+    question TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Общие результаты сдачи тестов по курсам
 CREATE TABLE IF NOT EXISTS course_test_results (
     id SERIAL PRIMARY KEY,
     test_id INTEGER NOT NULL REFERENCES course_tests(id) ON DELETE CASCADE,
@@ -149,6 +156,16 @@ CREATE TABLE IF NOT EXISTS course_test_results (
     "updatedAt" TIMESTAMPTZ NOT NULL
 );
 
+-- Повопросные ответы пользователя
+CREATE TABLE IF NOT EXISTS user_question_answers (
+    id SERIAL PRIMARY KEY,
+    test_id INTEGER NOT NULL REFERENCES course_tests(id) ON DELETE CASCADE,
+    question_id INTEGER NOT NULL REFERENCES course_test_questions(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    is_correct BOOLEAN NOT NULL,
+    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- =====================================================================
 -- 5. ИНДЕКСЫ ДЛЯ ОПТИМИЗАЦИИ СВЯЗЕЙ (FOREIGN KEYS)
@@ -157,5 +174,8 @@ CREATE INDEX IF NOT EXISTS idx_habits_user_id ON habits("userId");
 CREATE INDEX IF NOT EXISTS idx_pomodoro_user_id ON pomodoro_sessions("userId");
 CREATE INDEX IF NOT EXISTS idx_lessons_course_id ON lessons(course_id);
 CREATE INDEX IF NOT EXISTS idx_course_tests_course_id ON course_tests(course_id);
+CREATE INDEX IF NOT EXISTS idx_course_test_questions_test_id ON course_test_questions(test_id);
 CREATE INDEX IF NOT EXISTS idx_course_test_results_test_id ON course_test_results(test_id);
 CREATE INDEX IF NOT EXISTS idx_course_test_results_user_id ON course_test_results(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_question_answers_test_question ON user_question_answers(test_id, question_id);
+CREATE INDEX IF NOT EXISTS idx_user_question_answers_user ON user_question_answers(user_id);
