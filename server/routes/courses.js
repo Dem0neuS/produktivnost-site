@@ -16,11 +16,12 @@ router.get('/', async (req, res) => {
     const courses = await Course.findAll({
       order: [['id', 'ASC']],
       attributes: {
-        include: [[sequelize.literal('(SELECT COUNT(*) FROM lessons WHERE lessons.course_id = courses.id)'), 'lessonCount']]
+        include: [[sequelize.literal('(SELECT COUNT(*) FROM "lessons" WHERE "lessons"."course_id" = "Course"."id")'), 'lessonCount']]
       }
     });
     res.json({ courses });
   } catch (e) {
+    console.error('Courses list error:', e.message);
     res.status(500).json({ error: 'Ошибка загрузки курсов' });
   }
 });
