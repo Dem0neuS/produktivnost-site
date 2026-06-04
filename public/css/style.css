@@ -1,13 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
 :root {
+  --brand-hue: 248;
+  --brand-primary: #6c63ff;
+  --brand-secondary: #ff6b9d;
+  --brand-gradient: linear-gradient(135deg, #6c63ff, #ff6b9d);
+  --brand-gradient-text: linear-gradient(135deg, #6c63ff 0%, #ff6b9d 50%, #f39c12 100%);
+  --brand-dark: #1a1a2e;
+
   --bg: #ffffff;
   --bg-secondary: #f4f6fb;
   --bg-card: #ffffff;
   --text: #1a1a2e;
   --text-secondary: #5a5a7a;
-  --accent: #6c63ff;
-  --accent-2: #ff6b9d;
+  --accent: var(--brand-primary);
   --accent-hover: #5a52d5;
   --accent-light: rgba(108, 99, 255, 0.08);
   --accent-glow: rgba(108, 99, 255, 0.25);
@@ -22,7 +28,7 @@
   --warning: #f1c40f;
   --danger: #e74c3c;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --max-width: 1200px;
   --header-blur: rgba(255,255,255,0.72);
 }
@@ -43,6 +49,10 @@
   --shadow-glow: 0 8px 32px rgba(139, 131, 255, 0.2);
   --header-blur: rgba(11, 11, 26, 0.8);
 }
+
+/* ===== Brand ===== */
+.brand-text { background: var(--brand-gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.brand-border { border-image: var(--brand-gradient) 1; }
 
 *, *::before, *::after {
   box-sizing: border-box;
