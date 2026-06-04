@@ -25,6 +25,9 @@ router.post('/register', async (req, res) => {
     req.session.userName = user.name;
     res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, theme: user.theme } });
   } catch (err) {
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: 'Пользователь с таким email уже существует' });
+    }
     console.error('Register error:', err);
     res.status(500).json({ error: 'Ошибка регистрации' });
   }

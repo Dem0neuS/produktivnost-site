@@ -106,7 +106,7 @@
 
       initForgotPasswordCabinet(document.getElementById('loginForm'));
 
-      window.addEventListener('auth:changed', () => { currentUser = window.__currentUser; renderCabinet(); });
+      window.addEventListener('auth:changed', () => { renderCabinet(); });
 
       checkAuth();
     }
