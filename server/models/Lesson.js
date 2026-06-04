@@ -6,6 +6,7 @@ module.exports = (sequelize) => {
     courseId: { type: DataTypes.INTEGER, allowNull: false, field: 'course_id' },
     lessonNumber: { type: DataTypes.INTEGER, allowNull: false, field: 'lesson_number' },
     data: { type: DataTypes.TEXT, allowNull: false },
+    content: { type: DataTypes.TEXT, defaultValue: '' },
     statusId: { type: DataTypes.INTEGER, allowNull: false, field: 'status_id' },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }

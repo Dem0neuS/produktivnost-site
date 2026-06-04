@@ -65,34 +65,6 @@
   <script src="/js/auth.js"></script>
   <script src="/js/search.js"></script>
   <script>
-    const courses = {
-      1: { title: 'Ваша первая система из 4 блоков', icon: '🚀', desc: 'Собрать работающую систему из инструментов, которые уже есть на сайте (Эйзенхауэр + Pomodoro + Time Blocking + GTD).', audience: 'Новички и те, кто пробовал всё, но ничего не прижилось', modules: [
-        { id: 1, name: 'Утро: матрица Эйзенхауэра за 5 минут', content: '<p>Научитесь за 5 минут отфильтровать хаос из задач с помощью матрицы Эйзенхауэра.</p><h3>Практика</h3><p>Возьмите список всех дел на сегодня. Разделите лист на 4 квадранта:</p><ul><li><strong>Важно и срочно</strong> — делаем сразу</li><li><strong>Важно, не срочно</strong> — планируем</li><li><strong>Не важно, срочно</strong> — делегируем</li><li><strong>Не важно, не срочно</strong> — удаляем</li></ul><p>Результат: перед вами не хаос, а чёткая картина дня.</p>' },
-        { id: 2, name: 'День: Pomodoro внутри Time Blocking', content: '<p>Техника Pomodoro внутри жёстких блоков — работаем 25 мин, отдыхаем, не переключаясь.</p><h3>Как совместить</h3><p>Разбейте день на 2-часовые блоки. В каждом блоке — 3 помодоро по 25 мин с перерывами 5 мин. После каждого блока — большой перерыв 15-30 мин.</p><p><strong>Важно:</strong> внутри блока никаких переключений — только одна задача.</p>' },
-        { id: 3, name: 'Вечер: мини-GTD и ритуал «Стоп»', content: '<p>Мини-GTD (обзор дня) и ритуал «Стоп» — чтобы мысли о работе не шли в личную жизнь.</p><h3>Вечерний ритуал (5 минут)</h3><ol><li>Запишите 3 главных достижения дня</li><li>Перенесите несделанное на завтра</li><li>Скажите вслух: «Рабочий день окончен»</li></ol><p>Этот ритуал снижает тревожность и помогает мозгу переключиться на отдых.</p>' }
-      ], result: 'Пошаговый PDF «Мой спокойный день» и первое снижение тревожности' },
-      2: { title: 'Сессия без нервов: учёба и жизнь', icon: '🎓', desc: 'Перестать учиться ночью и начать успевать отдыхать.', audience: 'Студенты', modules: [
-        { id: 4, name: 'Декомпозиция курсача (80/20)', content: '<p>Как разбить «написать диплом» на 15-минутные задачи, используя правило Парето.</p><h3>Правило 80/20 для учёбы</h3><p>20% усилий дают 80% результата. Найдите эти 20% в вашем курсовом проекте:</p><ul><li>Какая глава самая важная?</li><li>Какой источник даст 80% информации?</li><li>Какой эксперимент самый показательный?</li></ul><p>Разбейте работу на задачи по 15 минут и выполняйте по одной в день.</p>' },
-        { id: 5, name: 'Карта экзаменов', content: '<p>Метод приоритетов: матрица Эйзенхауэра + вес предмета.</p><h3>Как составить карту</h3><p>Оцените каждый предмет по двум шкалам: сложность (1-10) и вес зачётки (количество часов/кредитов). Предметы с высокой сложностью и большим весом — в приоритет. На них уйдёт 80% времени подготовки.</p>' },
-        { id: 6, name: 'Режим «Фрилансер» для студента', content: '<p>Как совмещать подработку, пары и личную жизнь без выгорания.</p><h3>Режим дня</h3><p>Используйте Time Blocking: пары (утро) → подработка (день) → личное (вечер). В каждом блоке — только одна активность. Pomodoro внутри блоков помогает не отвлекаться.</p>' }
-      ], result: 'Готовый план на семестр, где «поспать» — такая же задача, как и «сдать лабу»' },
-      3: { title: 'Сделать, отвлечься, не забыть', icon: '👨‍👩‍👧‍👦', desc: 'Совмещать быт, ребёнка и собственные проекты без чувства вины.', audience: 'Родители в декрете', modules: [
-        { id: 7, name: 'Уровни задач', content: '<p>«Можно с ребёнком» / «Только когда спит». Как их раскладывать по блокам.</p><h3>Два типа задач</h3><p><strong>Тип А</strong> — можно делать с ребёнком: уборка, готовка, покупки, звонки родным.</p><p><strong>Тип Б</strong> — только когда ребёнок спит: работа, учёба, творчество, важные звонки.</p><p>Планируйте день вокруг снов ребёнка: в один сон — задача типа Б, в другой — отдых.</p>' },
-        { id: 8, name: 'Правило 3-х дел', content: '<p>Всего 3 важных бытовых дела в день — остальное по желанию.</p><h3>Как это работает</h3><p>Каждое утро выбирайте 3 дела, которые сделают день «успешным». Всё остальное — бонус. Если сделали только 3 дела — день прошёл не зря. Если сделали больше — вы супергерой.</p>' },
-        { id: 9, name: 'Свой проект без прокрастинации', content: '<p>Выделение 45 минут «на себя» через технику Pomodoro.</p><h3>45 минут для себя</h3><p>Один блок в день, когда ребёнок спит или с другим родителем. 45 минут = 1 помодоро (25 мин) + перерыв + ещё 1 помодоро. В это время — только ваш проект. Без соцсетей, без уборки, без «срочных» дел.</p>' }
-      ], result: 'Исчезновение ощущения «день прошёл, а я ничего не сделала»' },
-      4: { title: 'Мастер-контроль без выгорания', icon: '💼', desc: 'Внедрить полную систему GTD, адаптированную под бережное отношение к себе.', audience: 'Работающие и фрилансеры', modules: [
-        { id: 10, name: 'Полная «Корзина»', content: '<p>Куда сливать задачи из головы, телеграма, почты.</p><h3>Корзина входящего</h3><p>Заведите одно место (Notion/бумага/файл), куда попадают ВСЕ задачи. Раз в день разбирайте корзину: что-то в календарь, что-то в список, что-то в архив. Если задача занимает меньше 2 минут — сделайте сразу.</p>' },
-        { id: 11, name: 'Контексты вместо дедлайнов', content: '<p>Метка «надо подумать», «жду ответа», «сделать, если будет 10 минут».</p><h3>Контексты в GTD</h3><p>Вместо того чтобы ставить дедлайн на каждую задачу, разложите их по контекстам: @компьютер, @звонки, @встречи, @дома, @ожидание. Когда у вас есть 10 минут в очереди — смотрите контекст @ожидание.</p>' },
-        { id: 12, name: 'Еженедельный обзор по-человечески', content: '<p>Не 2 часа, а 20 минут и чашка чая — пересмотреть «Когда-нибудь» и похвалить себя.</p><h3>Review для занятых</h3><p>Раз в неделю (например, в воскресенье вечером) уделите 20 минут: (1) очистите корзину, (2) посмотрите на список «Когда-нибудь», (3) отметьте сделанное и похвалите себя, (4) наметьте 3 задачи на неделю.</p>' }
-      ], result: 'Mind like water — спокойный ум, потому что система знает о каждой задаче' },
-      5: { title: 'Синхронизация без конфликтов', icon: '👥', desc: 'Научить всю семью или отдел пользоваться единой логикой планирования.', audience: 'Пары, где оба работают; мамы в декрете + муж; небольшая команда фрилансеров', modules: [
-        { id: 13, name: 'Общий календарь', content: '<p>Кто забирает ребёнка, кто покупает продукты — Time Blocking для двоих.</p><h3>Синхронизация</h3><p>Заведите общий календарь (Google Calendar / Notion) с цветовыми метками для каждого члена семьи. В воскресенье на 10 минут сверьте планы на неделю: кто ведёт ребёнка к врачу, кто закупает продукты, когда общий ужин.</p>' },
-        { id: 14, name: '«Тихие часы» и «Зелёные зоны»', content: '<p>Когда никого не дёргать по работе / домашним вопросам.</p><h3>Правила для дома</h3><p>Определите «тихие часы» (например, 9:00-11:00 утра) — время глубокой работы, когда никто никого не отвлекает. «Зелёные зоны» — время для семейных дел и общения. Это снижает конфликты и повышает продуктивность всех.</p>' },
-        { id: 15, name: 'Общий обзор', content: '<p>10 минут в воскресенье синхронизировать планы, чтобы не было «А ты что, забыл?».</p><h3>Воскресный ритуал</h3><p>В воскресенье вечером соберитесь на 10 минут: (1) что было классного на неделе, (2) что не получилось, (3) планы на следующую неделю. Записывайте договорённости в общий календарь. Это убирает 90% бытовых конфликтов.</p>' }
-      ], result: 'Меньше обид и ссор, потому что договорённости лежат в системе, а не в голове у одного человека' }
-    };
-
     let currentCourse = null;
     let enrolled = false;
     let completedLessons = [];
@@ -101,25 +73,24 @@
     function getCourseId() { return new URLSearchParams(location.search).get('id') || 1; }
 
     function renderCourse() {
-      const id = getCourseId();
-      const c = courses[id];
-      if (!c) { document.getElementById('courseContent').innerHTML = '<p style="text-align:center;padding:40px;">Курс не найден</p>'; return; }
-      currentCourse = c;
-      const total = c.modules.length;
+      if (!currentCourse) return;
+      const c = currentCourse;
+      const lessons = c.Lessons || [];
+      const total = lessons.length;
       const done = completedLessons.length;
       const progress = total > 0 ? Math.round((done / total) * 100) : 0;
 
       document.getElementById('courseContent').innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;">
+        <div class="course-layout">
           <div>
             <div style="font-size:2.5rem;margin-bottom:8px;">${c.icon}</div>
-            <h1 style="margin:0 0 8px;">${c.title}</h1>
-            <p style="color:var(--text-secondary);margin:0 0 16px;">${c.desc}</p>
+            <h1 style="margin:0 0 8px;">${c.name}</h1>
+            <p style="color:var(--text-secondary);margin:0 0 16px;">${c.description}</p>
             <p style="font-size:0.9rem;"><strong>Для кого:</strong> ${c.audience}</p>
             <p style="font-size:0.9rem;color:var(--success);"><strong>Результат:</strong> ${c.result}</p>
             <div id="enrollArea" style="margin-top:16px;"></div>
           </div>
-          <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+          <div class="course-sidebar">
             <h3 style="margin:0 0 12px;">Прогресс</h3>
             <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${progress}%;"></div></div>
             <p style="font-size:0.85rem;color:var(--text-secondary);margin:8px 0 0;">${done} из ${total} модулей (${progress}%)</p>
@@ -130,10 +101,10 @@
         <div id="lessonsList"></div>
       `;
 
-      document.getElementById('lessonsList').innerHTML = c.modules.map((m, i) => `
+      document.getElementById('lessonsList').innerHTML = lessons.map((m, i) => `
         <div class="lesson-row ${completedLessons.includes(m.id) ? 'completed' : ''}" onclick="openLesson(${m.id})">
           <div class="lesson-check">${completedLessons.includes(m.id) ? '✓' : i + 1}</div>
-          <div style="flex:1;"><strong>${m.name}</strong></div>
+          <div style="flex:1;"><strong>${m.data}</strong></div>
           <span style="color:var(--text-secondary);font-size:0.8rem;">${completedLessons.includes(m.id) ? 'Пройдено' : 'Начать →'}</span>
         </div>
       `).join('');
@@ -159,14 +130,23 @@
     function openLesson(id) {
       if (!enrolled && currentUser) { showToast('Запишитесь на курс сначала'); return; }
       if (!currentUser) { openModal('authModal'); return; }
-      const m = currentCourse.modules.find(x => x.id == id);
+      const lessons = currentCourse.Lessons || [];
+      const m = lessons.find(x => x.id == id);
       if (!m) return;
       currentLessonId = id;
-      document.getElementById('lessonModalTitle').textContent = m.name;
-      document.getElementById('lessonModalBody').innerHTML = m.content;
+      document.getElementById('lessonModalTitle').textContent = m.data;
+      document.getElementById('lessonModalBody').innerHTML = m.content || '<p>Нет содержимого</p>';
       const done = completedLessons.includes(id);
-      document.getElementById('completeLessonBtn').textContent = done ? 'Пройдено ✓' : 'Отметить пройденным';
-      document.getElementById('completeLessonBtn').disabled = done;
+      const btn = document.getElementById('completeLessonBtn');
+      if (done) {
+        btn.textContent = 'Снять отметку';
+        btn.onclick = uncompleteLesson;
+        btn.disabled = false;
+      } else {
+        btn.textContent = 'Отметить пройденным';
+        btn.onclick = completeLesson;
+        btn.disabled = false;
+      }
       openModal('lessonModal');
     }
 
@@ -197,6 +177,21 @@
       } catch(e) { showToast('Ошибка сети'); }
     }
 
+    async function uncompleteLesson() {
+      if (!currentLessonId) return;
+      try {
+        const res = await fetch(`/api/courses/lessons/${currentLessonId}/uncomplete`, { method: 'POST', credentials: 'same-origin' });
+        const data = await res.json();
+        if (data.success) {
+          const idx = completedLessons.indexOf(currentLessonId);
+          if (idx !== -1) completedLessons.splice(idx, 1);
+          closeLessonModal();
+          renderCourse();
+          showToast('Отметка снята');
+        } else showToast(data.error || 'Ошибка');
+      } catch(e) { showToast('Ошибка сети'); }
+    }
+
     async function loadEnrollment() {
       if (!currentUser) return;
       try {
@@ -207,6 +202,22 @@
       } catch(e) {}
     }
 
+    async function loadCourse() {
+      const container = document.getElementById('courseContent');
+      container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-secondary);">Загрузка...</p>';
+      try {
+        const res = await fetch(`/api/courses/${getCourseId()}`);
+        if (!res.ok) throw new Error('Not found');
+        const data = await res.json();
+        currentCourse = data.course;
+        if (!currentCourse) { container.innerHTML = '<p style="text-align:center;padding:40px;">Курс не найден</p>'; return; }
+        await loadEnrollment();
+        renderCourse();
+      } catch(e) {
+        container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-secondary);">Не удалось загрузить курс</p>';
+      }
+    }
+
     function showToast(msg) {
       const t = document.createElement('div'); t.className = 'toast-success'; t.textContent = msg;
       document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
@@ -214,14 +225,12 @@
 
     document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
-      // проверяем авторизацию напрямую (не полагаясь на auth.js)
       try {
         const me = await fetch('/api/auth/me', { credentials: 'same-origin' });
         const data = await me.json();
         currentUser = data.user;
       } catch(e) {}
-      await loadEnrollment();
-      renderCourse();
+      loadCourse();
     });
   </script>
 </body>

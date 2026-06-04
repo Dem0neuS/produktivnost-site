@@ -63,17 +63,12 @@
   <script src="/js/auth.js"></script>
   <script src="/js/search.js"></script>
   <script>
-    const coursesData = [
-      { id: 1, title: 'Ваша первая система из 4 блоков', tag: 'beginner', icon: '🚀', desc: 'Собрать работающую систему из инструментов сайта: Эйзенхауэр + Pomodoro + Time Blocking + GTD.', audience: 'Новички и те, кто пробовал всё, но ничего не прижилось', modules: ['Утро: матрица Эйзенхауэра за 5 минут', 'День: Pomodoro внутри Time Blocking', 'Вечер: мини-GTD и ритуал «Стоп»'], result: 'PDF «Мой спокойный день» + снижение тревожности', free: true },
-      { id: 2, title: 'Сессия без нервов: учёба и жизнь', tag: 'student', icon: '🎓', desc: 'Перестать учиться ночью и начать успевать отдыхать.', audience: 'Студенты', modules: ['Декомпозиция курсача (80/20)', 'Карта экзаменов: приоритеты + вес предмета', 'Режим «Фрилансер» для студента'], result: 'Готовый план на семестр' },
-      { id: 3, title: 'Сделать, отвлечься, не забыть', tag: 'parent', icon: '👨‍👩‍👧‍👦', desc: 'Совмещать быт, ребёнка и собственные проекты без чувства вины.', audience: 'Родители в декрете', modules: ['Уровни задач: «можно с ребёнком» / «только когда спит»', 'Правило 3-х дел', 'Свой проект без прокрастинации: 45 минут «на себя»'], result: 'Система покажет — вы сделали главное' },
-      { id: 4, title: 'Мастер-контроль без выгорания', tag: 'work', icon: '💼', desc: 'Полный GTD, адаптированный под бережное отношение к себе.', audience: 'Работающие и фрилансеры', modules: ['Полная «Корзина» для задач', 'Контексты вместо дедлайнов', 'Еженедельный обзор по-человечески'], result: 'Mind like water — спокойный ум' },
-      { id: 5, title: 'Синхронизация без конфликтов', tag: 'work', icon: '👥', desc: 'Единая логика планирования для семьи или команды.', audience: 'Пары, родители + дети, небольшие команды', modules: ['Общий календарь', '«Тихие часы» и «Зелёные зоны»', 'Общий обзор 10 минут в воскресенье'], result: 'Меньше обид и ссор' }
-    ];
+    let coursesData = [];
+    let currentFilter = 'all';
 
-    function renderCourses(filter = 'all') {
+    function renderCourses() {
       const grid = document.getElementById('coursesGrid');
-      const filtered = filter === 'all' ? coursesData : coursesData.filter(c => c.tag === filter);
+      const filtered = currentFilter === 'all' ? coursesData : coursesData.filter(c => c.tag === currentFilter);
       if (filtered.length === 0) {
         grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">Нет курсов в этой категории</p>';
         return;
@@ -81,25 +76,44 @@
       grid.innerHTML = filtered.map(c => `
         <div class="course-card" onclick="location.href='/course?id=${c.id}'">
           <div style="font-size:2rem;margin-bottom:8px;">${c.icon}</div>
-          <h3 style="font-size:1.1rem;margin:0 0 4px;">${c.title}</h3>
-          ${c.free ? '<span style="font-size:0.75rem;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">Бесплатно</span>' : ''}
-          <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 8px;">${c.desc}</p>
+          <h3 style="font-size:1.1rem;margin:0 0 4px;">${c.name}</h3>
+          ${c.isFree ? '<span style="font-size:0.75rem;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">Бесплатно</span>' : ''}
+          <p style="font-size:0.85rem;color:var(--text-secondary);margin:0 0 8px;">${c.description}</p>
           <p style="font-size:0.8rem;color:var(--text);font-weight:500;"><strong>Для кого:</strong> ${c.audience}</p>
-          <p style="font-size:0.8rem;color:var(--text-secondary);margin:4px 0 8px;"><strong>Модули:</strong> ${c.modules.length}</p>
+          <p style="font-size:0.8rem;color:var(--text-secondary);margin:4px 0 8px;"><strong>Модули:</strong> ${c.lessonCount || 0}</p>
           <p style="font-size:0.8rem;color:var(--success);margin:0;"><strong>Результат:</strong> ${c.result}</p>
-          <div style="margin-top:12px;"><span class="btn btn-sm ${c.free ? 'btn-primary' : 'btn-outline'}" style="pointer-events:none;">${c.free ? 'Начать бесплатно' : 'Подробнее'}</span></div>
+          <div style="margin-top:12px;"><span class="btn btn-sm ${c.isFree ? 'btn-primary' : 'btn-outline'}" style="pointer-events:none;">${c.isFree ? 'Начать бесплатно' : 'Подробнее'}</span></div>
         </div>
       `).join('');
     }
 
+    function showError(msg) {
+      document.getElementById('coursesGrid').innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px;">${msg}</p>`;
+    }
+
+    async function loadCourses() {
+      const grid = document.getElementById('coursesGrid');
+      grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">Загрузка...</p>';
+      try {
+        const res = await fetch('/api/courses');
+        if (!res.ok) throw new Error('Ошибка загрузки');
+        const data = await res.json();
+        coursesData = data.courses || [];
+        renderCourses();
+      } catch (e) {
+        showError('Не удалось загрузить курсы. Попробуйте позже.');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
-      renderCourses();
+      loadCourses();
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
-          renderCourses(this.dataset.filter);
+          currentFilter = this.dataset.filter;
+          renderCourses();
         });
       });
     });
