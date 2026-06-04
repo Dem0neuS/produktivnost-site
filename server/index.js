@@ -75,13 +75,16 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'));
 });
 
-async function migrateRoles() {
+async function ensureRoles() {
   try {
+    const [adminRole, userRole] = await Promise.all([
+      Role.findOrCreate({ where: { name: 'Администратор' }, defaults: { name: 'Администратор' } }),
+      Role.findOrCreate({ where: { name: 'Пользователь' }, defaults: { name: 'Пользователь' } })
+    ]);
+    console.log(`Roles ensured: Администратор (id=${adminRole[0].id}), Пользователь (id=${userRole[0].id})`);
     const count = await User.count({ where: { roleId: null } });
     if (count > 0) {
-      const userRole = await Role.findOne({ where: { name: 'Пользователь' } });
-      const roleId = userRole ? userRole.id : 2;
-      await User.update({ roleId }, { where: { roleId: null } });
+      await User.update({ roleId: userRole[0].id }, { where: { roleId: null } });
       console.log(`Assigned role 'Пользователь' to ${count} existing users`);
     }
   } catch (e) { console.log('Role migration:', e.message); }
@@ -89,15 +92,15 @@ async function migrateRoles() {
 
 async function ensureAdmin() {
   try {
+    const adminRole = await Role.findOne({ where: { name: 'Администратор' } });
     const admin = await User.findOne({ where: { email: 'thenullpath1@gmail.com' } });
-    if (!admin) {
-      const adminRole = await Role.findOne({ where: { name: 'Администратор' } });
+    if (!admin && adminRole) {
       const hash = await bcrypt.hash('123456', 10);
       await User.create({
         name: 'dem0neuS',
         email: 'thenullpath1@gmail.com',
         password: hash,
-        roleId: adminRole ? adminRole.id : 1
+        roleId: adminRole.id
       });
       console.log('Admin user created (dem0neuS / 123456)');
     }
@@ -152,7 +155,7 @@ async function migrateCourses() {
 
 async function start() {
   await initDb();
-  await migrateRoles();
+  await ensureRoles();
   await ensureAdmin();
   await migrateCourses();
   if (sessionStore.sync) {
