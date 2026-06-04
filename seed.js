@@ -3,7 +3,7 @@
 // Внимание: предварительно запустите reset-db.js для чистой БД
 
 const bcrypt = require('bcryptjs');
-const { sequelize, initDb, User, Habit, PomodoroSession, TestResult, GlossaryFavorite, MicroStep, Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestQuestion, CourseTestResult, UserQuestionAnswer, UserCourse } = require('./server/db');
+const { sequelize, initDb, Role, User, Habit, PomodoroSession, TestResult, GlossaryFavorite, MicroStep, Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestQuestion, CourseTestResult, UserQuestionAnswer, UserCourse } = require('./server/db');
 require('dotenv').config();
 
 (async () => {
@@ -53,20 +53,30 @@ require('dotenv').config();
     console.log(`  ${courses.length} created`);
 
     // =====================================================================
-    // 3. ПОЛЬЗОВАТЕЛИ
+    // 3. РОЛИ
+    // =====================================================================
+    console.log('\n--- Roles ---');
+    const roles = await Role.bulkCreate([
+      { name: 'Администратор' },
+      { name: 'Пользователь' }
+    ]);
+    console.log(`  ${roles.length} created`);
+
+    // =====================================================================
+    // 4. ПОЛЬЗОВАТЕЛИ
     // =====================================================================
     console.log('\n--- Users ---');
     const hash = await bcrypt.hash('123456', 10);
     const users = await User.bulkCreate([
-      { name: 'Анна Петрова', email: 'anna@test.ru', password: hash, theme: 'light', subscriptionStatusId: subs[0].id },
-      { name: 'Иван Сидоров', email: 'ivan@test.ru', password: hash, theme: 'dark', subscriptionStatusId: subs[1].id },
-      { name: 'Мария Иванова', email: 'maria@test.ru', password: hash, theme: 'light', subscriptionStatusId: subs[2].id },
-      { name: 'Демо Пользователь', email: 'demo@test.ru', password: hash, theme: 'light', subscriptionStatusId: subs[0].id }
+      { name: 'Анна Петрова', email: 'anna@test.ru', password: hash, roleId: roles[0].id, theme: 'light', subscriptionStatusId: subs[0].id },
+      { name: 'Иван Сидоров', email: 'ivan@test.ru', password: hash, roleId: roles[1].id, theme: 'dark', subscriptionStatusId: subs[1].id },
+      { name: 'Мария Иванова', email: 'maria@test.ru', password: hash, roleId: roles[1].id, theme: 'light', subscriptionStatusId: subs[2].id },
+      { name: 'Демо Пользователь', email: 'demo@test.ru', password: hash, roleId: roles[1].id, theme: 'light', subscriptionStatusId: subs[0].id }
     ]);
     console.log(`  ${users.length} created (pass: 123456)`);
 
     // =====================================================================
-    // 4. ТРЕКЕР ПРОДУКТИВНОСТИ
+    // 5. ТРЕКЕР ПРОДУКТИВНОСТИ
     // =====================================================================
     console.log('\n--- Habits ---');
     const habits = await Habit.bulkCreate([
@@ -134,7 +144,7 @@ require('dotenv').config();
     console.log(`  ${micros.length} created`);
 
     // =====================================================================
-    // 5. МОДУЛЬ ОБУЧЕНИЯ
+    // 6. МОДУЛЬ ОБУЧЕНИЯ
     // =====================================================================
     console.log('\n--- Lessons ---');
     const lessons = await Lesson.bulkCreate([

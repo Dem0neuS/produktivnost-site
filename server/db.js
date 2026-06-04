@@ -50,6 +50,7 @@ const GlossaryFavorite = require('./models/GlossaryFavorite')(sequelize);
 const MicroStep = require('./models/MicroStep')(sequelize);
 const PomodoroSession = require('./models/PomodoroSession')(sequelize);
 
+const Role = require('./models/Role')(sequelize);
 const Subscription = require('./models/Subscription')(sequelize);
 const LessonStatus = require('./models/LessonStatus')(sequelize);
 const TestStatus = require('./models/TestStatus')(sequelize);
@@ -88,6 +89,10 @@ PomodoroSession.belongsTo(User, { foreignKey: 'userId' });
 // Модуль обучения
 User.belongsTo(Subscription, { foreignKey: 'subscriptionStatusId', as: 'subscription' });
 Subscription.hasMany(User, { foreignKey: 'subscriptionStatusId' });
+
+// Роли
+Role.hasMany(User, { foreignKey: 'roleId' });
+User.belongsTo(Role, { foreignKey: 'roleId' });
 
 Course.hasMany(Lesson, { foreignKey: 'course_id' });
 Lesson.belongsTo(Course, { foreignKey: 'course_id' });
@@ -139,7 +144,7 @@ async function initDb() {
 }
 
 module.exports = {
-  sequelize, User, Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession,
+  sequelize,   Role, User, Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession,
   Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestResult,
   CourseTestQuestion, UserQuestionAnswer, UserCourse, Session,
   initDb
