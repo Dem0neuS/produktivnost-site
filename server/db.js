@@ -61,6 +61,14 @@ const CourseTestQuestion = require('./models/CourseTestQuestion')(sequelize);
 const UserQuestionAnswer = require('./models/UserQuestionAnswer')(sequelize);
 const UserCourse = require('./models/UserCourse')(sequelize);
 
+// Session model for connect-session-sequelize (must be defined before SequelizeStore)
+const sessionAttrs = {
+  sid: { type: Sequelize.STRING, primaryKey: true },
+  expires: Sequelize.DATE,
+  data: Sequelize.TEXT
+};
+const Session = sequelize.define('Session', sessionAttrs, { tableName: 'Sessions' });
+
 // Трекер продуктивности
 User.hasMany(Habit, { foreignKey: 'userId' });
 Habit.belongsTo(User, { foreignKey: 'userId' });
@@ -133,6 +141,6 @@ async function initDb() {
 module.exports = {
   sequelize, User, Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession,
   Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestResult,
-  CourseTestQuestion, UserQuestionAnswer, UserCourse,
+  CourseTestQuestion, UserQuestionAnswer, UserCourse, Session,
   initDb
 };
