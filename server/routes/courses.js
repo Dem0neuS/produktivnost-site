@@ -47,15 +47,24 @@ router.get('/my/list', async (req, res) => {
   try {
     const userCourses = await UserCourse.findAll({
       where: { userId: uid },
-      include: [{
-        model: Course,
-        attributes: {
-          include: [[sequelize.literal('(SELECT COUNT(*) FROM "lessons" WHERE "lessons"."course_id" = "Course"."id")'), 'lessonCount']]
-        }
-      }],
+      include: [Course],
       order: [['createdAt', 'DESC']]
     });
-    res.json({ courses: userCourses });
+    const courseIds = [...new Set(userCourses.map(uc => uc.courseId))];
+    const counts = {};
+    if (courseIds.length > 0) {
+      const rows = await sequelize.query(
+        'SELECT course_id, COUNT(*) AS cnt FROM lessons WHERE course_id IN (:ids) GROUP BY course_id',
+        { replacements: { ids: courseIds }, type: sequelize.QueryTypes.SELECT }
+      );
+      rows.forEach(r => { counts[r.course_id] = parseInt(r.cnt, 10); });
+    }
+    const result = userCourses.map(uc => {
+      const plain = uc.toJSON();
+      if (plain.course) plain.course.lessonCount = counts[uc.courseId] || 0;
+      return plain;
+    });
+    res.json({ courses: result });
   } catch (e) {
     res.status(500).json({ error: 'Ошибка загрузки' });
   }
