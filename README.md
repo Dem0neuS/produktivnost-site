@@ -62,6 +62,22 @@ NODE_ENV=development
 npm start
 ```
 
+## Docker
+
+```bash
+docker compose up --build
+```
+
+Приложение будет доступно на http://localhost:3000, PostgreSQL — на порту 5433.
+
+## Тестирование
+
+```bash
+npm test
+```
+
+Для работы тестов требуется запущенный PostgreSQL (или `npm start` для локальной БД).
+
 ## Деплой на Railway
 
 1. Подключите GitHub-репозиторий
