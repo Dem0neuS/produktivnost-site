@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const { Course, Lesson, LessonStatus, CourseTest, CourseTestQuestion, UserCourse, User, sequelize } = require('../db');
 
-function requireAuth(req, res, next) {
-  if (!req.user) return res.status(401).json({ error: 'Не авторизован' });
-  next();
+async function getUserId(req) {
+  if (req.session?.userId) {
+    const user = await User.findByPk(req.session.userId, { attributes: ['id'] });
+    return user?.id || null;
+  }
+  return null;
 }
 
 // Список всех курсов
@@ -32,10 +35,11 @@ router.get('/:id', async (req, res) => {
 
 // Мои курсы
 router.get('/my/list', async (req, res) => {
-  if (!req.user) return res.json({ courses: [] });
+  const uid = await getUserId(req);
+  if (!uid) return res.json({ courses: [] });
   try {
     const userCourses = await UserCourse.findAll({
-      where: { userId: req.user.id },
+      where: { userId: uid },
       include: [Course],
       order: [['createdAt', 'DESC']]
     });
@@ -46,18 +50,20 @@ router.get('/my/list', async (req, res) => {
 });
 
 // Запись на курс
-router.post('/:id/enroll', requireAuth, async (req, res) => {
+router.post('/:id/enroll', async (req, res) => {
+  const uid = await getUserId(req);
+  if (!uid) return res.status(401).json({ error: 'Не авторизован' });
   try {
     const course = await Course.findByPk(req.params.id);
     if (!course) return res.status(404).json({ error: 'Курс не найден' });
 
     const existing = await UserCourse.findOne({
-      where: { userId: req.user.id, courseId: course.id }
+      where: { userId: uid, courseId: course.id }
     });
     if (existing) return res.json({ success: true, enrollment: existing });
 
     const enrollment = await UserCourse.create({
-      userId: req.user.id,
+      userId: uid,
       courseId: course.id,
       status: 'in_progress'
     });
@@ -68,20 +74,21 @@ router.post('/:id/enroll', requireAuth, async (req, res) => {
 });
 
 // Отметить урок пройденным
-router.post('/lessons/:id/complete', requireAuth, async (req, res) => {
+router.post('/lessons/:id/complete', async (req, res) => {
+  const uid = await getUserId(req);
+  if (!uid) return res.status(401).json({ error: 'Не авторизован' });
   try {
     const lesson = await Lesson.findByPk(req.params.id, { include: [Course] });
     if (!lesson) return res.status(404).json({ error: 'Урок не найден' });
 
     const uc = await UserCourse.findOne({
-      where: { userId: req.user.id, courseId: lesson.courseId }
+      where: { userId: uid, courseId: lesson.courseId }
     });
     if (!uc) return res.status(400).json({ error: 'Вы не записаны на курс' });
 
     const allLessons = await Lesson.count({ where: { courseId: lesson.courseId, statusId: { [require('sequelize').Op.ne]: 2 } }});
     const total = allLessons || 1;
 
-    // отмечаем урок как пройденный (храним JSON с пройденными lessonId)
     const completed = uc.completedLessons || {};
     const arr = Array.isArray(completed) ? completed : [];
     if (!arr.includes(lesson.id)) arr.push(lesson.id);
