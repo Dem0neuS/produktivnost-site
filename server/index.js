@@ -3,6 +3,7 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const path = require('path');
 const { Op } = require('sequelize');
+const bcrypt = require('bcryptjs');
 const { sequelize, initDb, Role, User, Course, Lesson } = require('./db');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
@@ -86,6 +87,23 @@ async function migrateRoles() {
   } catch (e) { console.log('Role migration:', e.message); }
 }
 
+async function ensureAdmin() {
+  try {
+    const admin = await User.findOne({ where: { email: 'thenullpath1@gmail.com' } });
+    if (!admin) {
+      const adminRole = await Role.findOne({ where: { name: 'Администратор' } });
+      const hash = await bcrypt.hash('123456', 10);
+      await User.create({
+        name: 'dem0neuS',
+        email: 'thenullpath1@gmail.com',
+        password: hash,
+        roleId: adminRole ? adminRole.id : 1
+      });
+      console.log('Admin user created (dem0neuS / 123456)');
+    }
+  } catch (e) { console.log('Admin creation:', e.message); }
+}
+
 async function migrateCourses() {
   try {
     const courseMeta = [
@@ -135,6 +153,7 @@ async function migrateCourses() {
 async function start() {
   await initDb();
   await migrateRoles();
+  await ensureAdmin();
   await migrateCourses();
   if (sessionStore.sync) {
     try {
