@@ -97,14 +97,19 @@
     ];
 
     let favorites = JSON.parse(localStorage.getItem('glossary_favorites') || '[]');
+    const PER_PAGE = 10;
+    let currentPage = 1;
 
-    function renderGlossary(search = '') {
+    function renderGlossary(search = '', page = 1) {
       const container = document.getElementById('glossaryList');
       const filtered = terms.filter(t =>
         t.term.toLowerCase().includes(search) ||
         t.def.toLowerCase().includes(search) ||
         t.example.toLowerCase().includes(search)
       );
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+      if (page > totalPages) page = totalPages;
+      currentPage = page;
       document.getElementById('glossaryCount').textContent = filtered.length;
 
       if (filtered.length === 0) {
@@ -112,14 +117,16 @@
         return;
       }
 
+      const start = (page - 1) * PER_PAGE;
+      const pageTerms = filtered.slice(start, start + PER_PAGE);
       const grouped = {};
-      filtered.forEach(t => {
+      pageTerms.forEach(t => {
         const letter = t.term[0].toUpperCase();
         if (!grouped[letter]) grouped[letter] = [];
         grouped[letter].push(t);
       });
 
-      container.innerHTML = Object.keys(grouped).sort().map(letter =>
+      let html = Object.keys(grouped).sort().map(letter =>
         `<h3 style="margin:24px 0 12px;color:var(--accent);font-size:1.5rem;">${letter}</h3>
         ${grouped[letter].map(t => `
           <div class="accordion">
@@ -138,6 +145,45 @@
           </div>
         `).join('')}
       `).join('');
+
+      if (totalPages > 1) {
+        html += `<div style="display:flex;justify-content:center;align-items:center;gap:6px;margin-top:32px;flex-wrap:wrap;">`;
+        html += `<button class="pagination-btn" onclick="goToPage(${page - 1})" ${page <= 1 ? 'disabled' : ''} style="${page <= 1 ? 'opacity:0.4;cursor:default;' : ''}padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);color:var(--text);cursor:pointer;">‹ Назад</button>`;
+
+        const maxVisible = 5;
+        let startPage = Math.max(1, page - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+        if (endPage - startPage + 1 < maxVisible) {
+          startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        if (startPage > 1) {
+          html += `<button class="pagination-btn" onclick="goToPage(1)" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);color:var(--text);cursor:pointer;">1</button>`;
+          if (startPage > 2) html += `<span style="color:var(--text-secondary);padding:0 4px;">…</span>`;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+          const active = i === page;
+          html += `<button class="pagination-btn" onclick="goToPage(${i})" style="padding:6px 10px;border:1px solid ${active ? 'var(--accent)' : 'var(--border)'};border-radius:6px;background:${active ? 'var(--accent)' : 'var(--card-bg)'};color:${active ? '#fff' : 'var(--text)'};cursor:pointer;font-weight:${active ? '600' : '400'};">${i}</button>`;
+        }
+
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) html += `<span style="color:var(--text-secondary);padding:0 4px;">…</span>`;
+          html += `<button class="pagination-btn" onclick="goToPage(${totalPages})" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);color:var(--text);cursor:pointer;">${totalPages}</button>`;
+        }
+
+        html += `<button class="pagination-btn" onclick="goToPage(${page + 1})" ${page >= totalPages ? 'disabled' : ''} style="${page >= totalPages ? 'opacity:0.4;cursor:default;' : ''}padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);color:var(--text);cursor:pointer;">Далее ›</button>`;
+        html += `</div>`;
+      }
+
+      html += `<p style="text-align:center;margin-top:12px;font-size:0.85rem;color:var(--text-secondary);">Страница ${page} из ${totalPages}</p>`;
+      container.innerHTML = html;
+    }
+
+    function goToPage(page) {
+      const search = document.getElementById('glossarySearch').value.toLowerCase();
+      renderGlossary(search, page);
+      document.getElementById('glossaryList').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function toggleFav(term) {

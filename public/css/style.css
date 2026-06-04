@@ -772,6 +772,12 @@ body {
   padding: 16px 20px;
 }
 
+/* Pagination */
+.pagination-btn:not(:disabled):hover {
+  filter: brightness(0.92);
+  transform: translateY(-1px);
+}
+
 /* Filters */
 .filters {
   display: flex;
