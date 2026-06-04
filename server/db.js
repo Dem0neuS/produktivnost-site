@@ -119,12 +119,12 @@ UserQuestionAnswer.belongsTo(CourseTestQuestion, { foreignKey: 'question_id' });
 User.hasMany(UserQuestionAnswer, { foreignKey: 'user_id' });
 UserQuestionAnswer.belongsTo(User, { foreignKey: 'user_id' });
 
-User.belongsToMany(Course, { through: UserCourse, foreignKey: 'user_id', otherKey: 'course_id' });
-Course.belongsToMany(User, { through: UserCourse, foreignKey: 'course_id', otherKey: 'user_id' });
-User.hasMany(UserCourse, { foreignKey: 'user_id' });
-UserCourse.belongsTo(User, { foreignKey: 'user_id' });
-Course.hasMany(UserCourse, { foreignKey: 'course_id' });
-UserCourse.belongsTo(Course, { foreignKey: 'course_id' });
+User.belongsToMany(Course, { through: UserCourse, foreignKey: 'userId', otherKey: 'courseId' });
+Course.belongsToMany(User, { through: UserCourse, foreignKey: 'courseId', otherKey: 'userId' });
+User.hasMany(UserCourse, { foreignKey: 'userId' });
+UserCourse.belongsTo(User, { foreignKey: 'userId' });
+Course.hasMany(UserCourse, { foreignKey: 'courseId' });
+UserCourse.belongsTo(Course, { foreignKey: 'courseId' });
 
 async function initDb() {
   try {
