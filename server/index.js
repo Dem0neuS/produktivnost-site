@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const path = require('path');
-const { sequelize, initDb } = require('./db');
+const { sequelize, User, initDb } = require('./db');
 const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const cabinetRoutes = require('./routes/cabinet');
@@ -39,6 +39,16 @@ app.use(session({
     sameSite: 'lax'
   }
 }));
+
+// Populate req.user from session
+app.use(async (req, res, next) => {
+  if (req.session.userId) {
+    try {
+      req.user = await User.findByPk(req.session.userId);
+    } catch (e) {}
+  }
+  next();
+});
 
 app.use('/css', express.static(path.join(__dirname, '..', 'public', 'css')));
 app.use('/js', express.static(path.join(__dirname, '..', 'public', 'js')));

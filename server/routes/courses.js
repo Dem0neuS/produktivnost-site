@@ -37,7 +37,7 @@ router.get('/my/list', async (req, res) => {
     const userCourses = await UserCourse.findAll({
       where: { userId: req.user.id },
       include: [Course],
-      order: [['enrolledAt', 'DESC']]
+      order: [['createdAt', 'DESC']]
     });
     res.json({ courses: userCourses });
   } catch (e) {

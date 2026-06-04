@@ -3,15 +3,13 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   return sequelize.define('UserCourse', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false, field: 'user_id' },
-    courseId: { type: DataTypes.INTEGER, allowNull: false, field: 'course_id' },
-    status: { type: DataTypes.STRING, defaultValue: 'enrolled' },
+    userId: { type: DataTypes.INTEGER, allowNull: false },
+    courseId: { type: DataTypes.INTEGER, allowNull: false },
+    status: { type: DataTypes.STRING, defaultValue: 'in_progress' },
     progress: { type: DataTypes.FLOAT, defaultValue: 0 },
-    completedLessons: { type: DataTypes.JSONB, defaultValue: [], field: 'completed_lessons' },
-    enrolledAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW, field: 'enrolled_at' },
-    completedAt: { type: DataTypes.DATE, allowNull: true, field: 'completed_at' }
+    completedLessons: { type: DataTypes.JSONB, defaultValue: [] },
+    completedAt: { type: DataTypes.DATE, allowNull: true }
   }, {
-    tableName: 'user_courses',
-    timestamps: false
+    tableName: 'user_courses'
   });
 };
