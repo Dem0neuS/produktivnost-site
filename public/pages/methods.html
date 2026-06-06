@@ -31,6 +31,7 @@
   <div class="page-header">
     <h1>Методы продуктивности</h1>
     <p>База знаний: 15+ проверенных техник тайм-менеджмента, целеполагания и фокуса</p>
+    <button class="btn btn-primary btn-sm" id="createMethodBtn" style="display:none;margin-top:12px;">+ Создать метод</button>
   </div>
 
   <section class="section">
@@ -76,59 +77,71 @@
 
   <div class="modal-overlay" id="authModal"><div class="modal"><button class="modal-close" onclick="closeModal('authModal')">&times;</button><h2>Личный кабинет</h2><div class="auth-tabs"><button class="auth-tab active" data-form="loginForm">Вход</button><button class="auth-tab" data-form="registerForm">Регистрация</button></div><form class="auth-form active" id="loginForm"><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Войти</button></form><form class="auth-form" id="registerForm"><div class="form-group"><label>Имя</label><input type="text" name="name" class="form-input" required></div><div class="form-group"><label>Email</label><input type="email" name="email" class="form-input" required></div><div class="form-group"><label>Пароль</label><input type="password" name="password" class="form-input" required minlength="4"></div><div class="form-group"><label>Подтвердите пароль</label><input type="password" name="confirm" class="form-input" required></div><div class="error-text"></div><button type="submit" class="btn btn-primary" style="width:100%;">Зарегистрироваться</button></form></div></div>
   <div class="search-overlay" id="searchOverlay"><div class="search-container"><input type="text" class="search-input" id="searchInput" placeholder="Поиск..."><div class="search-results" id="searchResults"><p style="color:var(--text-secondary);padding:12px;">Начните вводить запрос...</p></div></div></div>
+  <div class="modal-overlay" id="adminMethodModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('adminMethodModal')">&times;</button>
+      <h2 id="adminMethodTitle">Редактировать метод</h2>
+      <form id="adminMethodForm" onsubmit="saveMethod();return false;">
+        <input type="hidden" id="methodId" value="">
+        <div class="form-group"><label>Slug</label><input type="text" id="methodSlug" class="form-input" required></div>
+        <div class="form-group"><label>Название</label><input type="text" id="methodName" class="form-input" required></div>
+        <div class="form-group"><label>Описание</label><textarea id="methodDesc" class="form-input" rows="2" required></textarea></div>
+        <div class="form-group"><label>Звёзд (1-5)</label><input type="number" id="methodStars" class="form-input" min="1" max="5" required></div>
+        <div class="form-group"><label>Теги (через запятую)</label><input type="text" id="methodTags" class="form-input" placeholder="time, focus, fast"></div>
+        <div class="form-group"><label>Время</label><input type="text" id="methodTime" class="form-input" placeholder="До 10 мин"></div>
+        <div class="form-group"><label>Детали (HTML)</label><textarea id="methodDetails" class="form-input" rows="6"></textarea></div>
+        <div class="error-text" id="adminMethodError"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Сохранить</button>
+      </form>
+    </div>
+  </div>
 
   <script src="/js/theme.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/search.js"></script>
   <script>
-    const methods = [
-      { id: 'eisenhower', name: 'Матрица Эйзенхауэра', desc: 'Приоритизация задач по двум осям: срочность и важность. 4 квадранта для принятия решений.', stars: 3, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Выпишите все задачи</li><li>Оцените каждую по срочности и важности</li><li>Распределите по 4 квадрантам:<ul><li>Важно и срочно → делать немедленно</li><li>Важно, но не срочно → запланировать</li><li>Не важно, но срочно → делегировать</li><li>Не важно и не срочно → удалить</li></ul></li><li>Работайте с квадрантом 2 (важное несрочное)</li></ol><h4>Совет:</h4><p>80% времени уделяйте квадранту 2 — это зона стратегического роста.</p>' },
-      { id: 'pomodoro', name: 'Pomodoro', desc: 'Работа интервалами: 25 минут фокуса, 5 минут отдыха. После 4 циклов — большой перерыв.', stars: 4, tags: ['time', 'focus', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Выберите задачу</li><li>Установите таймер на 25 минут</li><li>Работайте без отвлечений</li><li>Отдых 5 минут</li><li>После 4 помодоро — отдых 15-30 минут</li></ol><h4>Вариант для прокрастинаторов:</h4><p>Начните с 5-минутных интервалов. Постепенно увеличивайте до 25 минут.</p>' },
-      { id: 'gtd', name: 'GTD (Getting Things Done)', desc: 'Система Дэвида Аллена: 5 этапов управления задачами от сбора до выполнения.', stars: 5, tags: ['time', 'long'], time: 'Неделя', details: '<h4>5 этапов GTD:</h4><ol><li><strong>Сбор</strong> — запишите всё, что занимает внимание</li><li><strong>Обработка</strong> — что это? Нужно ли действие?</li><li><strong>Организация</strong> — разложите по категориям: проекты, контексты, когда-нибудь</li><li><strong>Обзор</strong> — еженедельный обзор всех списков</li><li><strong>Выполнение</strong> — выбирайте задачи по контексту и энергии</li></ol><h4>Принцип:</h4><p>Мозг — для мыслей, а не для хранения задач. Выгрузите всё в систему.</p>' },
-      { id: 'timeblocking', name: 'Time Blocking', desc: 'Планирование дня блоками по 1-2 часа на конкретные типы задач. Борьба с переключением контекста.', stars: 4, tags: ['time', 'focus', 'medium'], time: '1 час', details: '<h4>Как применять:</h4><ol><li>Определите типы задач (глубокая работа, встречи, администрирование)</li><li>Назначьте каждому типу временной блок в расписании</li><li>Не смешивайте типы в одном блоке</li><li>Оставьте буферные блоки на непредвиденное</li></ol><h4>Пример:</h4><p>9:00-11:00 Глубокая работа<br>11:00-12:00 Встречи<br>14:00-15:00 Администрирование<br>15:00-16:00 Планирование</p>' },
-      { id: 'smart', name: 'SMART', desc: 'Критерии постановки целей: Specific, Measurable, Achievable, Relevant, Time-bound.', stars: 4, tags: ['goals', 'fast'], time: 'До 10 мин', details: '<h4>Расшифровка:</h4><ul><li><strong>S</strong> — Конкретная (что именно?)</li><li><strong>M</strong> — Измеримая (как узнать, что сделано?)</li><li><strong>A</strong> — Достижимая (реально?)</li><li><strong>R</strong> — Релевантная (зачем это?)</li><li><strong>T</strong> — Ограниченная по времени (когда?)</li></ul><h4>Пример:</h4><p>Вместо «Начать учить английский» → «Сдать IELTS на 7.0 до 31 декабря, занимаясь 3 раза в неделю по 1 часу».</p>' },
-      { id: 'clear', name: 'CLEAR', desc: 'Современная альтернатива SMART: Collaborative, Limited, Emotional, Appreciable, Refinable.', stars: 3, tags: ['goals', 'medium'], time: '1 час', details: '<h4>Расшифровка:</h4><ul><li><strong>C</strong> — Совместная (есть поддержка)</li><li><strong>L</strong> — Ограниченная (по времени/ресурсам)</li><li><strong>E</strong> — Эмоциональная (вдохновляет)</li><li><strong>A</strong> — Ощутимая (можно разбить на шаги)</li><li><strong>R</strong> — Улучшаемая (можно корректировать)</li></ul><p>Подходит для творческих и гибких проектов, где SMART слишком жёсткий.</p>' },
-      { id: 'okr', name: 'OKR', desc: 'Objectives and Key Results — метод целеполагания для амбициозных целей с измеримыми результатами.', stars: 4, tags: ['goals', 'medium'], time: '1 час', details: '<h4>Структура OKR:</h4><ul><li><strong>Objective</strong> — вдохновляющая цель (1-3 слова)</li><li><strong>Key Results</strong> — 3-5 измеримых результата</li></ul><h4>Пример:</h4><p>O: Стать продуктивнее в 2026<br>KR1: Внедрить 3 новых привычки<br>KR2: Прочитать 12 книг по продуктивности<br>KR3: Уменьшить прокрастинацию на 50%</p>' },
-      { id: 'pareto', name: '80/20 (Парето)', desc: '20% усилий дают 80% результата. Сфокусируйтесь на ключевых 20% задач.', stars: 4, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Выпишите все задачи/клиенты/проекты</li><li>Определите, какие 20% приносят 80% результата</li><li>Увеличьте время на эти 20%</li><li>Сократите или делегируйте остальные 80%</li></ol><h4>Примеры:</h4><p>80% продаж приносят 20% клиентов<br>80% проблем — из-за 20% причин<br>80% ценности книги — в 20% глав</p>' },
-      { id: 'eatfrog', name: 'Съешь лягушку', desc: 'Начинайте день с самой сложной и неприятной задачи. Всё остальное покажется лёгким.', stars: 3, tags: ['focus', 'fast'], time: 'До 10 мин', details: '<h4>Правило:</h4><p>«Если ваша задача — съесть лягушку, делайте это с утра. Если нужно съесть двух — начните с самой большой».</p><h4>Как применять:</h4><ol><li>Вечером определите «лягушку» на завтра</li><li>Утром, не проверяя почту и соцсети, сделайте её</li><li>После этого — награда (кофе, прогулка)</li></ol>' },
-      { id: '2minrule', name: 'Правило 2 минут', desc: 'Если задача выполняется за 2 минуты или быстрее — сделайте её сразу, не записывая.', stars: 3, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Принцип:</h4><p>Большинство мелких задач занимают больше времени на запись и обработку, чем на выполнение.</p><h4>Примеры:</h4><ul><li>Ответить на сообщение</li><li>Подписать документ</li><li>Положить вещь на место</li><li>Открыть файл</li></ul><p>Это правило — часть системы GTD.</p>' },
-      { id: 'habitstacking', name: 'Habit Stacking', desc: 'Привязка новой привычки к существующей: «После [триггер] я сделаю [новая привычка]».', stars: 4, tags: ['focus', 'fast'], time: 'До 10 мин', details: '<h4>Формула:</h4><p><strong>После/Перед [текущая привычка], я сделаю [новая привычка].</strong></p><h4>Примеры:</h4><ul><li>«После утреннего кофе я читаю 2 страницы»</li><li>«После чистки зубов я делаю 10 приседаний»</li><li>«Перед сном я записываю 3 задачи на завтра»</li></ul><p>Метод Джеймса Клира из книги «Атомные привычки».</p>' },
-      { id: 'weeklyreview', name: 'Weekly Review', desc: 'Еженедельный 30-минутный обзор: очистка списков, обновление целей, планирование недели.', stars: 4, tags: ['time', 'medium'], time: '1 час', details: '<h4>Процесс еженедельного обзора:</h4><ol><li>Соберите все записи и заметки</li><li>Очистите почту и мессенджеры</li><li>Обновите списки задач</li><li>Проверьте календарь на неделю</li><li>Оцените прогресс по целям</li><li>Запланируйте задачи на неделю</li></ol><p>Лучшее время: пятница после обеда или воскресенье вечером.</p>' },
-      { id: 'deepwork', name: 'Deep Work', desc: 'Режим глубокой работы без отвлечений. 2-4 часа в день для сложных интеллектуальных задач.', stars: 5, tags: ['focus', 'medium'], time: '1 час', details: '<h4>Правила глубокой работы:</h4><ol><li>Выделите 2-4 часа без уведомлений</li><li>Закройте все вкладки, кроме нужной</li><li>Используйте технику Pomodoro (50/10)</li><li>Тренируйте концентрацию постепенно</li></ol><h4>Методы:</h4><ul><li><strong>Монастырский</strong> — полная изоляция</li><li><strong>Бимодальный</strong> — несколько часов утром</li><li><strong>Ритмичный</strong> — ежедневно в одно время</li><li><strong>Журналистский</strong> — урывками между делами</li></ul><p>Метод Кэла Ньюпорта из книги «Deep Work».</p>' },
-      { id: 'ivylee', name: 'Метод Айви Ли', desc: 'Ежедневное планирование 6 главных задач. В конце дня выберите 6 задач на завтра по порядку.', stars: 3, tags: ['time', 'fast'], time: 'До 10 мин', details: '<h4>Как применять:</h4><ol><li>Каждый вечер записывайте 6 самых важных задач на завтра</li><li>Расположите их в порядке истинной важности</li><li>Начинайте день с задачи №1</li><li>Работайте над ней, пока не закончите</li><li>Переходите к следующей задаче</li><li>Невыполненные задачи перенесите на следующий день</li></ol><p>Метод повысил продуктивность Bethlehem Steel на 50% за 3 месяца.</p>' },
-      { id: 'kanban', name: 'Kanban', desc: 'Визуальное управление задачами через доску с колонками: Нужно сделать → В процессе → Готово.', stars: 4, tags: ['time', 'medium'], time: '1 час', details: '<h4>Базовая доска Kanban:</h4><ul><li><strong>Нужно сделать</strong> — все задачи в очереди</li><li><strong>В процессе</strong> — не более 3 задач одновременно</li><li><strong>Готово</strong> — выполненные задачи</li></ul><h4>Правила:</h4><ul><li>Ограничьте WIP (work in progress) — не берите больше 2-3 задач</li><li>Визуализируйте поток работы</li><li>Измеряйте время выполнения</li><li>Постоянно улучшайте процесс</li></ul><p>Инструменты: Trello, Notion, Jira или физическая доска.</p>' },
-    ];
-    const detailViews = {
-      eisenhower: '<h4>Как применять:</h4><ol><li>Выпишите все задачи</li><li>Оцените каждую по срочности и важности</li><li>Распределите по 4 квадрантам:<ul><li>Важно и срочно → делать немедленно</li><li>Важно, но не срочно → запланировать</li><li>Не важно, но срочно → делегировать</li><li>Не важно и не срочно → удалить</li></ul></li><li>Работайте с квадрантом 2 (важное несрочное)</li></ol><h4>Совет:</h4><p>80% времени уделяйте квадранту 2 — это зона стратегического роста.</p>',
-      pomodoro: '<h4>Как применять:</h4><ol><li>Выберите задачу</li><li>Установите таймер на 25 минут</li><li>Работайте без отвлечений</li><li>Отдых 5 минут</li><li>После 4 помодоро — отдых 15-30 минут</li></ol><h4>Вариант для прокрастинаторов:</h4><p>Начните с 5-минутных интервалов. Постепенно увеличивайте до 25 минут.</p>',
-      gtd: '<h4>5 этапов GTD:</h4><ol><li><strong>Сбор</strong> — запишите всё, что занимает внимание</li><li><strong>Обработка</strong> — что это? Нужно ли действие?</li><li><strong>Организация</strong> — разложите по категориям</li><li><strong>Обзор</strong> — еженедельный обзор всех списков</li><li><strong>Выполнение</strong> — выбирайте по контексту и энергии</li></ol><h4>Принцип:</h4><p>Мозг — для мыслей, а не для хранения задач.</p>',
-    };
+    let methods = [];
+
+    async function loadMethods() {
+      try {
+        const res = await fetch('/api/content/methods');
+        const data = await res.json();
+        methods = data.methods || [];
+      } catch (e) {
+        methods = [];
+      }
+      renderMethods();
+    }
 
     function renderMethods(filter = 'all', search = '') {
       const grid = document.getElementById('methodsGrid');
       const filtered = methods.filter(m => {
-        const matchFilter = filter === 'all' || m.tags.includes(filter);
-        const matchSearch = !search || m.name.toLowerCase().includes(search) || m.desc.toLowerCase().includes(search);
+        const matchFilter = filter === 'all' || (m.tags && m.tags.includes(filter));
+        const matchSearch = !search || (m.name && m.name.toLowerCase().includes(search)) || (m.desc && m.desc.toLowerCase().includes(search));
         return matchFilter && matchSearch;
       });
       if (filtered.length === 0) {
         grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);padding:40px;">Методы не найдены</p>';
         return;
       }
+      const isAdmin = window.currentUser && window.currentUser.roleId === 1;
       grid.innerHTML = filtered.map(m => `
         <div class="card">
           <div class="stars">${'★'.repeat(m.stars)}${'☆'.repeat(5-m.stars)}</div>
           <h3>${m.name}</h3>
           <p>${m.desc}</p>
           <div style="font-size:0.8rem;color:var(--text-secondary);margin:8px 0;">⏱ ${m.time}</div>
-          <div class="card-tags">${m.tags.map(t => `<span class="tag">${t === 'time' ? 'Тайм-менеджмент' : t === 'focus' ? 'Фокус' : t === 'goals' ? 'Целеполагание' : t === 'fast' ? 'Быстро' : t === 'medium' ? '1 час' : t === 'long' ? 'Неделя' : t}</span>`).join('')}</div>
-          <button class="btn btn-sm btn-primary" onclick="openMethodModal('${m.id}')">Подробнее</button>
+          <div class="card-tags">${(m.tags || []).map(t => `<span class="tag">${t === 'time' ? 'Тайм-менеджмент' : t === 'focus' ? 'Фокус' : t === 'goals' ? 'Целеполагание' : t === 'fast' ? 'Быстро' : t === 'medium' ? '1 час' : t === 'long' ? 'Неделя' : t}</span>`).join('')}</div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <button class="btn btn-sm btn-primary" onclick="openMethodModal('${m.slug}')">Подробнее</button>
+            ${isAdmin ? `<button class="btn btn-sm" style="background:var(--bg-secondary);border:1px solid var(--border);" onclick="event.stopPropagation();openMethodEdit(${m.id})" title="Редактировать">✏️</button><button class="btn btn-sm" style="background:var(--bg-secondary);border:1px solid var(--border);" onclick="event.stopPropagation();deleteMethod(${m.id})" title="Удалить">🗑️</button>` : ''}
+          </div>
         </div>
       `).join('');
     }
 
-    function openMethodModal(id) {
-      const m = methods.find(x => x.id === id);
+    function openMethodModal(slug) {
+      const m = methods.find(x => x.slug === slug);
       if (!m) return;
       const overlay = document.createElement('div');
       overlay.className = 'modal-overlay active';
@@ -137,15 +150,110 @@
         <h2>${m.name}</h2>
         <div class="stars" style="margin-bottom:12px;">${'★'.repeat(m.stars)}${'☆'.repeat(5-m.stars)}</div>
         <p style="color:var(--text-secondary);margin-bottom:16px;">${m.desc}</p>
-        <div>${m.details || detailViews[m.id] || 'Подробное описание готовится...'}</div>
+        <div>${m.details || 'Подробное описание готовится...'}</div>
       </div>`;
       document.body.appendChild(overlay);
+    }
+
+    function openMethodEdit(id) {
+      document.getElementById('adminMethodError').textContent = '';
+      const m = methods.find(x => x.id === id);
+      if (!m) return;
+      document.getElementById('adminMethodTitle').textContent = 'Редактировать метод';
+      document.getElementById('methodId').value = m.id;
+      document.getElementById('methodSlug').value = m.slug || '';
+      document.getElementById('methodName').value = m.name || '';
+      document.getElementById('methodDesc').value = m.desc || '';
+      document.getElementById('methodStars').value = m.stars || 3;
+      document.getElementById('methodTags').value = (m.tags || []).join(', ');
+      document.getElementById('methodTime').value = m.time || '';
+      document.getElementById('methodDetails').value = m.details || '';
+      document.getElementById('adminMethodModal').classList.add('active');
+    }
+
+    function openMethodCreate() {
+      document.getElementById('adminMethodError').textContent = '';
+      document.getElementById('adminMethodTitle').textContent = 'Создать метод';
+      document.getElementById('methodId').value = '';
+      document.getElementById('methodSlug').value = '';
+      document.getElementById('methodName').value = '';
+      document.getElementById('methodDesc').value = '';
+      document.getElementById('methodStars').value = 3;
+      document.getElementById('methodTags').value = '';
+      document.getElementById('methodTime').value = '';
+      document.getElementById('methodDetails').value = '';
+      document.getElementById('adminMethodModal').classList.add('active');
+    }
+
+    async function saveMethod() {
+      const id = document.getElementById('methodId').value;
+      const errorEl = document.getElementById('adminMethodError');
+      errorEl.textContent = '';
+      const tagsRaw = document.getElementById('methodTags').value;
+      const body = {
+        slug: document.getElementById('methodSlug').value.trim(),
+        name: document.getElementById('methodName').value.trim(),
+        desc: document.getElementById('methodDesc').value.trim(),
+        stars: parseInt(document.getElementById('methodStars').value, 10) || 3,
+        tags: tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [],
+        time: document.getElementById('methodTime').value.trim(),
+        details: document.getElementById('methodDetails').value.trim(),
+      };
+      if (!body.slug || !body.name) {
+        errorEl.textContent = 'Slug и название обязательны';
+        return;
+      }
+      try {
+        const url = id ? `/api/content/methods/${id}` : '/api/content/methods';
+        const method = id ? 'PUT' : 'POST';
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          errorEl.textContent = err.error || 'Ошибка сохранения';
+          return;
+        }
+        document.getElementById('adminMethodModal').classList.remove('active');
+        await loadMethods();
+      } catch (e) {
+        errorEl.textContent = 'Ошибка сети';
+      }
+    }
+
+    async function deleteMethod(id) {
+      if (!confirm('Удалить метод?')) return;
+      try {
+        const res = await fetch(`/api/content/methods/${id}`, { method: 'DELETE' });
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.error || 'Ошибка удаления');
+          return;
+        }
+        await loadMethods();
+      } catch (e) {
+        alert('Ошибка сети');
+      }
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
     }
 
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
 
-      renderMethods();
+      loadMethods().then(() => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+          setTimeout(() => {
+            const m = methods.find(x => x.slug === hash);
+            if (m) openMethodModal(hash);
+          }, 300);
+        }
+      });
 
       document.querySelectorAll('#methodFilters .filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
@@ -161,12 +269,25 @@
         renderMethods(active ? active.dataset.filter : 'all', this.value.toLowerCase());
       });
 
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        setTimeout(() => {
-          const m = methods.find(x => x.id === hash);
-          if (m) openMethodModal(hash);
-        }, 300);
+      document.getElementById('createMethodBtn').addEventListener('click', openMethodCreate);
+
+      function checkAdmin() {
+        const isAdmin = window.currentUser && window.currentUser.roleId === 1;
+        document.getElementById('createMethodBtn').style.display = isAdmin ? 'inline-block' : 'none';
+        renderMethods();
+      }
+      checkAdmin();
+      const orig = window.__defineSetter__ || Object.defineProperty;
+      const desc = Object.getOwnPropertyDescriptor(window, 'currentUser');
+      if (desc && desc.set) {
+        const origSet = desc.set;
+        Object.defineProperty(window, 'currentUser', {
+          set(v) { origSet.call(window, v); checkAdmin(); },
+          get() { return desc.get ? desc.get.call(window) : undefined; },
+          configurable: true,
+        });
+      } else {
+        window.addEventListener('user-changed', checkAdmin);
       }
     });
   </script>

@@ -62,6 +62,10 @@ const CourseTestQuestion = require('./models/CourseTestQuestion')(sequelize);
 const UserQuestionAnswer = require('./models/UserQuestionAnswer')(sequelize);
 const UserCourse = require('./models/UserCourse')(sequelize);
 
+const GlossaryTerm = require('./models/GlossaryTerm')(sequelize);
+const Method = require('./models/Method')(sequelize);
+const Template = require('./models/Template')(sequelize);
+
 // Session model for connect-session-sequelize (must be defined before SequelizeStore)
 // timestamps: false — session data doesn't need createdAt/updatedAt
 const Session = sequelize.define('Session', {
@@ -151,5 +155,6 @@ module.exports = {
   sequelize,   Role, User, Habit, TestResult, GlossaryFavorite, MicroStep, PomodoroSession,
   Subscription, LessonStatus, TestStatus, Course, Lesson, CourseTest, CourseTestResult,
   CourseTestQuestion, UserQuestionAnswer, UserCourse, Session,
+  GlossaryTerm, Method, Template,
   initDb
 };
