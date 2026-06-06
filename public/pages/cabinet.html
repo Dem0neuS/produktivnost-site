@@ -207,7 +207,7 @@
           <div class="cabinet-info">
             <h2>${currentUser.name}</h2>
             <p>${currentUser.email}</p>
-            <p style="font-size:0.8rem;margin-top:4px;">Тема: ${data?.theme || localStorage.getItem('theme') || 'светлая'}${currentUser.role ? ' · Роль: ' + currentUser.role : ''}</p>
+            <p style="font-size:0.8rem;margin-top:4px;">Тема: ${data?.theme === 'night' ? 'ночная' : data?.theme === 'dark' ? 'тёмная' : 'светлая'}${currentUser.role ? ' · Роль: ' + currentUser.role : ''}</p>
           </div>
           <div style="margin-left:auto;">
             <button class="btn btn-sm btn-outline" onclick="syncAll()" title="Синхронизировать все данные">🔄 Синхронизировать</button>

@@ -10,7 +10,7 @@ function initTheme() {
     if (window.currentUser) {
       fetch('/api/theme', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: next }),
+        body: JSON.stringify({ theme: next === 'dark' ? 'night' : 'light' }),
         credentials: 'same-origin'
       }).catch(() => {});
     }

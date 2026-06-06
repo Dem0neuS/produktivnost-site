@@ -247,8 +247,9 @@ function syncFromServer() {
     .then(r => r.json())
     .then(data => {
       if (data.theme) {
-        applyTheme(data.theme);
-        localStorage.setItem('theme', data.theme);
+        const theme = data.theme === 'night' ? 'dark' : data.theme;
+        applyTheme(theme);
+        localStorage.setItem('theme', theme);
       }
       localStorage.setItem('synced_habits', JSON.stringify(data.habits || []));
       localStorage.setItem('synced_favorites', JSON.stringify((data.favorites || []).map(f => f.term)));
