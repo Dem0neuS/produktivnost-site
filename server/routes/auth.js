@@ -50,6 +50,8 @@ router.post('/login', async (req, res) => {
     req.session.userId = user.id;
     req.session.userEmail = user.email;
     req.session.userName = user.name;
+    user.lastActiveAt = new Date();
+    await user.save();
     res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, theme: user.theme, roleId: user.roleId, role: user.Role?.name } });
   } catch (err) {
     console.error('Login error:', err);
@@ -105,7 +107,11 @@ router.get('/me', async (req, res) => {
     return res.json({ user: null });
   }
   try {
-    const user = await User.findByPk(req.session.userId, { include: [Role], attributes: ['id', 'name', 'email', 'theme', 'roleId'] });
+    const user = await User.findByPk(req.session.userId, { include: [Role], attributes: ['id', 'name', 'email', 'theme', 'roleId', 'lastActiveAt'] });
+    if (user) {
+      user.lastActiveAt = new Date();
+      await user.save();
+    }
     res.json({ user: { id: user.id, name: user.name, email: user.email, theme: user.theme, roleId: user.roleId, role: user.Role?.name } });
   } catch (err) {
     res.json({ user: null });

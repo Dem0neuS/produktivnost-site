@@ -27,6 +27,8 @@
     .no-data { text-align: center; padding: 32px; color: var(--text-secondary); }
     .logout-btn { color: var(--danger) !important; }
     .logout-btn:hover { background: rgba(231,76,60,0.1) !important; transform: none !important; }
+    .admin-monitoring { margin-top: 32px; padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+    .admin-monitoring h3 { margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
   </style>
 </head>
 <body>
@@ -205,7 +207,7 @@
           <div class="cabinet-info">
             <h2>${currentUser.name}</h2>
             <p>${currentUser.email}</p>
-            <p style="font-size:0.8rem;margin-top:4px;">Тема: ${data?.theme || localStorage.getItem('theme') || 'светлая'}</p>
+            <p style="font-size:0.8rem;margin-top:4px;">Тема: ${data?.theme || localStorage.getItem('theme') || 'светлая'}${currentUser.role ? ' · Роль: ' + currentUser.role : ''}</p>
           </div>
           <div style="margin-left:auto;">
             <button class="btn btn-sm btn-outline" onclick="syncAll()" title="Синхронизировать все данные">🔄 Синхронизировать</button>
@@ -220,6 +222,8 @@
           <div class="stat-card"><div class="stat-number">${totalFavs}</div><p>В избранном</p></div>
           <div class="stat-card"><div class="stat-number">${weekCount}</div><p>Микро-шагов за неделю</p></div>
         </div>
+
+        ${currentUser.role === 'Администратор' ? `<div class="admin-monitoring"><h3>📊 Мониторинг системы</h3><div class="cabinet-stats" id="adminStats"><div class="stat-card"><div class="stat-number" id="statUsers">—</div><p>Зарегистрировано пользователей</p></div><div class="stat-card"><div class="stat-number" id="statActive">—</div><p>Активных за 24 ч</p></div><div class="stat-card"><div class="stat-number" id="statTests">—</div><p>Пройдено тестов</p></div></div></div>` : ''}
 
         <div class="cabinet-section">
           <h3>📋 Ваши привычки</h3>
@@ -253,7 +257,20 @@
           <p style="font-size:0.9rem;color:var(--text-secondary);">📱 Все данные синхронизированы с сервером. При входе с другого устройства ваши данные восстановятся.</p>
         </div>
       `;
-    }
+
+    if (currentUser.role === 'Администратор') fetchAdminStats();
+  }
+
+  async function fetchAdminStats() {
+    try {
+      const res = await fetch('/api/admin/stats', { credentials: 'same-origin' });
+      if (!res.ok) return;
+      const stats = await res.json();
+      document.getElementById('statUsers').textContent = stats.totalUsers;
+      document.getElementById('statActive').textContent = stats.activeUsers;
+      document.getElementById('statTests').textContent = stats.totalTests;
+    } catch (e) {}
+  }
 
     function getWeekStart() {
       const d = new Date(); d.setDate(d.getDate() - d.getDay());

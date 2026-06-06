@@ -10,6 +10,7 @@ const apiRoutes = require('./routes/api');
 const cabinetRoutes = require('./routes/cabinet');
 const coursesRoutes = require('./routes/courses');
 const contentRoutes = require('./routes/content');
+const adminRoutes = require('./routes/admin');
 require('dotenv').config();
 
 const app = express();
@@ -53,6 +54,7 @@ app.use('/api', apiRoutes);
 app.use('/api/cabinet', cabinetRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/admin', adminRoutes);
 
 const pages = ['index', 'habits', 'antiprocrastination', 'methods', 'templates', 'glossary', 'tests', 'about', 'cabinet', 'pomodoro', 'courses', 'course'];
 

@@ -83,7 +83,8 @@
       const c = currentCourse;
       const lessons = c.Lessons || [];
       const total = lessons.length;
-      const done = completedLessons.length;
+      const validIds = lessons.map(m => m.id);
+      const done = completedLessons.filter(id => validIds.includes(id)).length;
       const progress = total > 0 ? Math.round((done / total) * 100) : 0;
       const isAdmin = window.currentUser?.roleId === 1;
 
@@ -219,7 +220,6 @@
     }
 
     async function loadEnrollment() {
-      if (!currentUser) return;
       try {
         const res = await fetch('/api/courses/my/list', { credentials: 'same-origin' });
         const data = await res.json();
@@ -365,6 +365,12 @@
     document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
       loadCourse();
+    });
+
+    window.addEventListener('auth:changed', function() {
+      if (currentCourse) {
+        loadEnrollment().then(() => renderCourse());
+      }
     });
   </script>
 </body>

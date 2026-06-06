@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
     resetTokenExpires: { type: DataTypes.DATE, allowNull: true },
     roleId: { type: DataTypes.INTEGER, allowNull: true, field: 'role_id' },
     subscriptionStatusId: { type: DataTypes.INTEGER, allowNull: true, field: 'subscription_status_id' },
+    lastActiveAt: { type: DataTypes.DATE, allowNull: true, field: 'last_active_at' },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   }, {
