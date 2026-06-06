@@ -1,6 +1,6 @@
 const express = require('express');
-const { ContentBlock, Role, User, Sequelize } = require('../db');
-const Op = Sequelize.Op;
+const { Op } = require('sequelize');
+const { ContentBlock, Role, User } = require('../db');
 
 const router = express.Router();
 
