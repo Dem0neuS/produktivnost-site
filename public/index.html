@@ -35,6 +35,7 @@
     </div>
   </header>
 
+<div data-block="hero">
   <section class="hero">
     <h1>Система продуктивности, которая работает без выгорания</h1>
     <p>Проверенные техники, шаблоны и тесты, чтобы успевать больше и жить спокойно</p>
@@ -43,7 +44,9 @@
       <a href="/templates" class="btn btn-outline btn-lg">Скачать чек-лист</a>
     </div>
   </section>
+</div>
 
+<div data-block="audience_cards">
   <section class="section">
     <div class="container">
       <h2 class="section-title animate-on-scroll">Для кого этот сайт</h2>
@@ -72,7 +75,9 @@
       </div>
     </div>
   </section>
+</div>
 
+<div data-block="popular_methods">
   <section class="section" style="background:var(--bg-secondary);">
     <div class="container">
       <h2 class="section-title animate-on-scroll">Популярные методы</h2>
@@ -117,6 +122,7 @@
       </div>
     </div>
   </section>
+</div>
 
   <section class="section">
     <div class="container">
@@ -189,6 +195,7 @@
     </div>
   </section>
 
+<div data-block="statistics">
   <section class="section">
     <div class="container">
       <div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:32px;text-align:center;">
@@ -207,6 +214,7 @@
       </div>
     </div>
   </section>
+</div>
 
   <footer class="footer">
     <div class="footer-inner">
@@ -273,6 +281,7 @@
   <script src="/js/auth.js"></script>
   <script src="/js/search.js"></script>
   <script src="/js/main.js"></script>
+  <script src="/js/pageContent.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const hamburger = document.getElementById('hamburger');
@@ -308,6 +317,7 @@
         URL.revokeObjectURL(url);
         showToast('📄 Скачивание начато!', 'success');
       });
+      loadPageContent('index');
     });
   </script>
 </body>

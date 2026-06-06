@@ -11,6 +11,8 @@ const cabinetRoutes = require('./routes/cabinet');
 const coursesRoutes = require('./routes/courses');
 const contentRoutes = require('./routes/content');
 const adminRoutes = require('./routes/admin');
+const pageContentRoutes = require('./routes/pageContent');
+const migratePageContent = require('./migratePageContent');
 require('dotenv').config();
 
 const app = express();
@@ -55,6 +57,7 @@ app.use('/api/cabinet', cabinetRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/page-content', pageContentRoutes);
 
 const pages = ['index', 'habits', 'antiprocrastination', 'methods', 'templates', 'glossary', 'tests', 'about', 'cabinet', 'pomodoro', 'courses', 'course'];
 
@@ -252,6 +255,7 @@ async function start() {
   await ensureAdmin();
   await migrateCourses();
   await migrateContent();
+  await migratePageContent();
   if (sessionStore.sync) {
     try {
       await sequelize.query('DROP TABLE IF EXISTS "Sessions" CASCADE');

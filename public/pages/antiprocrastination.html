@@ -40,6 +40,7 @@
     <div id="quickActionResult" style="margin-top:12px;font-size:1.1rem;font-weight:600;color:var(--accent);min-height:30px;"></div>
   </div>
 
+<div data-block="why_procrastinate">
   <section class="section">
     <div class="container">
       <h2 class="section-title">Почему мы откладываем</h2>
@@ -50,7 +51,9 @@
       </div>
     </div>
   </section>
+</div>
 
+<div data-block="techniques">
   <section class="section" style="background:var(--bg-secondary);">
     <div class="container">
       <h2 class="section-title">Топ-7 техник «здесь и сейчас»</h2>
@@ -66,6 +69,7 @@
       </div>
     </div>
   </section>
+</div>
 
   <section class="section">
     <div class="container">
@@ -90,6 +94,7 @@
     </div>
   </section>
 
+<div data-block="tools_table">
   <section class="section" style="background:var(--bg-secondary);">
     <div class="container">
       <h2 class="section-title">Инструменты против прокрастинации</h2>
@@ -107,7 +112,9 @@
       </div>
     </div>
   </section>
+</div>
 
+<div data-block="checklist">
   <section class="section">
     <div class="container">
       <h2 class="section-title">Чек-лист «Экстренная помощь при прокрастинации»</h2>
@@ -125,6 +132,7 @@
       </div>
     </div>
   </section>
+</div>
 
   <footer class="footer">
     <div class="footer-inner">
@@ -142,6 +150,7 @@
   <script src="/js/theme.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/search.js"></script>
+  <script src="/js/pageContent.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
@@ -206,6 +215,7 @@
         const checked = document.querySelectorAll('.procrast-check:checked');
         localStorage.setItem('procrast_checklist', checked.length.toString());
       }));
+      loadPageContent('antiprocrastination');
     });
   </script>
 </body>

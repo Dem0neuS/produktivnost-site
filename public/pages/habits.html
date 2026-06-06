@@ -52,6 +52,7 @@
     </div>
   </div>
 
+<div data-block="science">
   <section class="section">
     <div class="container">
       <h2 class="section-title">Научная основа привычек</h2>
@@ -75,6 +76,7 @@
       <p style="text-align:center;margin-top:20px;color:var(--text-secondary);font-size:0.9rem;">Модель Чарльза Дахигга из книги «Сила привычки» + закон малых шагов Джеймса Клира</p>
     </div>
   </section>
+</div>
 
   <section class="section" style="background:var(--bg-secondary);">
     <div class="container">
@@ -138,6 +140,7 @@
     </div>
   </section>
 
+<div data-block="popular_habits">
   <section class="section" style="background:var(--bg-secondary);">
     <div class="container">
       <h2 class="section-title">10 популярных привычек для старта</h2>
@@ -156,7 +159,9 @@
       </div>
     </div>
   </section>
+</div>
 
+<div data-block="comparison_table">
   <section class="section">
     <div class="container">
       <h2 class="section-title">Сравнение приложений для привычек</h2>
@@ -174,7 +179,9 @@
       </div>
     </div>
   </section>
+</div>
 
+<div data-block="bad_habits">
   <section class="section" style="background:var(--bg-secondary);">
     <div class="container">
       <h2 class="section-title">Как избавиться от вредной привычки</h2>
@@ -206,6 +213,7 @@
       </div>
     </div>
   </section>
+</div>
 
   <footer class="footer">
     <div class="footer-inner">
@@ -223,6 +231,7 @@
   <script src="/js/theme.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/search.js"></script>
+  <script src="/js/pageContent.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('hamburger').addEventListener('click', () => document.getElementById('nav').classList.toggle('open'));
@@ -379,6 +388,7 @@
         const done = parseInt(localStorage.getItem('habit_steps') || '0');
         if (done > 0) { /* just show saved */ }
       });
+      loadPageContent('habits');
     });
   </script>
 </body>
